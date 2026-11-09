@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gesichtsfoto-Gestell 3D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Vollbild-Werkstattansicht, schwebendes Bedienfeld links oben */
+:root{
+  --bg:#eef0ec; --panel:#fbfbf8; --fg:#23282a; --muted:#677072; --line:#d6dad3; --accent:#c4642d;
+  --grid1:#c9cec6; --grid2:#dde1da;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1b1f20; --panel:#252a2c; --fg:#e7eae6; --muted:#9aa3a4; --line:#3a4144; --accent:#e08a52;
+  --grid1:#3a4144; --grid2:#2b3133; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1b1f20; --panel:#252a2c; --fg:#e7eae6; --muted:#9aa3a4; --line:#3a4144; --accent:#e08a52;
+  --grid1:#3a4144; --grid2:#2b3133; color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);overflow:hidden}
+#view{position:fixed;inset:0}
+#view canvas{display:block;touch-action:none}
+.panel{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:max(16px,env(safe-area-inset-left,0px));
+  width:min(270px,calc(100vw - 32px));max-height:calc(100% - 24px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));
+  overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 14px 12px;
+  display:flex;flex-direction:column;gap:14px;box-shadow:0 6px 24px rgba(0,0,0,.08)}
+h1{font-size:15px;font-weight:600;margin:0;text-wrap:balance}
+.sub{font-size:12px;color:var(--muted);margin-top:2px}
+.lbl{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.grp{display:flex;flex-direction:column;gap:6px}
+.views{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+button{font:500 12.5px var(--sans);color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:6px;padding:6px 8px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.parts label{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer}
+.sw{width:11px;height:11px;border-radius:3px;flex:none}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.val{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums}
+.row{display:flex;justify-content:space-between;align-items:baseline}
+.hint{font-size:11.5px;color:var(--muted);line-height:1.45}
+#toggle{display:none}
+@media (max-width:560px){
+  .panel.closed>:not(.head){display:none}
+  #toggle{display:inline-block}
+}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+#camnote{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom,0px));right:max(16px,env(safe-area-inset-right,0px));
+  font:500 12px var(--mono);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:5px 9px}
+</style>
+
+<div id="view"></div>
+<div class="panel" id="panel">
+  <div class="head">
+    <div><h1>Gesichtsfoto-Gestell</h1><div class="sub">v4 · iPhone 14 Pro Max · 250 mm Stirn–Objektiv</div></div>
+    <button id="toggle" aria-label="Bedienfeld ein-/ausklappen">☰</button>
+  </div>
+  <div class="grp">
+    <div class="lbl">Ansicht</div>
+    <div class="views">
+      <button id="v-iso">Schräg</button><button id="v-side">Seite</button>
+      <button id="v-top">Oben</button><button id="v-cam">Kamerablick</button>
+    </div>
+  </div>
+  <div class="grp">
+    <div class="row"><span class="lbl">Kinnstütze</span><span class="val" id="angv">aufrecht</span></div>
+    <input type="range" id="ang" min="-5" max="84" step="1" value="-5" aria-label="Klappwinkel Kinnstütze">
+  </div>
+  <div class="grp parts" id="parts"><div class="lbl">Teile</div></div>
+  <div class="hint">Ziehen: drehen · Scrollen/Pinch: zoomen · Rechtsklick oder zwei Finger: verschieben.<br>Kamerablick zeigt ungefähr den Bildausschnitt der Hauptkamera (Hochformat).</div>
+</div>
+<div id="camnote" hidden>Kamerablick · 24 mm, Hochformat</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+<script src="models.js"></script>
+<script>
+const PIV={y:269.45,z:24.0}, LENS={x:0,y:0,z:144.7}, LEAN=5;
+const PARTS=[
+  {id:"kopfrahmen",name:"Kopfrahmen",c:"#dfe4e8"},
+  {id:"kopfbuegel",name:"Kopfbügel",c:"#eef1f3"},
+  {id:"kinnhebel",name:"Kinnschale",c:"#7f9bb0"},
+  {id:"traeger",name:"Träger + Wiege",c:"#cfd6dc"},
+  {id:"verbinder",name:"Schrauben + Muttern",c:"#c4642d"},
+  {id:"phone",name:"iPhone (Dummy)",c:"#30353a"},
+  {id:"kopf",name:"Kopf (Dummy)",c:"#e9c9b8",ghost:true},
+];
+const el=document.getElementById("view");
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+el.appendChild(renderer.domElement);
+const scene=new THREE.Scene();
+const cam=new THREE.PerspectiveCamera(35,1,1,5000);
+cam.up.set(0,0,1);
+const controls=new THREE.OrbitControls(cam,renderer.domElement);
+controls.enableDamping=false; controls.rotateSpeed=0.8;
+// Maus losgelassen außerhalb des Fensters: Drehen sauber beenden
+function release(){document.dispatchEvent(new PointerEvent('pointerup',{bubbles:true}))}
+addEventListener('blur',release); document.documentElement.addEventListener('pointerleave',release);
+renderer.domElement.addEventListener('pointerdown',e=>{try{e.target.setPointerCapture(e.pointerId)}catch(_){}}); controls.target.set(0,150,110);
+scene.add(new THREE.HemisphereLight(0xffffff,0x8a8070,0.75));
+const sun=new THREE.DirectionalLight(0xffffff,0.75); sun.position.set(300,-400,600); scene.add(sun);
+const fill=new THREE.DirectionalLight(0xffffff,0.3); fill.position.set(-400,500,200); scene.add(fill);
+
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()}
+let grid;
+function makeGrid(){
+  if(grid) scene.remove(grid);
+  grid=new THREE.GridHelper(600,30,css("--grid1"),css("--grid2"));
+  grid.rotation.x=Math.PI/2; grid.position.set(0,150,-0.5); scene.add(grid);
+}
+makeGrid();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",makeGrid);
+new MutationObserver(makeGrid).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+
+const meshes={}, pivot=new THREE.Group();
+pivot.position.set(0,PIV.y,PIV.z); scene.add(pivot);
+const loader=new THREE.STLLoader();
+function b64(s){const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u.buffer}
+const partsBox=document.getElementById("parts");
+PARTS.forEach(p=>{
+  (geo=>{
+    geo.computeVertexNormals();
+    const mat=new THREE.MeshStandardMaterial({color:p.c,roughness:.75,metalness:0,
+      transparent:!!p.ghost,opacity:p.ghost?.28:1,depthWrite:!p.ghost});
+    const m=new THREE.Mesh(geo,mat);
+    if(p.id==="kinnhebel"){pivot.add(m)} else scene.add(m);
+    meshes[p.id]=m; m.visible=box(p.id).checked;
+  })(loader.parse(b64(window.MODELS[p.id])));
+  if(p.group==="saeule"&&p.id==="saeule_R") return;
+  const l=document.createElement("label");
+  const ids=p.group?PARTS.filter(q=>q.group===p.group).map(q=>q.id):[p.id];
+  l.innerHTML=`<input type="checkbox" id="cb-${p.id}" checked><span class="sw" style="background:${p.c}"></span>${p.group?"Säulen (2×)":p.name}`;
+  partsBox.appendChild(l);
+  l.querySelector("input").addEventListener("change",e=>ids.forEach(i=>meshes[i]&&(meshes[i].visible=e.target.checked)));
+});
+function box(id){const p=PARTS.find(q=>q.id===id);return document.getElementById("cb-"+(p.group?PARTS.find(q=>q.group===p.group).id:id))||{checked:true}}
+
+const ang=document.getElementById("ang"), angv=document.getElementById("angv");
+// a = Drehwinkel um +X: -5 = 5° nach hinten gegen Anschlag, positiv = Richtung Handy geklappt
+function applyAng(){pivot.rotation.x=THREE.MathUtils.degToRad(+ang.value); angv.textContent=(+ang.value<=-5)?"Gesicht-Modus":(+ang.value>=80?"Zungen-Modus":(+ang.value+5)+"° geklappt");}
+ang.addEventListener("input",applyAng); applyAng();
+
+const views={
+  iso:{p:[420,-260,380],t:[0,150,110],fov:35},
+  side:{p:[700,150,120],t:[0,150,110],fov:35},
+  top:{p:[0,120,900],t:[0,150,0],fov:35},
+  cam:{p:[LENS.x,LENS.y-2,LENS.z],t:[0,250,LENS.z],fov:74},
+};
+let current="iso";
+function setView(k){
+  const v=views[k]; current=k;
+  cam.position.set(...v.p); controls.target.set(...v.t); cam.fov=v.fov;
+  cam.updateProjectionMatrix(); controls.update();
+  document.querySelectorAll(".views button").forEach(b=>b.setAttribute("aria-pressed",b.id==="v-"+k));
+  document.getElementById("camnote").hidden=k!=="cam";
+  if(k==="cam"&&meshes.phone){meshes.phone.visible=false}
+  else if(meshes.phone){meshes.phone.visible=document.getElementById("cb-phone").checked}
+}
+["iso","side","top","cam"].forEach(k=>document.getElementById("v-"+k).addEventListener("click",()=>setView(k)));
+
+document.getElementById("toggle").addEventListener("click",()=>document.getElementById("panel").classList.toggle("closed"));
+
+function resize(){const w=el.clientWidth,h=el.clientHeight;renderer.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix()}
+addEventListener("resize",resize); resize(); setView("iso");
+(function loop(){controls.update();renderer.render(scene,cam);requestAnimationFrame(loop)})();
+</script>
+
+</html>
