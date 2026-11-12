@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drehventil Behälter-Port</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Werkstatt-Datenblatt: helles, kühles Papier, Stahlblau als Leitfarbe, Messing für Empfehlungen. Eine Spalte, Tabellen dürfen breiter sein. */
+  --bg: #f3f6f8;
+  --surface: #ffffff;
+  --ink: #15212b;
+  --muted: #5a6a77;
+  --line: #d9e1e7;
+  --accent: #1d5f8a;
+  --accent-soft: #e4eef5;
+  --brass: #9a6a1c;
+  --brass-soft: #f6eedd;
+  --ok: #2c7a4b;
+  --ok-soft: #e3f2e8;
+  --warn: #a8481f;
+  --warn-soft: #f8e7df;
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+  --font-body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11181e; --surface: #18222a; --ink: #e6edf2; --muted: #9db0bf; --line: #2a3843;
+    --accent: #7fb6dc; --accent-soft: #1d2f3c; --brass: #d9aa58; --brass-soft: #2f2817;
+    --ok: #7cc79a; --ok-soft: #1b2e23; --warn: #e79671; --warn-soft: #34221a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11181e; --surface: #18222a; --ink: #e6edf2; --muted: #9db0bf; --line: #2a3843;
+  --accent: #7fb6dc; --accent-soft: #1d2f3c; --brass: #d9aa58; --brass-soft: #2f2817;
+  --ok: #7cc79a; --ok-soft: #1b2e23; --warn: #e79671; --warn-soft: #34221a;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55; }
+main { max-width: 1040px; margin: 0 auto; padding: 32px 20px 64px; display: grid; gap: 28px; }
+header.top { display: grid; gap: 10px; padding-bottom: 18px; border-bottom: 2px solid var(--ink); }
+.kicker { font-family: var(--font-mono); font-size: 13px; color: var(--muted); letter-spacing: .02em; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 700; }
+h2 { font-size: 26px; font-weight: 700; display: flex; gap: 12px; align-items: baseline; }
+h2 .num { font-family: var(--font-mono); font-size: 15px; color: var(--accent); font-weight: 500; }
+h3 { font-size: 19px; font-weight: 600; }
+p { margin: 0; max-width: 72ch; }
+section { display: grid; gap: 14px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font-family: var(--font-mono); font-size: 13px; padding: 3px 9px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; display: grid; gap: 10px; }
+.card.rec { border-left: 5px solid var(--brass); background: linear-gradient(0deg, var(--surface), var(--surface)); }
+.card.ask { border-left: 5px solid var(--accent); }
+ol, ul { margin: 0; padding-left: 22px; display: grid; gap: 6px; max-width: 76ch; }
+li::marker { color: var(--accent); }
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; border-radius: 2px; }
+code, .mono { font-family: var(--font-mono); font-size: .92em; font-variant-numeric: tabular-nums; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--font-display); font-weight: 600; font-size: 14px; color: var(--muted); background: var(--bg); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; white-space: nowrap; }
+tr.pick td { background: var(--brass-soft); }
+.tag { display: inline-block; font-family: var(--font-mono); font-size: 12px; padding: 1px 7px; border-radius: 5px; white-space: nowrap; }
+.tag.good { background: var(--ok-soft); color: var(--ok); }
+.tag.mid { background: var(--brass-soft); color: var(--brass); }
+.tag.bad { background: var(--warn-soft); color: var(--warn); }
+.note { font-size: 14px; color: var(--muted); max-width: 80ch; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.vocab { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 8px 18px; }
+.vocab div { font-size: 14.5px; }
+.vocab b { font-family: var(--font-display); font-weight: 600; }
+.tree ul { padding-left: 20px; gap: 3px; }
+.tree > ul { padding-left: 0; list-style: none; }
+.tree li { font-size: 14px; }
+.tree .dom { font-family: var(--font-mono); font-weight: 500; }
+svg text { font-family: var(--font-mono); fill: var(--ink); }
+@media (max-width: 520px) { main { padding: 22px 16px 48px; } h2 { font-size: 22px; } th, td { padding: 8px 9px; } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+<main>
+
+<header class="top">
+  <div class="kicker">Recherche · 12. November 2026 · Testbehälter-Port 1-1/16"-12 UN</div>
+  <h1>Drehventil für den Behälter-Port</h1>
+  <div class="meta">
+    <span class="chip">Δp = 1 bar (2 bar innen, 1 bar außen)</span>
+    <span class="chip">Ziel: 90–180° von zu auf voll</span>
+    <span class="chip">Fluss wie jetzt: 3 × Ø7 mm</span>
+    <span class="chip">Griff innen</span>
+  </div>
+</header>
+
+<section>
+  <h2><span class="num">1</span>Kurzfassung</h2>
+  <div class="card rec">
+    <h3>Empfehlung: dein Tellerventil, mit vier Änderungen</h3>
+    <ol>
+      <li><b>Keilkante bleibt, drückt aber in Gummi.</b> Teil 1 bekommt den Sitzring mit Kante, Teil 2 einen O-Ring in einer Halb-Schwalbenschwanznut. Kunststoff auf Kunststoff dichtet bei gedruckten Flächen nicht zuverlässig.</li>
+      <li><b>3-gängiges Gewinde</b> mit deiner Teilung 2,117 mm: 6,35 mm Steigung. Damit reichen <span class="mono">≈ 100°</span> für 0,7 mm O-Ring-Verpressung plus 1 mm Hub. Es bleibt selbsthemmend.</li>
+      <li><b>Der Druck schließt mit.</b> Der Teller sitzt innen, die Kammer drückt ihn mit rund 100 N auf den Sitz. Das Gewinde liegt vor dem Sitz, sein Spalt muss nicht dicht sein. Bricht das Gewinde, bleibt das Ventil zu.</li>
+      <li><b>Sitz Ø36–40 mm.</b> Dann gibt 1 mm Hub schon 115 mm² Ringspalt, so viel wie deine drei 7-mm-Löcher, als dünner, leiser Spalt.</li>
+    </ol>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h3>Kauf-Variante</h3>
+      <p>1/2"-Kugelhahn mit vollem Durchgang (Ø ≈ 15 mm = 177 mm²) innen, gedruckter Port-Adapter, Sinterbronze-Schalldämpfer außen. Teile ab ca. 10 € + 6 €. Robust und dicht, aber der laute Strahl entsteht im Ventil auf der Innenseite.</p>
+    </div>
+    <div class="card">
+      <h3>Verworfen</h3>
+      <p>Nadelventil (1/2": Kv 0,7–1,6, nötig ≈ 3,5–4,6). Metall-Adapter 1-1/16"-12 (gibt es, wird nicht gebraucht). Leises Kammerventil als Ersatzteil: keins gefunden; das Dr.-Hugo-Ventil gibt es einzeln nur per Seefracht.</p>
+    </div>
+    <div class="card">
+      <h3>Material</h3>
+      <p>PETG (Bambu PETG Basic), mindestens 4 Wände, Fluss +5–10 %. Dein Standard-Hotend reicht, ein gehärtetes brauchst du nur für Kohle- oder Glasfaser-Filament.</p>
+    </div>
+  </div>
+  <div class="card ask">
+    <h3>Deine Entscheidung</h3>
+    <p>A: Tellerventil drucken · B: Kugelhahn kaufen und anpassen · oder beides parallel testen.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">2</span>Die Zahlen, die alles festlegen</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Größe</th><th class="num">Wert</th><th>Herleitung</th></tr></thead>
+      <tbody>
+        <tr><td>Fläche jetziges Ventil</td><td class="num">115 mm²</td><td>3 × π/4 × 7² — entspricht einer Bohrung Ø12,1 mm</td></tr>
+        <tr><td>Strömungsart</td><td class="num">kritisch</td><td>2 bar abs. zu 1 bar abs.: an der engsten Stelle strömt die Luft mit Schallgeschwindigkeit</td></tr>
+        <tr><td>Massenstrom zu Beginn</td><td class="num">33–44 g/s</td><td>≈ 1 500–2 000 Nl/min, Ausflusszahl 0,6–0,8</td></tr>
+        <tr><td>nötiger Kv-Wert</td><td class="num">≈ 3,5–4,6 m³/h</td><td>Gasformel überkritisch, <a href="https://www.burkert.com/en/service-support/knowledge-center/glossary/fluid-calculator">Bürkert</a>: Q<sub>N</sub> = 257 · Kv · p₁ / √(ρ<sub>N</sub>·T)</td></tr>
+        <tr><td>Hub Ringspalt (Sitz Ø36 / Ø40)</td><td class="num">1,0 / 0,9 mm</td><td>Vorhangfläche π · D · h = 115 mm²</td></tr>
+        <tr><td>Druckkraft auf Teller Ø36 / Ø40</td><td class="num">102 / 126 N</td><td>1 bar × Sitzfläche, Richtung: auf den Sitz</td></tr>
+        <tr><td>Moment zum Öffnen (3-gängig, Flanken-Ø44)</td><td class="num">0,4–0,9 N·m</td><td>Reibwert 0,1–0,3; Steigungswinkel 2,6° &lt; Reibungswinkel 6,6–19° → selbsthemmend</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Gewinde (Teilung 2,117 mm)</th><th class="num">Steigung</th><th class="num">Hub bei 90°</th><th class="num">Hub bei 180°</th><th class="num">Winkel für 1,7 mm*</th></tr></thead>
+      <tbody>
+        <tr><td>1-gängig (wie Port)</td><td class="num">2,12 mm</td><td class="num">0,53 mm</td><td class="num">1,06 mm</td><td class="num">289°</td></tr>
+        <tr><td>2-gängig</td><td class="num">4,23 mm</td><td class="num">1,06 mm</td><td class="num">2,12 mm</td><td class="num">145°</td></tr>
+        <tr class="pick"><td>3-gängig</td><td class="num">6,35 mm</td><td class="num">1,59 mm</td><td class="num">3,18 mm</td><td class="num">96°</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">* 0,7 mm O-Ring-Verpressung (etwa 20–25 % einer 3-mm-Schnur, meine Annahme) plus 1,0 mm Hub. Beim mehrgängigen Gewinde gilt Gangzahl = Steigung : Teilung; selbsthemmend ist es, solange der Steigungswinkel kleiner als der Reibungswinkel ist (<a href="https://de.zimm.com/wp-content/uploads/2018/10/konstruktionshinweise-gewindetechnik_1.pdf">Zimm, Gewindetechnik</a>).</p>
+</section>
+
+<section>
+  <h2><span class="num">3</span>Wie Kammerhersteller es lösen</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Quelle</th><th>Prinzip</th><th>Bedienung</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://www.recoveryforathletes.com/products/macy-pan-st701-1-3-ata-soft-lying-hyperbaric-chamber">Macy-Pan ST701</a></td><td>„Two-Way Manual Deflate Valve“ für kontrolliertes Ablassen</td><td>innen und außen</td></tr>
+        <tr><td><a href="https://www.recoveryforathletes.com/products/tecnotu-home-portable-1-5ata-sitting-hyperbaric-chamber-home-hbot">Tecnotu</a></td><td>Notablass über ein drehbares Kugelventil</td><td>innen und außen</td></tr>
+        <tr><td><a href="https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/9664202">Patent US 9 664 202</a> (auch US 9 622 931, US 11 452 654)</td><td>Drehscheibe: feste Lochplatte + drehbare Lochplatte. Kein Loch deckungsgleich = dicht, teilweise deckungsgleich = Ablassrate einstellbar</td><td>Knopf innen und außen auf einer Achse</td></tr>
+        <tr><td><a href="https://cdn.shopify.com/s/files/1/0590/3089/6774/files/grand-dive-instructions.pdf">Summit to Sea</a></td><td>roter Drehknopf, laut Anleitung in beide Richtungen drehbar zum Ablassen (passt zur Drehscheibe)</td><td>innen</td></tr>
+        <tr><td><a href="https://www.medicalexpo.com/prod/zhengzhou-olive-electronic-technology/product-117784-1149421.html">Olive</a> (laut <a href="https://ledtranceguy.org/perso/hbot/post_2024-05-22_Olive-2_0-ATA-Soft-HBOT-_Hyperbaric_-Chamber-Review-and-Instructions.html">Erfahrungsbericht</a> dieselbe Kammer wie Hugo)</td><td>4 manuelle Ventile, gegen den Uhrzeigersinn aufdrehen</td><td>außen</td></tr>
+        <tr><td><a href="https://www.alibaba.com/product-detail/DR-HUGO-Manual-Pressure-Relief-Valve_1601988982043.html">Dr.-Hugo-Ersatzventil</a></td><td>Stahl, Auslass 1/2", Angabe „control air leaking speed“</td><td>k. A.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Ergebnis: Die Hersteller nehmen entweder einen Kugelhahn (90°) oder eine Drehscheibe mit Lochbild. Ein Tellerventil mit Mehrganggewinde habe ich bei keiner Kammer gefunden. Wie das Macy-Pan-Ventil innen aufgebaut ist, steht nirgends.</p>
+</section>
+
+<section>
+  <h2><span class="num">4</span>Prinzipien im Vergleich</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Prinzip</th><th>Drehwinkel</th><th>Dicht?</th><th>Lautstärke</th><th>Druckbar</th><th>Urteil</th></tr></thead>
+      <tbody>
+        <tr class="pick"><td><b>Tellerventil + Weichdichtung + 3-gängiges Gewinde</b> (dein Konzept, angepasst)</td><td>≈ 100–150°</td><td>sehr gut: Gummi, Druck presst zu</td><td>gut: dünner Ringspalt</td><td>ja, supportfrei</td><td><span class="tag good">Empfehlung</span></td></tr>
+        <tr><td>Drehscheibe mit Lochbild (Kammer-Patente)</td><td>30–90°</td><td>schwer: zwei Flächen gleiten, O-Ringe müssten über Lochkanten gleiten</td><td>sehr gut: viele kleine Löcher</td><td>ja</td><td><span class="tag mid">zweite Wahl</span></td></tr>
+        <tr><td>Kugelhahn (Kaufteil, Messing)</td><td>90°</td><td>sehr gut</td><td>laut im Ventil, Dämpfer außen nötig</td><td>nur Adapter</td><td><span class="tag mid">Kauf-Variante</span></td></tr>
+        <tr><td>Kükenhahn (Küken mit Querbohrung)</td><td>90°</td><td>mittel: O-Ringe gleiten über die Bohrung</td><td>wie Kugelhahn</td><td>ja, hohe Reibung</td><td><span class="tag bad">nein</span></td></tr>
+        <tr><td>Nadelventil</td><td>mehrere Umdrehungen</td><td>sehr gut</td><td>—</td><td>Kauf</td><td><span class="tag bad">zu klein</span></td></tr>
+        <tr><td>Hybrid: O-Ring-Stufe (5–6 Umdrehungen) + undichter Teller</td><td>5–6 U + 90–180°</td><td>über die O-Ring-Stufe</td><td>wie Teller</td><td>ja</td><td><span class="tag mid">nur Rückfallebene</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Nadelventile 1/2" liegen bei Kv 0,7–1,6 m³/h (<a href="https://impexron.de/show_catalogue_pdf/262116/1">END-Armaturen</a> 0,66–0,74; <a href="https://www.landefeld.de/shop/media/atlas9_seiten/524x.pdf">Landefeld NADEL 12</a> 17 l/min ≈ 1,0; <a href="https://products.swagelok.com/ja/c/Прямая-конфигурация-регулирующий-шток/p/B-18RF8">Swagelok B-18RF8</a> Cv 1,8 ≈ Kv 1,6). Das ist ein Viertel bis ein Drittel des Bestandsventils.</p>
+</section>
+
+<section>
+  <h2><span class="num">5</span>Dein Konzept: was ich ändern würde</h2>
+  <div class="card">
+    <h3>5.1 Kante gegen Gummi statt gegen Kunststoff</h3>
+    <p>Zwei harte Flächen dichten nur mit hoher Linienpressung und glatten Oberflächen, beides liefert ein FDM-Teil nicht. In Ventilen sitzt deshalb fast immer ein Elastomer im Sitz: Nach einem Handbuch zum Raketentriebwerksbau dichten O-Ring-Ventilsitze bei allen Drücken, auch mit etwas Schmutz, und das Hauptproblem ist, dass der Ring aus der Nut gerissen wird. Dagegen hilft eine Schwalbenschwanznut (<a href="https://kaldoc.pages.dev/Rocket%20Engine%20Design/Part%20VII/chapter_vii_77_design_of_dynamic_seals_for_fluid-flow-control_components">Kap. VII.77</a>).</p>
+  </div>
+  <div class="card">
+    <h3>5.2 Mehrgängiges Gewinde statt Kompromiss beim Winkel</h3>
+    <p>Mit 1-gängigem Gewinde bringen 180° nur 1,06 mm. Das reicht entweder zum Verpressen oder zum Öffnen, nicht für beides. 3-gängig mit derselben Teilung schafft 1,7 mm in 96°. Das Profil bleibt deins (60°, 2,117 mm), nur drei Gänge starten versetzt um 120°.</p>
+  </div>
+  <div class="card">
+    <h3>5.3 Druck arbeitet für dich</h3>
+    <p>Teil 2 sitzt innen auf dem Sitzring von Teil 1. Außerhalb des Sitzrings herrscht Kammerdruck, innerhalb Umgebungsdruck. Die Differenz drückt Teil 2 mit 102 N (Sitz Ø36) zu. Folgen: geschlossen dichtet es von selbst besser, der Gewindespalt liegt auf der Hochdruckseite und darf lecken, und wenn das Gewinde versagt, fällt das Ventil zu, nicht auf.</p>
+  </div>
+  <div class="card">
+    <h3>5.4 O-Ring richtig legen</h3>
+    <p>Der Druck kommt hier von außen auf den Ring (Kammer außen, Bohrung innen). Für Stirndichtungen mit Druck von außen soll der O-Ring-Innendurchmesser etwas kleiner sein als der Nut-Innendurchmesser, höchstens 5 % (<a href="https://www.globaloring.com/o-ring-groove-design/">Global O-Ring</a>, nach <a href="https://parker.com/promotionsite/oring-ehandbook/us/en/ehome/Face-Type-Seals">Parker</a>). Die Halb-Schwalbenschwanznut mit dem Hinterschnitt zur Bohrung hält den Ring beim Öffnen, wenn die Luft über ihn hinwegströmt. Passende Größen (z. B. 33 × 3, 36 × 3, 38 × 3) stecken in den gängigen 419er-Sortimenten.</p>
+  </div>
+  <div class="card">
+    <h3>5.5 Deine Hybrid-Idee</h3>
+    <p>Funktioniert als zweite Absperrung in Reihe, braucht aber zwei Handgriffe und 5–6 Umdrehungen, also genau das, was du vermeiden willst. Ich würde sie nur bauen, wenn der Teller mit O-Ring im Test nicht dicht wird.</p>
+  </div>
+  <figure class="card" aria-label="Schnittskizze Tellerventil">
+    <h3>Skizze: Schnitt durch das angepasste Konzept</h3>
+    <div style="overflow-x:auto">
+    <svg viewBox="0 0 640 300" width="640" height="300" role="img" aria-label="Schnitt: Teil 1 im Port, Teil 2 als Teller innen, O-Ring auf Sitzring, Luftweg">
+      <rect x="0" y="0" width="640" height="300" fill="none"/>
+      <!-- Behälterwand mit Port -->
+      <rect x="250" y="20" width="44" height="100" fill="var(--line)"/>
+      <rect x="250" y="180" width="44" height="100" fill="var(--line)"/>
+      <text x="252" y="14" font-size="11">Wand + Port</text>
+      <!-- Teil 1 -->
+      <rect x="230" y="120" width="160" height="12" fill="var(--accent-soft)" stroke="var(--accent)"/>
+      <rect x="230" y="168" width="160" height="12" fill="var(--accent-soft)" stroke="var(--accent)"/>
+      <rect x="196" y="96" width="34" height="108" fill="var(--accent-soft)" stroke="var(--accent)"/>
+      <text x="330" y="114" font-size="11">Teil 1 (fest, Port-Gewinde)</text>
+      <!-- Sitzring -->
+      <polygon points="196,110 186,116 196,122" fill="var(--accent)"/>
+      <polygon points="196,178 186,184 196,190" fill="var(--accent)"/>
+      <text x="40" y="70" font-size="11">Sitzring mit Kante</text>
+      <line x1="120" y1="74" x2="186" y2="114" stroke="var(--muted)"/>
+      <!-- Teil 2 Teller -->
+      <rect x="150" y="80" width="26" height="140" fill="var(--brass-soft)" stroke="var(--brass)"/>
+      <rect x="150" y="70" width="70" height="10" fill="var(--brass-soft)" stroke="var(--brass)"/>
+      <rect x="150" y="220" width="70" height="10" fill="var(--brass-soft)" stroke="var(--brass)"/>
+      <circle cx="181" cy="116" r="5" fill="var(--ink)"/>
+      <circle cx="181" cy="184" r="5" fill="var(--ink)"/>
+      <text x="40" y="250" font-size="11">Teil 2: Teller mit Griff,</text>
+      <text x="40" y="264" font-size="11">3-gängiges Gewinde, O-Ring</text>
+      <line x1="120" y1="246" x2="160" y2="222" stroke="var(--muted)"/>
+      <!-- Luftweg -->
+      <path d="M 120 150 L 140 150" stroke="var(--brass)" stroke-width="2" fill="none" marker-end="url(#a)"/>
+      <path d="M 200 150 L 600 150" stroke="var(--accent)" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#a2)"/>
+      <text x="420" y="144" font-size="11">Bohrung Ø18 → Schalldämpfer außen</text>
+      <text x="16" y="154" font-size="11">Kammer 2 bar</text>
+      <text x="560" y="174" font-size="11">außen 1 bar</text>
+      <defs>
+        <marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--brass)"/></marker>
+        <marker id="a2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker>
+      </defs>
+    </svg>
+    </div>
+    <p class="note">Prinzipskizze, nicht maßstäblich. Luft strömt durch Fenster im Teller-Rand zum Ringspalt am Sitz, dann durch die Bohrung nach außen.</p>
+  </figure>
+</section>
+
+<section>
+  <h2><span class="num">6</span>Warum der dünne Spalt leiser ist</h2>
+  <p>Strahllärm hat sein Maximum bei einer Frequenz f ≈ 0,2 · U / D (Strouhal-Zahl ≈ 0,2, <a href="https://homo-deus-lab.pages.dev/lab/aeroacoustics/jet-noise/">Lighthill-Modell</a>, <a href="https://ntrs.nasa.gov/citations/19790050524">NASA</a>). Bei Schallgeschwindigkeit (≈ 310 m/s) ergibt das:</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Strahl- bzw. Spaltbreite</th><th class="num">Spitzenfrequenz</th><th>Wirkung</th></tr></thead>
+      <tbody>
+        <tr><td>7 mm (jetziges Ventil)</td><td class="num">≈ 9 kHz</td><td>voll hörbar</td></tr>
+        <tr><td>1,5 mm (Ventil A)</td><td class="num">≈ 41 kHz</td><td>Ultraschall, nur die Flanke hörbar</td></tr>
+        <tr><td>1,0 mm (Ringspalt)</td><td class="num">≈ 62 kHz</td><td>Ultraschall</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Hinter dem Spalt fließt die Luft durch die Ø18-Bohrung mit noch ≈ 107 m/s. Weil die Schallleistung mit der 8. Potenz der Geschwindigkeit steigt, ist das viel leiser, liegt aber bei ≈ 1,2 kHz. Das erledigt der Schalldämpfer außen. Industrielle Leise-Ventile nutzen dasselbe Prinzip: Fisher WhisperFlo kombiniert unter anderem Frequenzverschiebung und voneinander unabhängige Austrittsstrahlen und erreicht bis −40 dB(A) (<a href="https://processengineering.co.uk/article/1275074/shh-dont-make-a-noise-about-it">Process Engineering</a>).</p>
+  <p class="note">Schalldämpfer-Daten: Festo U-1/2 (Polymer, Außengewinde) 80 dB(A) bei 10 600 l/min gegen Atmosphäre (<a href="https://ftp.festo.com/Public/PNEUMATIC/SOFTWARE_SERVICE/Documentation/2018/DE/SILENCERS_DE.PDF">Katalog</a>); Riegler Sinterbronze je nach Größe −15 bis −33 dB(A) (<a href="https://assets.sparepartsnow.de/product-assets/media/332/riegler_schalldaempfer_sinterbronze_564_de.pdf">Datenblatt</a>). Dein Fluss liegt bei ≈ 1 500–2 000 Nl/min.</p>
+</section>
+
+<section>
+  <h2><span class="num">7</span>Filament, Hotend, Dichtung, Fett</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>Filament: PETG</h3>
+      <p>PLA haftet zwischen den Schichten sogar besser (CNC Kitchen: PLA 40 kg, PETG 25 kg, ASA 17 kg) und ist steifer. PETG gibt aber erst bei 80 °C nach statt bei 60 °C (<a href="https://www.cnckitchen.com/blog/comparing-pla-petg-amp-asa-feat-prusament">CNC Kitchen</a>) und bricht nicht spröde. Für ein Teil, das in einer warmen, feuchten Kammer dauerhaft unter O-Ring-Vorspannung steht und täglich von Hand gedreht wird, ist das die bessere Reserve.</p>
+    </div>
+    <div class="card">
+      <h3>Dicht drucken</h3>
+      <ul>
+        <li>PETG und PLA brauchen mindestens 4 Wände, ABS/ASA/PC nur 2 (<a href="https://blog.prusa3d.com/watertight-3d-printing-pt1-vases-cups-and-other-open-models_48949/">Prusa-Test</a>).</li>
+        <li>Fluss +5–10 %, Düse +5–10 °C (<a href="https://help.prusa3d.com/article/watertight-prints_112324">Prusa</a>).</li>
+        <li>Sitzring und O-Ring-Nutgrund als Oberseite drucken, dort ist die Fläche am glattesten.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Hotend: keins kaufen</h3>
+      <p>Das Edelstahl-Hotend des P1S ist für PLA, PETG, ABS, PA und TPU ausgelegt. Gehärtet brauchst du erst für abrasive Filamente mit Kohle- oder Glasfaser, und dann laut Bambu auch gehärtete Extruderräder (<a href="https://wiki.bambulab.com/en/p1/manual/p1s-extruder-upgrade">Bambu-Wiki</a>).</p>
+    </div>
+    <div class="card">
+      <h3>O-Ring und Fett</h3>
+      <p>NBR geht. FKM oder EPDM halten in sauerstoffreicher Luft länger, sicherheitstechnisch ist der Unterschied bei niedrigem Druck gering (<a href="https://www.divegearexpress.com/faq/hardware">Dive Gear Express</a>). Statische O-Ringe trocken lassen; falls das Gewinde Fett braucht, nur sauerstoffverträgliches PFPE-Fett wie Christo-Lube MCG 111 oder Krytox GPL 205 (<a href="https://woundreference.com/p/producthandout?id=1645">Hyperbaric-Zubehör</a>), nicht in die Preisliste aufgenommen.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">8</span>Kauf-Check (live geprüft am 12.11.2026)</h2>
+  <p class="note">Amazon zeigt ohne Login nur „gratis bei Erstbestellung“. In „Gesamt“ steht deshalb der Normalfall ohne Prime: +3,99 € bei Warenkorb unter 49 € (<a href="https://www.netzwelt.de/news/252046-amazon-erhoeht-mindestbestellwert-einkaufen-ohne-prime-teurer.html">netzwelt</a>). Mit Prime oder ab 49 € gilt der Stückpreis. Bambu-Store: 5 € Versand, frei ab 55 € (<a href="https://eu.store.bambulab.com/en-no/policies/shipping-policy">Versandbedingungen</a>). Lieferdaten sind die Schätzungen der Shops. Markierte Zeile = meine Wahl.</p>
+
+  <h3>8.1 Kugelhahn 1/2" (DN15), Messing, voller Durchgang</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Angebot</th><th>Shop</th><th class="num">Preis pro Stück</th><th class="num">Gesamt inkl. Versand</th><th>Lieferung</th></tr></thead>
+    <tbody>
+      <tr class="pick"><td><a href="https://www.amazon.de/dp/B07XJW94PJ">VARIOSAN 13378, IG/AG, Hebel</a></td><td>Amazon (VARIOSAN)</td><td class="num">9,95 €</td><td class="num">13,94 €</td><td>Di 17.11. (Prime Fr 13.11.)</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B07XJW94X4">VARIOSAN 13521, IG/AG, Flügelgriff</a></td><td>Amazon (VARIOSAN)</td><td class="num">10,90 €</td><td class="num">14,89 €</td><td>Di 17.11. (Prime Fr 13.11.)</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B097ZCWVZQ">Messing AG/IG, Flügelgriff, PN16</a></td><td>Amazon (ouu-mmo)</td><td class="num">10,99 €</td><td class="num">14,98 €</td><td>Di 17.11. (Prime Fr 13.11.)</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B0FSQFSN42">AG/IG, PN25</a></td><td>Amazon (tujiawujin)</td><td class="num">12,99 €</td><td class="num">16,98 €</td><td>Di 17.11. (Prime Fr 13.11.)</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B0GW2SH7P7">2er-Pack AG/IG, PN25, Hebel</a></td><td>Amazon (Kontazmi)</td><td class="num">5,00 €</td><td class="num">13,98 €</td><td>Di 17.11. (Prime Fr 13.11.)</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B0HGFRB33L">DTGN IG/AG, Flügelgriff (nur 1 auf Lager)</a></td><td>Amazon (Dtgn)</td><td class="num">9,99 €</td><td class="num">13,98 €</td><td>Di 17.11.</td></tr>
+      <tr><td><a href="https://www.hornbach.de/p/veporit-trinkwasser-kugelhahn-1-2-ig-x-ag-dvgw-geprueft/10328063/">veporit IG × AG, DVGW-geprüft</a></td><td>Hornbach</td><td class="num">7,35 €</td><td class="num">13,05 €</td><td>lt. Shop</td></tr>
+      <tr><td><a href="https://www.ebay.de/itm/128183818792">Messing DN15 PN16, AG/IG, rot</a></td><td>eBay (4 verfügbar)</td><td class="num">16,99 €</td><td class="num">16,99 €</td><td>Sa 14.–Mo 16.11.</td></tr>
+      <tr><td><a href="https://www.ebay.de/itm/860083737516">Messing, Flügelgriff, AG/IG, PN16</a></td><td>eBay (2 verfügbar)</td><td class="num">17,95 €</td><td class="num">17,95 €</td><td>Sa 14.–Mi 18.11.</td></tr>
+      <tr><td><a href="https://www.ebay.de/itm/155936980850">MS vernickelt, IG/IG (braucht Nippel)</a></td><td>eBay (100 verfügbar)</td><td class="num">3,49 €</td><td class="num">10,48 €</td><td>bis Mo 16.11.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>8.2 Schalldämpfer Sinterbronze, G1/2 Außengewinde</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Angebot</th><th>Shop</th><th class="num">Preis pro Stück</th><th class="num">Gesamt inkl. Versand</th><th>Lieferung</th></tr></thead>
+    <tbody>
+      <tr class="pick"><td><a href="https://www.ebay.de/itm/365338035308">Riegler, Sechskant, G1/2, SW23</a></td><td>eBay</td><td class="num">15,93 €</td><td class="num">15,93 €</td><td>bis Mo 16.11.</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B0HF4VTWLB">tecuro, Sechskant, G1/2</a></td><td>Amazon (ew-haustechnik)</td><td class="num">9,65 €</td><td class="num">13,64 €</td><td>Di 17.11.</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B01IET4Y0A">Sechskant, G1/2</a></td><td>Amazon (fittingstore)</td><td class="num">7,99 €</td><td class="num">11,98 €</td><td>Do 19.11.</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B01IES4U3C">Messinggewinde, G1/2</a></td><td>Amazon (fittingstore)</td><td class="num">6,99 €</td><td class="num">10,98 €</td><td>Fr 20.11.</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B0B9LFW2MX">Fittingteile, G1/2, L 39 mm</a></td><td>Amazon (fittingteile)</td><td class="num">5,93 €</td><td class="num">10,92 €</td><td>Mi 18.11.</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B09BK1NDKQ">gesintertes Gewinde mit Schlitz, G1/2</a></td><td>Amazon (toolnerds)</td><td class="num">6,03 €</td><td class="num">11,93 €</td><td>17.–18.11.</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B091Z95LPT">zylindrisch, Messinggewinde, G1/2</a></td><td>Amazon (toolnerds)</td><td class="num">3,93 €</td><td class="num">9,83 €</td><td>17.–18.11.</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B0CFQN9C2V">2er-Set 1/2", SW22</a></td><td>Amazon (CNCTEC)</td><td class="num">5,25 €</td><td class="num">14,48 €</td><td>Di 17.11. (Prime Fr 13.11.)</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B098F5WDFH">2er-Set 1/2" (nur 4 auf Lager)</a></td><td>Amazon (CNCTEC)</td><td class="num">5,50 €</td><td class="num">14,98 €</td><td>Di 17.11. (Prime Fr 13.11.)</td></tr>
+      <tr><td><a href="https://www.ebay.de/itm/272138784118">Sechskant, Variante G1/2</a></td><td>eBay</td><td class="num">7,99 €</td><td class="num">12,49 €</td><td>Sa 14.–Mo 16.11.</td></tr>
+      <tr><td><a href="https://www.ebay.de/itm/156293270175">Messinggewinde, Variante 1/2"</a></td><td>eBay</td><td class="num">3,45 €</td><td class="num">6,35 €</td><td>Sa 14.–Mo 16.11.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>8.3 O-Ring-Sortiment (für den Sitz: z. B. 33/36/38 × 3 mm)</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Angebot</th><th>Shop</th><th class="num">Preis pro Stück</th><th class="num">Gesamt inkl. Versand</th><th>Lieferung</th></tr></thead>
+    <tbody>
+      <tr class="pick"><td><a href="https://www.ebay.de/itm/920098688719">FKM metrisch, 386 Stück</a></td><td>eBay (letzter Artikel)</td><td class="num">16,99 €</td><td class="num">16,99 €</td><td>lt. Angebot (DHL)</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B09VBFJYJH">Glarks 423 tlg. NBR, u. a. 30/33/36/38/41 × 3</a></td><td>Amazon (GIEMOR)</td><td class="num">15,99 €</td><td class="num">19,98 €</td><td>Di 17.11. (Prime Sa 14.11.)</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B0FCBB3X5N">KEZE 1380 tlg., u. a. 30–44 × 3 (3 auf Lager)</a></td><td>Amazon (FlexiSeal)</td><td class="num">19,99 €</td><td class="num">23,98 €</td><td>Di 17.11.</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B000B9RKL2">419 tlg. 3–50 mm</a></td><td>Amazon (Amazon)</td><td class="num">11,46 €</td><td class="num">15,45 €</td><td>Di 17.11. (Prime Fr 13.11.)</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B07ZSDYX8G">419 tlg. NBR 3–50 mm</a></td><td>Amazon (LucyStudio)</td><td class="num">11,99 €</td><td class="num">15,98 €</td><td>Di 17.11. (Prime Sa 14.11.)</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B0GDF16CHK">595 tlg. NBR, 36 Größen</a></td><td>Amazon (VELAJA)</td><td class="num">15,99 €</td><td class="num">19,98 €</td><td>Di 17.11. (Prime Fr 13.11.)</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B09TN27YLC">Swpeet 1235 tlg. NBR (9 auf Lager)</a></td><td>Amazon (swpeet)</td><td class="num">22,99 €</td><td class="num">26,98 €</td><td>Di 17.11. (Prime Sa 14.11.)</td></tr>
+      <tr><td><a href="https://www.ebay.de/itm/307222288059">ENVA 419 tlg. NBR 3–50 mm</a></td><td>eBay</td><td class="num">16,29 €</td><td class="num">16,29 €</td><td>Sa 14.–Mo 16.11.</td></tr>
+      <tr><td><a href="https://www.ebay.de/itm/226939465876">419 tlg., u. a. 28–44 × 3,5</a></td><td>eBay (2 verfügbar)</td><td class="num">15,90 €</td><td class="num">22,80 €</td><td>Sa 14.–Mo 16.11.</td></tr>
+      <tr><td><a href="https://www.ebay.de/itm/175440682019">419 tlg. 3–50 mm</a></td><td>eBay</td><td class="num">11,85 €</td><td class="num">11,85 €</td><td>Sa 14.–Mo 16.11.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>8.4 Filament: Bambu Lab PETG Basic, 1 kg</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Angebot</th><th>Shop</th><th class="num">Preis pro Stück</th><th class="num">Gesamt inkl. Versand</th><th>Lieferung</th></tr></thead>
+    <tbody>
+      <tr class="pick"><td><a href="https://eu.store.bambulab.com/de/products/petg-basic">Schwarz, mit Spule</a></td><td>Bambu Lab EU-Store</td><td class="num">18,99 €</td><td class="num">23,99 €</td><td>k. A.</td></tr>
+      <tr><td><a href="https://eu.store.bambulab.com/de/products/petg-basic">Schwarz, Refill (braucht Bambu-Spule)</a></td><td>Bambu Lab EU-Store</td><td class="num">15,99 €</td><td class="num">20,99 €</td><td>k. A.</td></tr>
+      <tr><td><a href="https://www.ebay.de/itm/137862699589">„Spule/Refill“ (Variante beim Kauf prüfen)</a></td><td>eBay</td><td class="num">14,99 €</td><td class="num">18,98 €</td><td>Sa 14.–Mo 16.11.</td></tr>
+      <tr><td><a href="https://www.welectron.com/Bambu-Lab-PETG-Basic-Filament-auf-Spule-30105-Black">Schwarz, Spule</a></td><td>welectron</td><td class="num">18,99 €</td><td class="num">23,94 €</td><td>bis Sa 14.11.</td></tr>
+      <tr><td><a href="https://www.3dmensionals.de/bambu-lab-petg-basic-filament-8381">Schwarz, Spule</a></td><td>3Dmensionals</td><td class="num">18,99 €</td><td class="num">23,89 €</td><td>bis Mi 18.11.</td></tr>
+      <tr><td><a href="https://www.3dprima.com/de/filament-resin/filament/petg/bambu-lab-petg-basic/a-34395">Schwarz, Spule</a></td><td>3D Prima</td><td class="num">18,90 €</td><td class="num">26,89 €</td><td>bis Di 17.11.</td></tr>
+      <tr><td><a href="https://www.3djake.de/bambu-lab/petg-basic-black-3">Schwarz, Spule</a></td><td>3DJake</td><td class="num">18,99 €</td><td class="num">24,78 €</td><td>Vorbestellung (bis Jan. 2027)</td></tr>
+      <tr><td><a href="https://www.otto.de/p/bambu-lab-filament-bambu-lab-petg-basic-filament-mit-spule-refill-1kg-diverse-farben-stark-und-rob">Spule oder Refill</a></td><td>otto.de (Marktplatz)</td><td class="num">23,62 €</td><td class="num">23,62 €</td><td>lt. Shop</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B0GS4Z36PH">Weiß, mit Spule</a></td><td>Amazon (Bambu Lab EU)</td><td class="num">17,99 €</td><td class="num">21,98 €</td><td>Di 17.11. (Prime Fr 13.11.)</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B0GS568LQ1">Schwarz, mit Spule</a></td><td>Amazon (MarcMax)</td><td class="num">22,34 €</td><td class="num">26,33 €</td><td>14.–16.11.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>8.5 Hotend P1-Serie, gehärteter Stahl 0,4 mm (nicht nötig, nur zur Info)</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Angebot</th><th>Shop</th><th class="num">Preis pro Stück</th><th class="num">Gesamt inkl. Versand</th><th>Lieferung</th></tr></thead>
+    <tbody>
+      <tr class="pick"><td><a href="https://eu.store.bambulab.com/de/products/bambu-hotend-p1-series">Original, „Hotend“ 0,4 gehärtet</a></td><td>Bambu Lab EU-Store</td><td class="num">15,99 €</td><td class="num">20,99 €</td><td>k. A.</td></tr>
+      <tr><td><a href="https://www.3dmensionals.de/bambu-lab-hotend-mit-duse-fur-p1p-und-x1-carbon-3015">Original, 0,4 gehärtet</a></td><td>3Dmensionals</td><td class="num">15,99 €</td><td class="num">20,89 €</td><td>bis Mi 18.11.</td></tr>
+      <tr><td><a href="https://www.3djake.de/bambu-lab/hotend-p1-serie">Original, 0,4 Hardened Steel</a></td><td>3DJake</td><td class="num">16,49 €</td><td class="num">22,28 €</td><td>bis Mi 18.11.</td></tr>
+      <tr><td><a href="https://www.3d-drucker-experte.de/ersatzteile/bambu-lab-p1-serie/zubehoer/hotend-extruder/3954/bambu-lab-hotend-hardened">Original, Hardened X1/P1 0,4</a></td><td>3D-Drucker-Experte</td><td class="num">16,99 €</td><td class="num">16,99 €</td><td>bis Mo 16.11.</td></tr>
+      <tr><td><a href="https://www.otto.de/p/bambu-lab-3d-drucker-hotend-S0IKO0LZ/">Bambu Lab Hotend</a></td><td>otto.de (Marktplatz)</td><td class="num">23,79 €</td><td class="num">27,64 €</td><td>bis Mo 16.11.</td></tr>
+      <tr><td><a href="https://www.ebay.de/itm/406914983209">Nachbau „Upgraded“, gehärtet</a></td><td>eBay</td><td class="num">14,95 €</td><td class="num">14,95 €</td><td>bis Mi 18.11.</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B0FCLXGV4F">Nachbau, 0,4 gehärtet</a></td><td>Amazon (Keyafei)</td><td class="num">16,99 €</td><td class="num">20,98 €</td><td>Di 17.11.</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B0FPG9F38L">Nachbau, 0,4 gehärtet, 48 W</a></td><td>Amazon (Lankegu)</td><td class="num">19,99 €</td><td class="num">23,98 €</td><td>Di 17.11. (Prime Sa 14.11.)</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B0H719B45H">Nachbau, 0,4 gehärtet</a></td><td>Amazon (WHEYE AUTO)</td><td class="num">28,49 €</td><td class="num">32,48 €</td><td>Di 17.11.</td></tr>
+      <tr><td><a href="https://www.amazon.de/dp/B0H7RX36DQ">Nachbau, 2er-Pack</a></td><td>Amazon (Hyschen EU)</td><td class="num">17,50 €</td><td class="num">38,98 €</td><td>Di 17.11. (Prime Fr 13.11.)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>8.6 Nadelventil 1/2" (zu klein, nur zum Vergleich)</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Angebot</th><th>Shop</th><th class="num">Preis pro Stück</th><th class="num">Gesamt inkl. Versand</th><th>Lieferung</th></tr></thead>
+    <tbody>
+      <tr><td><a href="https://www.amazon.de/dp/B0F1D16MLW">TAISHER Edelstahl 304, 1/2" IG (2 auf Lager)</a></td><td>Amazon (TIANDOG)</td><td class="num">22,99 €</td><td class="num">26,98 €</td><td>Di 17.11.</td></tr>
+      <tr><td><a href="https://www.ebay.de/itm/407354936524">Spacnana Edelstahl 304, 1/2" IG</a></td><td>eBay</td><td class="num">42,71 €</td><td class="num">42,71 €</td><td>Sa 14.–Mo 16.11.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Weitere Treffer waren keine Nadelventile (Kugelhähne, Gartenventile) oder gebraucht. Nach dem Kv-Vergleich in Abschnitt 4 habe ich hier nicht weitergesucht.</p>
+
+  <h3>8.7 Metall-Adapter 1-1/16"-12 UN (−12 JIC) auf G1/2</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Angebot</th><th>Shop</th><th class="num">Preis pro Stück</th><th class="num">Gesamt inkl. Versand</th><th>Lieferung</th></tr></thead>
+    <tbody>
+      <tr><td><a href="https://www.ebay.de/itm/191272587127">BAT Motorsport, G1/2 BSP ↔ −12 AN/JIC, blau</a></td><td>eBay (&gt; 10 verfügbar)</td><td class="num">11,39 €</td><td class="num">15,89 €</td><td>Fr 13.–Sa 14.11.</td></tr>
+      <tr><td><a href="https://www.ebay.de/itm/201802029330">BAT Motorsport, G1/2 BSP ↔ −12 AN/JIC, schwarz</a></td><td>eBay (&gt; 10 verfügbar)</td><td class="num">11,39 €</td><td class="num">15,89 €</td><td>Fr 13.–Sa 14.11.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Beide Seiten Außengewinde. Für die Kauf-Variante reicht ein gedruckter Adapter mit G1/2-Innengewinde, deshalb nicht weiter gesucht.</p>
+
+  <h3>8.8 Kammer-Ablassventil als Ersatzteil</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Angebot</th><th>Shop</th><th class="num">Preis pro Stück</th><th class="num">Gesamt inkl. Versand</th><th>Lieferung</th></tr></thead>
+    <tbody>
+      <tr><td><a href="https://www.alibaba.com/product-detail/DR-HUGO-Manual-Pressure-Relief-Valve_1601988982043.html">DR.HUGO Manual Pressure Relief Valve (ab 1 Stück)</a></td><td>Alibaba (Shenzhen LANNX Health)</td><td class="num">30,95 €</td><td class="num">65,36 €</td><td>11.12.–1.1. (Seefracht)</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Weitere Dr.-Hugo-Listungen auf Alibaba verlangen 100 Stück Mindestmenge, ein Push-Pull-Ventil M36×2 20 Stück. AliExpress und eBay: keine passenden Treffer. hyperbaricpro.com hat den Browser blockiert. Ein Macy-Pan-Ventil wird nirgends einzeln verkauft. Das Dr.-Hugo-Ventil ist vermutlich dein jetziges lautes Ventil, deshalb keine Empfehlung.</p>
+</section>
+
+<section>
+  <h2><span class="num">9</span>Fachbegriffe</h2>
+  <div class="card vocab">
+    <div><b>Tellerventil</b>: poppet valve</div>
+    <div><b>Ventilsitz</b>: valve seat</div>
+    <div><b>Weichdichtung</b>: soft seal</div>
+    <div><b>mehrgängiges Gewinde</b>: multi-start thread</div>
+    <div><b>Steigung / Teilung</b>: lead / pitch</div>
+    <div><b>Selbsthemmung</b>: self-locking</div>
+    <div><b>Schwalbenschwanznut</b>: dovetail groove</div>
+    <div><b>Kükenhahn</b>: plug valve</div>
+    <div><b>Drehschieber</b>: rotary disc valve</div>
+    <div><b>Schalldämpfer</b>: silencer, muffler</div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">10</span>Besuchte Seiten</h2>
+  <div class="card tree">
+    <ul>
+      <li><span class="dom">Konstruktion und Kammerventile</span>
+        <ul>
+          <li>recoveryforathletes.com: Macy-Pan ST701, Tecnotu Sitzkammer</li>
+          <li>image-ppubs.uspto.gov: US 9 664 202, US 9 622 931, US 11 452 654</li>
+          <li>cdn.shopify.com: Anleitungen Summit to Sea Grand Dive (3), Airo L36</li>
+          <li>medicalexpo.com: Olive-Kammer, OxyPrime</li>
+          <li>ledtranceguy.org: Olive-2.0-ATA-Erfahrungsbericht</li>
+          <li>kaldoc.pages.dev: Handbuch Raketentriebwerke, Kap. VII.77 (O-Ring-Ventilsitze)</li>
+          <li>parker.com, globaloring.com: Stirndichtung, Schwalbenschwanznut</li>
+          <li>de.zimm.com: Gewindetechnik (Gangzahl, Selbsthemmung)</li>
+          <li>burkert.com: Kv-Formel für Gase</li>
+          <li>impexron.de (END-Armaturen), landefeld.de, products.swagelok.com: Kv von Nadelventilen</li>
+        </ul>
+      </li>
+      <li><span class="dom">Akustik und Schalldämpfer</span>
+        <ul>
+          <li>homo-deus-lab.pages.dev, ntrs.nasa.gov: Strouhal-Zahl ≈ 0,2</li>
+          <li>processengineering.co.uk, lakesidecontrols.com: Fisher WhisperFlo</li>
+          <li>ftp.festo.com: Schalldämpfer-Katalog</li>
+          <li>assets.sparepartsnow.de: Riegler Sinterbronze-Datenblätter</li>
+        </ul>
+      </li>
+      <li><span class="dom">Material und Drucker</span>
+        <ul>
+          <li>cnckitchen.com: PLA/PETG/ASA-Vergleich</li>
+          <li>blog.prusa3d.com, help.prusa3d.com: wasserdichtes Drucken</li>
+          <li>hackaday.io: versetzte Wände unter 2 bar</li>
+          <li>wiki.bambulab.com: P1S-Extruder-Upgrade</li>
+          <li>divegearexpress.com, diverightinscuba.com, woundreference.com: O-Ringe und Fett bei Sauerstoff</li>
+        </ul>
+      </li>
+      <li><span class="dom">Shops (über Playwright geöffnet)</span>
+        <ul>
+          <li>amazon.de: 8 Suchen, 31 Produktseiten</li>
+          <li>ebay.de: 7 Suchen, 19 Angebotsseiten (Varianten 1/2" ausgewählt)</li>
+          <li>idealo.de: 3 Suchen, 4 Angebotslisten, 11 Shop-Weiterleitungen</li>
+          <li>eu.store.bambulab.com: PETG Basic, Hotend P1 (2 weitere Seiten mit Fehler 429)</li>
+          <li>3djake.de, 3dmensionals.de, welectron.com, 3dprima.com, otto.de, 3d-drucker-experte.de</li>
+          <li>hornbach.de: Suche, 1 Produkt · obi.de: Suche, 1 Produkt (nur Abholung)</li>
+          <li>alibaba.com: Suche, 7 Produktseiten · de.aliexpress.com: Suche (keine Treffer)</li>
+          <li>hyperbaricpro.com: blockiert</li>
+        </ul>
+      </li>
+      <li><span class="dom">Versandregeln</span>
+        <ul>
+          <li>netzwelt.de: Amazon-Mindestbestellwert 49 €</li>
+          <li>eu.store.bambulab.com: Versandbedingungen (5 €, frei ab 55 €)</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</section>
+
+</main>
+</body>
+</html>
