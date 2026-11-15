@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Release Valve – Testreihen</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; background: #f7f6f2; color: #2c2c2a; margin: 0; padding: 32px 16px; line-height: 1.6; }
+  main { max-width: 860px; margin: 0 auto; }
+  h1 { font-weight: 600; font-size: 26px; margin: 0 0 4px; }
+  h2 { font-weight: 600; font-size: 19px; margin: 36px 0 8px; }
+  .sub { color: #6b6a64; margin: 0 0 24px; }
+  .card { background: #fff; border: 1px solid #e4e2da; border-radius: 12px; padding: 18px 20px; margin: 14px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid #eceae3; vertical-align: top; }
+  th { color: #6b6a64; font-weight: 500; }
+  .tag { display: inline-block; font-size: 12px; padding: 2px 9px; border-radius: 99px; }
+  .open { background: #faeeda; color: #854f0b; }
+  .done { background: #e1f5ee; color: #0f6e56; }
+  code { background: #f1efe8; padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+  .note { color: #6b6a64; font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+<h1>Release Valve – Testreihen</h1>
+<p class="sub">Welche Parameterbereiche schon gedruckt/getestet sind. Neue Reihen oben anhängen, Ergebnisse direkt hier eintragen.</p>
+
+<h2>Reihe v4 – Durchmesser-Sweep für niedrigen Drehwiderstand <span class="tag open">Druck/Test ausstehend</span></h2>
+<div class="card">
+<p><b>Frage:</b> Mit welchem Außen-Ø erreicht das gedruckte Ventil den Drehwiderstand der Originalteile (auch unter Kammerdruck, mit Silikonschmiere) – bei möglichst wenig Abrieb an den Gewinden?</p>
+<table>
+<tr><th>Teil</th><th>Außen-Ø</th><th>Kern-Ø</th><th>Hals-Ø</th><th>Drehwiderstand drucklos</th><th>unter Druck</th><th>Fluss / Lautstärke</th><th>Abrieb</th></tr>
+<tr><td>v4a</td><td>26,1</td><td>23,503</td><td>23,203</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+<tr><td>v4b</td><td>25,8</td><td>23,203</td><td>22,903</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+<tr><td>v4c</td><td>25,5</td><td>22,903</td><td>22,603</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+</table>
+<p class="note">Untergrenze: Kern-Ø des Port-Innengewindes nach Norm ≈ 24,7 mm → bei 25,5 nur noch ≈ 0,4 mm Überdeckung. Dünner nur testen, wenn 25,5 noch sicher hält.</p>
+</div>
+<div class="card">
+<b>Fest in der ganzen Reihe</b>
+<table>
+<tr><td>Gewinde</td><td>60°, Steigung 2,117 (12 TPI), Tiefe 0,6134 × P = 1,30, Kamm P/8, 11 Gänge, 45°-Ein-/Anlauf, Rechtsgewinde (geprüft)</td></tr>
+<tr><td>Kopf</td><td>Wellen-Sterngriff r0 24,5 / Amplitude 4 / 6 Wellen, 6 mm, 0,5-mm-Fasen</td></tr>
+<tr><td>Hals</td><td>10 mm (z 6–16), untere ~5,5 mm glatt (O-Ring-Zone)</td></tr>
+<tr><td>Öffnungen</td><td>nur obere Hälfte des Zylinders (z 11,75–22,6), untere Hälfte reines Gewinde.<br>
+Hals: 2 versetzte Reihen à 4 Langlöcher 7 × 1,5 mm = 75 mm².<br>
+Gewinde: 6 Langlöcher 8 × 1,5 mm im Gewindegrund, entlang der Wendel (2,5 pro Gang) = 65 mm². Kämme bleiben ganz.<br>
+Summe 140 mm² ≈ 55 % der Bohrungsfläche (Ø 18) → ca. halber Maximalfluss gegenüber v2/v3.</td></tr>
+<tr><td>Bohrung</td><td>Ø 18, Boden 2 mm</td></tr>
+<tr><td>Druck</td><td>P1S, PLA, Kopf (z 0–6) 0,28 mm, ab z 6 bis oben 0,08 mm (Höhenbereich), Infill 20 %, kein Support</td></tr>
+</table>
+<p class="note">Dateien: <code>quelle/release_valve_a_v4.fs</code> (Onshape, Außen-Ø und Hals-Ø als Feature-Parameter) · <code>quelle/release_valve_a_v4_3mf.py</code> (baut die 3MF aus beliebigen Durchmessern) · <code>druck/release_valve_a_v4_serie.3mf</code></p>
+</div>
+
+<h2>Frühere Reihen <span class="tag done">getestet</span></h2>
+<div class="card">
+<table>
+<tr><th>Reihe</th><th>Variiert</th><th>Ergebnis</th></tr>
+<tr><td>Gewinde-Testraster 3×3 (Nov 2026)</td><td>Außen-Ø 26,5 / 26,6 / 26,7 / 26,9 · Steigung 2,100 / 2,117 / 2,135</td><td>26,5 leicht/etwas locker, 26,6 passt, 26,7 geht schwer ganz durch, 26,9 klemmt. Steigung 2,100 und 2,135 klemmen nach 3–5 Gängen → Steigung 2,117 ist kritisch, Ø weniger.</td></tr>
+<tr><td>v1 / v2 (Nov 2026)</td><td>240 Löcher Ø 1,5 im Gewindegrund über 8 Gänge, Außen-Ø 26,6</td><td>Fluss sehr hoch („1A“), aber schwergängig unter Druck; viele Lochkanten → Schmiere wird abgestreift.</td></tr>
+<tr><td>v3 (Nov 2026)</td><td>Außen-Ø 26,1 / Kern 23,5 / Hals 23,2 (≈ 0,29 mm axiales Flankenspiel)</td><td>nur als Datei, nicht gedruckt – ging in Reihe v4 auf.</td></tr>
+</table>
+</div>
+</main>
+</body>
+</html>
