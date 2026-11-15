@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>IHHT-Gasmischer v4</title>
+<title>IHHT-Gasmischer v5</title>
 <style>
 html,body{margin:0;height:100%;background:#1c1d20;color:#ddd;font:13px system-ui,sans-serif;overflow:hidden}
 #ui{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.55);padding:8px 10px;border-radius:6px;max-height:92vh;overflow:auto}
@@ -10,8 +10,10 @@ button{margin:2px 2px 2px 0}
 <div id="ui"><b>Ansicht</b>
 <button data-v="iso">Schräg</button><button data-v="side">Seite</button><button data-v="front">Kamera</button><button data-v="top">Oben</button><button data-v="bottom">Unten</button><button data-v="gears">Zahnräder</button>
 <b>Verstellung</b>
-<label>Kamera nach hinten <input id="cam" type="range" min="-2" max="52" value="0"> <span id="camv"></span></label>
-<label>Motorbrücke <input id="br" type="range" min="-10" max="2" value="0"> <span id="brv"></span></label>
+<label>Kamera-Abstand <input id="cam" type="range" step="1"> <span id="camv"></span></label>
+<label>Kamera-Höhe <input id="camh" type="range" step="1"> <span id="camhv"></span></label>
+<label>Motorbrücke <input id="br" type="range" min="-5" max="2" value="0"> <span id="brv"></span></label>
+<label><input id="sl" type="checkbox" checked> Sichtlinien Linse → Spindelachse am LZQ</label>
 <b>Teile</b><div id="list"></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -20,28 +22,38 @@ button{margin:2px 2px 2px 0}
 const scene = new THREE.Scene();
 const cam = new THREE.PerspectiveCamera(35, innerWidth / innerHeight, 1, 5000); cam.up.set(0, 0, 1);
 const ren = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: true}); ren.setSize(innerWidth, innerHeight); ren.setPixelRatio(devicePixelRatio); document.body.appendChild(ren.domElement);
-const ctl = new THREE.OrbitControls(cam, ren.domElement); ctl.target.set(0, -30, 60);
+const ctl = new THREE.OrbitControls(cam, ren.domElement); ctl.target.set(0, -40, 60);
 scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 0.9));
 const dl = new THREE.DirectionalLight(0xffffff, 0.7); dl.position.set(-200, -400, 500); scene.add(dl);
-const groups = {cam: new THREE.Group(), br: new THREE.Group(), fix: new THREE.Group()};
-Object.values(groups).forEach(g => scene.add(g));
+const groups = {cam: new THREE.Group(), camh: new THREE.Group(), br: new THREE.Group(), fix: new THREE.Group()};
+scene.add(groups.cam, groups.br, groups.fix); groups.cam.add(groups.camh);
 const list = document.getElementById('list');
 for (const m of MODELS) {
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(m.pos, 3)); g.computeVertexNormals();
   const mesh = new THREE.Mesh(g, new THREE.MeshStandardMaterial({color: new THREE.Color(m.col[0], m.col[1], m.col[2]), roughness: .8, flatShading: true, transparent: m.dummy, opacity: m.dummy ? .8 : 1}));
-  const grp = /^(camcol|camMount|camD|ledD)/.test(m.name) ? 'cam' : /^(bridge|nemaD|gear)/.test(m.name) ? 'br' : 'fix';
+  const grp = /^(camMount|camD)/.test(m.name) ? 'camh' : /^portal/.test(m.name) ? 'cam' : /^(bridge|nemaD|gear)/.test(m.name) ? 'br' : 'fix';
   groups[grp].add(mesh);
   const l = document.createElement('label'); const c = document.createElement('input'); c.type = 'checkbox'; c.checked = true; c.onchange = () => { mesh.visible = c.checked; };
   l.append(c, ' ' + m.label); list.append(l);
 }
-const views = {iso: [-330, -420, 300], side: [-600, -30, 60], front: [0, -620, 95], top: [0, -31, 760], bottom: [0, -29, -700], gears: [150, -130, 190]};
+// Sichtlinien: von der Linse zu dem Punkt, an dem die Spindelachse in den LZQ-Körper eintritt
+const sight = new THREE.Group(); scene.add(sight);
+const lines = VIEW.targets.map(() => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(6), 3));
+  const l = new THREE.Line(g, new THREE.LineBasicMaterial({color: 0xe0352b})); sight.add(l); return l; });
+const views = {iso: [-330, -430, 300], side: [-600, -40, 60], front: [0, -640, 85], top: [0, -41, 760], bottom: [0, -39, -700], gears: [170, -150, 190]};
 function setView(v) { cam.position.set(...views[v]); ctl.update(); }
 document.querySelectorAll('button[data-v]').forEach(b => b.onclick = () => setView(b.dataset.v));
-const sc = document.getElementById('cam'), sb = document.getElementById('br');
-function upd() { groups.cam.position.y = -sc.value; groups.br.position.y = +sb.value;
-  document.getElementById('camv').textContent = 'Abstand Linse–Rotameter ' + (90 + +sc.value) + ' mm';
+const sc = document.getElementById('cam'), sh = document.getElementById('camh'), sb = document.getElementById('br'), sl = document.getElementById('sl');
+sc.min = VIEW.dnear; sc.max = VIEW.dfar; sc.value = VIEW.dnom; sh.min = -VIEW.dz; sh.max = VIEW.dz; sh.value = 0;
+function upd() {
+  const dy = -(sc.value - VIEW.dnom), dz = +sh.value;
+  groups.cam.position.y = dy; groups.camh.position.z = dz; groups.br.position.y = +sb.value; sight.visible = sl.checked;
+  lines.forEach((l, i) => { const p = l.geometry.attributes.position; const t = VIEW.targets[i];
+    p.setXYZ(0, VIEW.lens[0], VIEW.lens[1] + dy, VIEW.lens[2] + dz); p.setXYZ(1, t[0], t[1], t[2]); p.needsUpdate = true; });
+  document.getElementById('camv').textContent = 'Linse–LZQ-Front ' + sc.value + ' mm';
+  document.getElementById('camhv').textContent = (dz > 0 ? '+' : '') + dz + ' mm (Mitte = z ' + VIEW.lens[2] + ')';
   document.getElementById('brv').textContent = (sb.value > 0 ? '+' : '') + sb.value + ' mm'; }
-sc.oninput = sb.oninput = upd; upd();
+sc.oninput = sh.oninput = sb.oninput = sl.onchange = upd; upd();
 const q = new URLSearchParams(location.search); setView(q.get('v') || 'iso'); if (q.get('cam')) { sc.value = q.get('cam'); upd(); }
 addEventListener('resize', () => { cam.aspect = innerWidth / innerHeight; cam.updateProjectionMatrix(); ren.setSize(innerWidth, innerHeight); });
 (function loop() { requestAnimationFrame(loop); ren.render(scene, cam); })();

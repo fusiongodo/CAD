@@ -1,15 +1,17 @@
 # IHHT-Gasmischer – Chassis & Druckteile
 
-Stand: 15.11.2026 (v4). Alle Teile sind Onshape-FeatureScripts (je ein Feature, keine Parameter).
+Stand: 15.11.2026 (v5). Alle Teile sind Onshape-FeatureScripts (je ein Feature, keine Parameter).
 
 ## Inhalt
 
 | Datei | Was |
 |---|---|
-| `quelle/chassis_v4.fs` | **Aktuell.** Entwicklungs-Chassis v4 (2 NEMA, Ventilpaare über Zahnräder gekoppelt), ein Feature „IHHT Entwicklung v4“ mit allen Teilen. Änderungen siehe unten |
-| `quelle/gen4.py`, `build4.py` | Generator für chassis_v4.fs: `python3 gen4.py chassis_v4.fs parts_v4.json`; Prüfung + STL + Viewer-Daten: `python3 build4.py parts_v4.json <ordner>` |
-| `druck/v4_*.stl` | Rahmen, Motorbrücke, Regal, Splitter hi/lo (Lage wie im Modell); Zahnradkupplung und Zahnradnabe in Drucklage (je 2× drucken) |
-| `ansicht/index.html` | 3D-Ansicht v4 im Browser (Teile ein/aus, Kamera und Motorbrücke verschieben) |
+| `quelle/chassis_v5.fs` | **Aktuell.** Entwicklungs-Chassis v5 (2 NEMA, Zahnradpaare, Kameraportal, Rahmen 250 mm), ein Feature „IHHT Entwicklung v5“ mit allen Teilen. Änderungen siehe unten |
+| `quelle/gen5.py`, `build5.py` | Generator für chassis_v5.fs: `python3 gen5.py chassis_v5.fs parts_v5.json`; Prüfung + STL + Viewer-Daten: `python3 build5.py parts_v5.json <ordner>` |
+| `druck/v5_*.stl` | Rahmen, Motorbrücke, Regal (Lage wie im Modell); Kameraportal, Kamerahalter, Zahnradkupplung, Zahnradnabe in Drucklage (Zahnradteile je 2×) |
+| `druck/v4_splitter_*.stl` | Splitter hi/lo mit 22 mm Tüllenabstand – in v5 unverändert, nur 13 mm näher an der Wand montiert |
+| `ansicht/index.html` | 3D-Ansicht v5 im Browser (Teile ein/aus; Kamera-Abstand, Kamera-Höhe, Motorbrücke verschieben; Sichtlinien) |
+| `quelle/chassis_v4.fs`, `gen4.py`, `build4.py` | Entwicklungs-Chassis v4 (erste Fassung mit 2 NEMA und Zahnradpaaren; Kamerasäule v3, Rahmen 253 mm) |
 | `quelle/chassis_v3.fs` | Entwicklungs-Chassis v3 (4 NEMA), ein Feature „IHHT Entwicklung v3“ mit allen Teilen (Rahmen, Regal, Motorbrücke, Kamerasäule, Splitter v3, Kamerahalter v3, Kupplungen, Dummies). Änderungen siehe unten |
 | `quelle/gen3.py` | Generator für chassis_v3.fs: `python3 gen3.py chassis_v3.fs parts_v3.json` (Splitter-v3- und Kamerahalter-v3-Patch sind eingearbeitet) |
 | `druck/v3_*.stl` | Rahmen, Motorbrücke, Kamerasäule, Regal v3 (aus dem Generator, Lage wie im Modell) |
@@ -21,6 +23,21 @@ Stand: 15.11.2026 (v4). Alle Teile sind Onshape-FeatureScripts (je ein Feature, 
 | `quelle/splitter_v3.patch`, `kamerahalter_v3.patch` | Änderungen gegenüber gen2.py für Splitter v3 / Kamerahalter v3 |
 | `quelle/kupplung_v1_3mf.py` | baut die Kupplungs-3MF (Bambu-Vorlage nötig) |
 | `druck/` | 3MF-Dateien (Bambu Studio, Einstellungen eingebettet) |
+
+## Chassis v5 – Änderungen gegenüber v4
+
+- **Hinten kürzer:** Zwischen Tüllenspitze LZQ und Tüllenspitze Splitter/Sammler bleiben 10 mm (v4: 23 mm unten, 25 mm oben). Splitter rücken 13 mm, Sammler Mix 15 mm zur Wand; Regal y 27…79. Die Teile selbst sind unverändert.
+- **Rahmen 250 mm lang** (y −168…82): hinten 13 mm kürzer, vorne 10 mm länger für die Kameraschienen. Breite 134 mm wie v4.
+- **NEMAs 24 mm weiter weg von den LZQ** (Motor-Vorderseite 65 mm vor der LZQ-Front). Zahnradkupplung und Zahnradnabe sind dafür **48 mm lang** (v4: 24): Zahnrad direkt am Motor, dann Nabe Ø 11, vorne Ø 9. Die LZQ-Bohrung reicht 12 mm über die Spindelspitze hinaus (Platz für den Spindelhub). Lagerzapfen der Brücke 16 mm lang.
+- **Kamera:** sitzt auf z 83 = Mitte zwischen unterer (z 35) und oberer (z 131) Tüllenachse; der Halter lässt sich ±12 mm (10 % der LZQ-Höhe) in der Höhe verstellen.
+- **Kameraportal** statt Kamerasäule: flache 3-mm-Platte mit zwei Beinen außen (x ±49…61) und Querträger über den Motoren, Füße 34 mm nach vorn neben den NEMAs. Schienen bei x ±55, Löcher im 8-mm-Raster (y −162…−98), in jeder Stellung mindestens 2 Schrauben je Seite. Abstand Linse–LZQ-Front **84…146 mm** (Nennlage 100).
+- **Kamerahalter v5:** nur noch Platte 50 × 25 mm mit den vier Hälsen für die Pi-Cam (M2 durch + Mutter wie v3), 2 × M3 in den Höhen-Langlöchern. Lampenhalter entfällt.
+- **Sicht bis zur Spindelachse** (Punkt, an dem die Spindel in den LZQ-Körper eintritt, z 35): Bei Kamerahöhe Mitte frei über den ganzen Abstandsbereich (Grenze 148 mm, dann verdeckt die NEMA-Oberkante). In der tiefsten Stellung (−12 mm) frei bis 111 mm, in der höchsten überall.
+- **Bildwinkel**, den die Kamera braucht (alle vier Rohre, ganzer Kugelbereich): bei 84 mm ca. 66° × 65°, bei 100 mm 57° × 56°, bei 146 mm 41° × 40°.
+- **Motorbrücke:** Verstellweg −5…+2 mm (die Kameraschienen enden 6 mm vor der Brückenplatte).
+- **Neu drucken gegenüber v4:** Rahmen, Regal, Motorbrücke, 2 Zahnradkupplungen, 2 Zahnradnaben, Kameraportal, Kamerahalter. **Unverändert:** Splitter hi/lo v4, Sammler Mix. Kamerasäule v3 und Kamerahalter v3 passen nicht mehr.
+- **Drucklage:** Kameraportal mit der Rückseite aufs Bett (Füße und Knotenbleche stehen nach oben), Kamerahalter flach, Zahnradteile stehend mit dem Zahnrad unten – alles ohne Support.
+- Geprüft im Modell (Python/Manifold): keine Überschneidungen in Nennlage sowie mit Kamera ganz vorn/hinten, Höhe ±12 mm und Brücke −5/+2 mm. Das FeatureScript ist noch nicht in Onshape gelaufen (neu: `prismOp`, `prismXOp`).
 
 ## Chassis v4 – Änderungen gegenüber v3
 
@@ -67,7 +84,7 @@ Ein NEMA steuert jetzt zwei LZQ: Zufuhr direkt, Ablass über ein Zahnradpaar geg
 
 ## Offen
 
-- v4: Zahnradpaar und Lagerzapfen-Passung (Ø 6 in Ø 7,0) im Druck prüfen; Spindelhub der LZQ über den Stellweg messen (Zahnräder vertragen ±5 mm Versatz)
+- v5: Zahnradpaar und Lagerzapfen-Passung (Ø 6 in Ø 7,0) im Druck prüfen; Spindelhub der LZQ über den Stellweg messen (Zahnräder vertragen ±5 mm Versatz, LZQ-Bohrung 12 mm Hub)
 
 - Prüfhülsen-Raster (32 Stück) zur Feinabstimmung der Kupplung – Ergebnis steht aus
 - Kammer hinter der Lo-Außentülle (Ø 20,4) braucht noch Support → ggf. Tropfendach
