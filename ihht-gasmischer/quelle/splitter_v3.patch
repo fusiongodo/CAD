@@ -1,0 +1,132 @@
+--- gen2.py	2026-11-12 21:21:32.390575287 +0100
++++ gen_spl3.py	2026-11-13 15:13:03.546247020 +0100
+@@ -164,7 +164,10 @@
+     'hi': (2.6, 3.5, 3.75, 2.0, 4, 0.5, 2.0, 12.0),       # O2, hyperoxisch
+     'mix': (10.2, 11.4, 12.2, 3.0, 4, 0.8, 2.5, 16.2),    # Mischausgang = gleiche CPAP-Tülle
+ }
+-Z_OUT = {'lo': 26.0, 'mix': Z_PT + 7.0}                                     # große Tülle höher, damit sie über dem Flansch liegt
++Z_OUT = {'lo': 30.0, 'mix': Z_PT + 7.0}   # lo +4 mm (Platz für übergestülpten Schlauch)
++TUELLE_AD = 10.75    # Kern-Ø Innentülle; Wellenscheitel = 10,75 + 2*0,25 = 11,25 (Ring-Test: zwischen Nr. 3 und 4)
++KANAL = 8.0          # Innenkanal Splitter (Tropfenprofil)
++def T(p0, p1, d): return ('tear', tuple(p0), tuple(p1), d)                                     # große Tülle höher, damit sie über dem Flansch liegt
+ def K(x, z, y0, y1, r0, r1):
+     return ('cone', (x, y0, z), (x, y1, z), r0, r1)
+ def barb_inner(x, z, ytip, ybase, od):
+@@ -173,8 +176,9 @@
+     ops = [Cy(x, ybase, ytip, z, od)]
+     for k in range(3):
+         a = ytip + 0.3 + k * 2.4
+-        ops.append(K(x, z, a, a + 1.8, r, r + 0.15))          # Rampe (von der Spitze her)
+-        ops.append(Cy(x, a + 1.8, a + 2.1, z, od + 0.3))       # kurzes Plateau, dann Stufe
++        rd = 0.25 if od > 9 else 0.15
++        ops.append(K(x, z, a, a + 1.8, r, r + rd))            # Rampe (von der Spitze her)
++        ops.append(Cy(x, a + 1.8, a + 2.1, z, od + 2 * rd))    # kurzes Plateau, dann Stufe
+     ops.append(K(x, z, ybase + 0.3, ybase - 2.2, r + 2.0, r))  # Fase 45°
+     return ops
+ def barb_smooth(x, z, ytip, ybase, od):
+@@ -213,11 +217,13 @@
+     xa, xb = spl_extent(xin, xout)
+     z_out = Z_OUT.get(kind, zc)
+     prof = TUELLE_PROF.get(kind)
+-    top = max(zc + 7, z_out + (prof[2] if prof else 4) + 2.5)
++    top = max(zc + (8.5 if zc == Z_PB else 7), z_out + (prof[2] if prof else 4) + 2.5)
+     m.add(B(xa, xb, SPL_Y0, SPL_Y1, floor, top))
+     m.add(B(xa - 10, xb + 10, SPL_Y0 - 8, SPL_Y1 + 8, floor, floor + 3))
++    low = (zc == Z_PB)
+     for x in xin:
+-        m.add(*barb_inner(x, zc, SPL_Y0 - 10, SPL_Y0 + 0.5, O2_BARB[0]))
++        if low: m.add(*barb_inner(x, zc, SPL_Y0 - 12, SPL_Y0 + 0.5, TUELLE_AD))
++        else:   m.add(*barb_inner(x, zc, SPL_Y0 - 10, SPL_Y0 + 0.5, O2_BARB[0]))
+     od_out, bore_out = OUTER[kind]
+     if prof:
+         m.add(*tuelle_ops(xout, z_out, SPL_Y1, prof))
+@@ -226,9 +232,11 @@
+         m.add(*barb_smooth(xout, zc, SPL_Y1 + 16, SPL_Y1 - 0.5, od_out))
+     xs_all = xin + [xout]
+     if max(xs_all) - min(xs_all) > 0.1:
+-        m.cut(Cx(min(xs_all), max(xs_all), SPL_CH, zc, 5.0))
++        if low: m.cut(T((min(xs_all) - KANAL / 2 + 0.5, SPL_CH, zc), (max(xs_all) + KANAL / 2 - 0.5, SPL_CH, zc), KANAL))
++        else:   m.cut(Cx(min(xs_all), max(xs_all), SPL_CH, zc, 5.0))
+     for x in xin:
+-        m.cut(Cy(x, SPL_Y0 - 11, SPL_CH + 0.5, zc, O2_BARB[1]))
++        if low: m.cut(T((x, SPL_Y0 - 13, zc), (x, SPL_CH, zc), 6.5))       # voller Tropfen passt in die Tülle
++        else:   m.cut(Cy(x, SPL_Y0 - 11, SPL_CH + 0.5, zc, O2_BARB[1]))
+     if prof and z_out != zc:
+         m.cut(Cy(xout, SPL_CH - 2, SPL_Y1 + prof[7] + 1, z_out, bore_out))   # Kammer schneidet den Kanal
+     else:
+@@ -351,6 +359,10 @@
+ 
+ # ---------------- Emit ----------------
+ def emit_any(o, idexpr):
++    if o[0] == 'tear':
++        _, p0, p1, d = o
++        return 'tearOp(context, %s, vector(%s, %s, %s) * millimeter, vector(%s, %s, %s) * millimeter, %s);' % (
++            idexpr, f(p0[0]), f(p0[1]), f(p0[2]), f(p1[0]), f(p1[1]), f(p1[2]), f(d / 2))
+     if o[0] == 'cone':
+         _, p0, p1, r0, r1 = o
+         return 'coneOp(context, %s, vector(%s, %s, %s) * millimeter, vector(%s, %s, %s) * millimeter, %s, %s);' % (
+@@ -408,6 +420,22 @@
+         L.append('        {')
+         L.append('            failed = append(failed, "%s @ " ~ prog[] ~ " -> " ~ toString(error));' % p.name)
+         L.append('        }')
++    if var == 'ihhtSplitterV3':
++        L += ['        // ===== SCHNITTE START (zum Entfernen alles bis SCHNITTE ENDE löschen) =====',
++              '        try silent',
++              '        {',
++              '            const cutPlanes = [plane(vector(0, 0, 25) * millimeter, vector(0, 0, 1)),        // waagerecht durch die Kanalachse (z 25)',
++              '                               plane(vector(0, 66, 0) * millimeter, vector(0, 1, 0)),        // senkrecht durch die Längsachse des Querkanals (y 66)',
++              '                               plane(vector(-67.95, 0, 0) * millimeter, vector(1, 0, 0)),    // senkrecht durch die Achse der äußeren Innentülle (hi)',
++              '                               plane(vector(67.95, 0, 0) * millimeter, vector(1, 0, 0))];    // senkrecht durch die Achse der äußeren Innentülle (lo)',
++              '            for (var i = 0; i < size(cutPlanes); i += 1)',
++              '            {',
++              '                opPlane(context, id + ("cutPl" ~ i), { "plane" : cutPlanes[i], "width" : 400 * millimeter, "height" : 400 * millimeter });',
++              '                opSplitPart(context, id + ("cutSp" ~ i), { "targets" : qBodyType(qCreatedBy(id, EntityType.BODY), BodyType.SOLID), "tool" : qCreatedBy(id + ("cutPl" ~ i), EntityType.FACE) });',
++              '                opDeleteBodies(context, id + ("cutDel" ~ i), { "entities" : qCreatedBy(id + ("cutPl" ~ i), EntityType.BODY) });',
++              '            }',
++              '        }',
++              '        // ===== SCHNITTE ENDE =====']
+     L.append('        if (size(failed) > 0)')
+     L.append('        {')
+     L.append('            var msg = "OK: " ~ toString(okCount) ~ " von %d Teilen. Fehler: ";' % len(names))
+@@ -464,13 +492,38 @@
+       '    const b = qBodyType(q, BodyType.SOLID);',
+       '    setProperty(context, { "entities" : b, "propertyType" : PropertyType.NAME, "value" : label });',
+       '    setProperty(context, { "entities" : b, "propertyType" : PropertyType.APPEARANCE, "value" : c });', '}', '']
+-emit_feature(L, V2, 'dev_', 'IHHT Entwicklung v2', 'ihhtDevV2')
+-emit_feature(L, ARC, 'arc_', 'IHHT Ablage', 'ihhtAblage')
++L += ['function tearOp(context is Context, id is Id, p0 is Vector, p1 is Vector, r is number)', '{',
++      '    // Waagerechter Kanal mit vollem Tropfenprofil (45°-Flanken bis zur Spitze, kein Dach) -> druckt ohne Support',
++      '    fCylinder(context, id + "cyl", { "bottomCenter" : p0, "topCenter" : p1, "radius" : r * millimeter });',
++      '    const n = normalize(p1 - p0);',
++      '    const len = norm(p1 - p0);',
++      '    const xd = normalize(cross(vector(0, 0, 1), n));',
++      '    const s2 = r / sqrt(2);',
++      '    const w = r * (sqrt(2) - 1);',
++      '    try',
++      '    {',
++      '        const sk = newSketchOnPlane(context, id + "sk", { "sketchPlane" : plane(p0, n, xd) });',
++      '        skLineSegment(sk, "a", { "start" : vector(0, 0) * millimeter, "end" : vector(-s2, s2) * millimeter });',
++      '        skLineSegment(sk, "b", { "start" : vector(-s2, s2) * millimeter, "end" : vector(0, r * sqrt(2)) * millimeter });',
++      '        skLineSegment(sk, "d", { "start" : vector(0, r * sqrt(2)) * millimeter, "end" : vector(s2, s2) * millimeter });',
++      '        skLineSegment(sk, "e", { "start" : vector(s2, s2) * millimeter, "end" : vector(0, 0) * millimeter });',
++      '        skSolve(sk);',
++      '        opExtrude(context, id + "ext", { "entities" : qSketchRegion(id + "sk"), "direction" : n, "endBound" : BoundingType.BLIND, "endDepth" : len });',
++      '        opDeleteBodies(context, id + "del", { "entities" : qCreatedBy(id + "sk", EntityType.BODY) });',
++      '    }',
++      '    catch (e)',
++      '    {',
++      '        // Fallback: nur runder Kanal',
++      '    }',
++      '}', '']
++SPL3 = [p for p in V2 if p.name in ('splHi', 'splLo')]
++for p in SPL3: p.label = p.label + ' v3'
++emit_feature(L, SPL3, 'spl3_', 'IHHT Splitter v3', 'ihhtSplitterV3')
+ open(sys.argv[1], 'w').write('\n'.join(L) + '\n')
+ 
+ def dump(pl, grp):
+     return [dict(name=p.name, label=p.label, col=p.col, printed=p.printed, stages=p.stages, group=grp) for p in pl]
+-json.dump(dump(V2, 'dev') + dump(ARC, 'arc'), open(sys.argv[2], 'w'))
++json.dump(dump(SPL3, 'dev'), open(sys.argv[2], 'w'))
+ 
+ half = XS[-1] + LZQ_W / 2
+ d = -LZQ_DEPTH - Y_LENS

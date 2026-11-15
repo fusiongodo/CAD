@@ -1,0 +1,47 @@
+--- gen2.py	2026-11-12 21:21:32.390575287 +0100
++++ gen_cam3.py	2026-11-13 17:23:17.715086566 +0100
+@@ -291,17 +291,21 @@
+     camcol.cut(*slotZ(sx * 15, CC_Y0 - 1, CC_Y1 + 1, 25, PL_Z1 - 3))
+     camcol.cut(*slotY(sx * CAM_RAIL_X, FOOT_Y0 + 3, FOOT_Y0 + 21, FOOT_Z0 - 1, FOOT_Z0 + 4))
+ 
+-mount = Part('camMount', 'Kamerahalter (Pi-Cam + LED-Röhre)', ANTH)
+-mount.add(B(-20, 20, PL_Y0, PL_Y1, PL_Z0, PL_Z1))
++mount = Part('camMount', 'Kamerahalter v3 (1 mm, M2 durch + Mutter)', ANTH)
++PLF = PL_Y0 + 1.0                                  # Platte 1 mm (Rückseite bleibt an der Säule)
++HALS_D, M2_DURCH = 10.0, 3.0                       # Hals Ø10; Loch nominal 3,0 (gedruckt ≈ 2,2–2,4)
++mount.add(B(-20, 20, PL_Y0, PLF, PL_Z0, PL_Z1))
+ for sx in (-1, 1):
+     for sz in (-1, 1):
+-        mount.add(Cy(sx * CAM_HW / 2, PL_Y1 - 0.5, BOARD_Y - 1.0, Z_CAM + sz * CAM_HL / 2, 5.0))
+-mount.add(Cy(0, PL_Y1 - 0.5, PL_Y1 + 30, Z_LED, 18.5))
++        hx, hz = sx * CAM_HW / 2, Z_CAM + sz * CAM_HL / 2
++        mount.add(Cy(hx, PLF - 0.5, BOARD_Y - 1.0, hz, HALS_D),
++                  K(hx, hz, PLF - 0.01, PLF + 0.8, HALS_D / 2 + 0.8, HALS_D / 2))     # Fase am Fuß
++mount.add(Cy(0, PLF - 0.5, PL_Y1 + 30, Z_LED, 16.5))   # LED-Röhre, Wand 1 mm
+ for sx in (-1, 1):
+     for zz in (PL_Z0 + 6, PL_Z1 - 6):
+-        mount.cut(Cy(sx * 15, PL_Y0 - 1, PL_Y1 + 1, zz, M3_CLR))
++        mount.cut(Cy(sx * 15, PL_Y0 - 1, PLF + 1, zz, M3_CLR))
+     for sz in (-1, 1):
+-        mount.cut(Cy(sx * CAM_HW / 2, PL_Y1 - 2, BOARD_Y, Z_CAM + sz * CAM_HL / 2, M2_PILOT))
++        mount.cut(Cy(sx * CAM_HW / 2, PL_Y0 - 1, BOARD_Y + 1, Z_CAM + sz * CAM_HL / 2, M2_DURCH))   # komplett durch
+ mount.cut(Cy(0, PL_Y0 - 1, PL_Y1 + 31, Z_LED, 14.5))
+ 
+ # Dummies
+@@ -464,13 +468,13 @@
+       '    const b = qBodyType(q, BodyType.SOLID);',
+       '    setProperty(context, { "entities" : b, "propertyType" : PropertyType.NAME, "value" : label });',
+       '    setProperty(context, { "entities" : b, "propertyType" : PropertyType.APPEARANCE, "value" : c });', '}', '']
+-emit_feature(L, V2, 'dev_', 'IHHT Entwicklung v2', 'ihhtDevV2')
+-emit_feature(L, ARC, 'arc_', 'IHHT Ablage', 'ihhtAblage')
++CAM3 = [p for p in V2 if p.name == 'camMount']
++emit_feature(L, CAM3, 'cam3_', 'IHHT Kamerahalter v3', 'ihhtKamerahalterV3')
+ open(sys.argv[1], 'w').write('\n'.join(L) + '\n')
+ 
+ def dump(pl, grp):
+     return [dict(name=p.name, label=p.label, col=p.col, printed=p.printed, stages=p.stages, group=grp) for p in pl]
+-json.dump(dump(V2, 'dev') + dump(ARC, 'arc'), open(sys.argv[2], 'w'))
++json.dump(dump(CAM3, 'dev'), open(sys.argv[2], 'w'))
+ 
+ half = XS[-1] + LZQ_W / 2
+ d = -LZQ_DEPTH - Y_LENS
