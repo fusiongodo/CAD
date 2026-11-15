@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>IHHT-Gasmischer v3</title>
+<title>IHHT-Gasmischer v4</title>
 <style>
 html,body{margin:0;height:100%;background:#1c1d20;color:#ddd;font:13px system-ui,sans-serif;overflow:hidden}
 #ui{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.55);padding:8px 10px;border-radius:6px;max-height:92vh;overflow:auto}
@@ -8,7 +8,7 @@ html,body{margin:0;height:100%;background:#1c1d20;color:#ddd;font:13px system-ui
 button{margin:2px 2px 2px 0}
 </style></head><body>
 <div id="ui"><b>Ansicht</b>
-<button data-v="iso">Schräg</button><button data-v="side">Seite</button><button data-v="front">Kamera</button><button data-v="top">Oben</button><button data-v="bottom">Unten</button>
+<button data-v="iso">Schräg</button><button data-v="side">Seite</button><button data-v="front">Kamera</button><button data-v="top">Oben</button><button data-v="bottom">Unten</button><button data-v="gears">Zahnräder</button>
 <b>Verstellung</b>
 <label>Kamera nach hinten <input id="cam" type="range" min="-2" max="52" value="0"> <span id="camv"></span></label>
 <label>Motorbrücke <input id="br" type="range" min="-10" max="2" value="0"> <span id="brv"></span></label>
@@ -29,12 +29,12 @@ const list = document.getElementById('list');
 for (const m of MODELS) {
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(m.pos, 3)); g.computeVertexNormals();
   const mesh = new THREE.Mesh(g, new THREE.MeshStandardMaterial({color: new THREE.Color(m.col[0], m.col[1], m.col[2]), roughness: .8, flatShading: true, transparent: m.dummy, opacity: m.dummy ? .8 : 1}));
-  const grp = /^(camcol|camMount|camD|ledD)/.test(m.name) ? 'cam' : /^(bridge|nemaD|plug)/.test(m.name) ? 'br' : 'fix';
+  const grp = /^(camcol|camMount|camD|ledD)/.test(m.name) ? 'cam' : /^(bridge|nemaD|gear)/.test(m.name) ? 'br' : 'fix';
   groups[grp].add(mesh);
   const l = document.createElement('label'); const c = document.createElement('input'); c.type = 'checkbox'; c.checked = true; c.onchange = () => { mesh.visible = c.checked; };
   l.append(c, ' ' + m.label); list.append(l);
 }
-const views = {iso: [-330, -420, 300], side: [-600, -30, 60], front: [0, -620, 95], top: [0, -31, 760], bottom: [0, -29, -700]};
+const views = {iso: [-330, -420, 300], side: [-600, -30, 60], front: [0, -620, 95], top: [0, -31, 760], bottom: [0, -29, -700], gears: [150, -130, 190]};
 function setView(v) { cam.position.set(...views[v]); ctl.update(); }
 document.querySelectorAll('button[data-v]').forEach(b => b.onclick = () => setView(b.dataset.v));
 const sc = document.getElementById('cam'), sb = document.getElementById('br');
