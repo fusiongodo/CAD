@@ -8,8 +8,8 @@ on the command line, get one 3MF with all variants side by side.
   python3 release_valve_a_v4_3mf.py out.3mf 26.1:23.2 25.8:22.9      (major:neck)
 
 Neck diameter defaults to minor - 0.3 mm. Print settings written into the 3MF:
-  layer height 0.28 mm for the head (z 0 .. 6), 0.08 mm from z 6 to the top (height range modifier),
-  sparse infill 20 %. Printer / filament profile copied from the CAD repo's YValveSitzring.3mf (P1S, PLA).
+  layer height 0.28 mm from the bed up to the thread start (head + neck), 0.08 mm from the thread start
+  to the top (height range modifier), sparse infill 20 %, support OFF (everything is self-supporting). Printer / filament profile copied from the CAD repo's YValveSitzring.3mf (P1S, PLA).
 z = 0 is the bed (head face). Thread is right-hand (checked).
 """
 import io, json, math, sys, uuid, zipfile
@@ -213,15 +213,16 @@ def object_model_xml(mf):
 
 
 def write_3mf(path, parts, template):
-    """parts: list of (name, manifold, x, y). Positions are plate coordinates (P1S bed 256 x 256)."""
+    """parts: list of (name, manifold, x, y, z_fine) - z_fine: start of the 0.08 mm range. Positions are plate coordinates (P1S bed 256 x 256)."""
     with zipfile.ZipFile(template) as z:
         proj = json.loads(z.read("Metadata/project_settings.config"))
         ctypes = z.read("[Content_Types].xml")
     proj["layer_height"] = f"{LAYER_HEAD}"
     proj["sparse_infill_density"] = INFILL
+    proj["enable_support"] = "0"          # template had tree(auto) support on - never for this part
     zf = zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED)
     res, build, rels, settings, ranges, insts, assem = [], [], [], [], [], [], []
-    for i, (name, mf, x, y) in enumerate(parts, 1):
+    for i, (name, mf, x, y, z_fine) in enumerate(parts, 1):
         xml, nf = object_model_xml(mf)
         fn = f"3D/Objects/object_{i}.model"
         zf.writestr(fn, xml)
@@ -236,6 +237,7 @@ def write_3mf(path, parts, template):
                         '    <metadata key="extruder" value="1"/>\n'
                         f'    <metadata key="layer_height" value="{LAYER_HEAD}"/>\n'
                         f'    <metadata key="sparse_infill_density" value="{INFILL}"/>\n'
+                        '    <metadata key="enable_support" value="0"/>\n'
                         f'    <metadata face_count="{nf}"/>\n'
                         f'    <part id="{i}" subtype="normal_part" uuid="{uuid.uuid4()}">\n'
                         f'      <metadata key="name" value="{name}"/>\n'
@@ -243,7 +245,7 @@ def write_3mf(path, parts, template):
                         f'      <mesh_stat face_count="{nf}" edges_fixed="0" degenerate_facets="0" '
                         'facets_removed="0" facets_reversed="0" backwards_edges="0"/>\n    </part>\n  </object>')
         top = round(mf.bounding_box()[5] + 1, 3)
-        ranges.append(f' <object id="{i}">\n  <range min_z="{HEAD_H}" max_z="{top}">\n'
+        ranges.append(f' <object id="{i}">\n  <range min_z="{z_fine}" max_z="{top}">\n'
                       '   <option opt_key="extruder">1</option>\n'
                       f'   <option opt_key="layer_height">{LAYER_CYL}</option>\n  </range>\n </object>')
         insts.append(f'    <model_instance>\n      <metadata key="object_id" value="{i}"/>\n'
@@ -296,7 +298,7 @@ def main():
         mf, info = valve(major, neck)
         tag = chr(ord("a") + i)
         name = f"RV-A v4{tag} OD{major:g}"
-        parts.append((name, mf, round(x0 + i * spacing, 3), 128))
+        parts.append((name, mf, round(x0 + i * spacing, 3), 128, info["z_neck"]))
         info.update(name=name, volume_cm3=round(mf.volume() / 1000, 2), genus=mf.genus(), status=mf.status().name)
         infos.append(info)
     write_3mf(out, parts, template)
