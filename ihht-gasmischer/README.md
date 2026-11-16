@@ -88,15 +88,15 @@ Ein NEMA steuert jetzt zwei LZQ: Zufuhr direkt, Ablass über ein Zahnradpaar geg
 - v5: Zahnradpaar und Lagerzapfen-Passung (Ø 6 in Ø 7,0) im Druck prüfen; Spindelhub der LZQ über den Stellweg messen (Zahnräder vertragen ±5 mm Versatz, LZQ-Bohrung 12 mm Hub)
 
 - **Passungs-Raster D-Bohrung** (`druck/passungsraster.3mf`, Skript `quelle/passungsraster_3mf.py`) – Ergebnis steht aus. Die bisherigen Passmaße (NEMA Ø 5,32 / 2,22; LZQ Ø 4,50 / 1,06) haben im Druck deutlich zu viel Spiel; mit dem Raster wird die D-Bohrung für Zahnradkupplung und -nabe im Chassis v5 neu bestimmt.
-  - Zwei Platten 40 × 40 × 5 mm, je 4 × 4 D-Löcher, 0,20-mm-Schichten, ohne Stützen, ohne Brim. Unten 0,5-mm-Fase, Abflachung beginnt darüber.
-  - Lesen: abgeschrägte Ecke vorn links = Reihe 1 / Spalte 1. Kerben am linken Rand = Reihe, Kerben am vorderen Rand = Spalte (je 1–4). Abflachungen zeigen nach hinten.
+  - Zwei Platten 64 × 64 × 5 mm, je 5 × 5 D-Löcher, 0,20-mm-Schichten, ohne Stützen, ohne Brim. Unten 0,5-mm-Fase, Abflachung beginnt darüber.
+  - Lesen: abgeschrägte Ecke vorn links = Reihe 1 / Spalte 1. Kerben am linken Rand = Reihe, Kerben am vorderen Rand = Spalte (je 1–5). Abflachungen zeigen nach hinten.
   - NEMA-Platte hat eine abgeschrägte Ecke, LZQ-Platte eine zweite diagonal gegenüber.
 
-  | | Reihe 1 | Reihe 2 | Reihe 3 | Reihe 4 | | Spalte 1 | Spalte 2 | Spalte 3 | Spalte 4 |
-  |---|---|---|---|---|---|---|---|---|---|
-  | | Bohrungs-Ø | | | | | Abstand Fläche–Achse | | | |
-  | **NEMA** (Welle Ø 5) | 5,10 | 5,18 | 5,26 | 5,34 | | 2,10 | 2,15 | 2,20 | 2,25 |
-  | **LZQ** (Spindel Ø 4) | 4,25 | 4,33 | 4,41 | 4,49 | | 0,95 | 1,00 | 1,05 | 1,10 |
+  | | Reihe 1 | Reihe 2 | Reihe 3 | Reihe 4 | Reihe 5 | | Spalte 1 | Spalte 2 | Spalte 3 | Spalte 4 | Spalte 5 |
+  |---|---|---|---|---|---|---|---|---|---|---|---|
+  | | Bohrungs-Ø | | | | | | Abstand Fläche–Achse | | | | |
+  | **NEMA** (Welle Ø 5) | 5,02 | 5,10 | 5,18 | 5,26 | 5,34 | | 2,05 | 2,10 | 2,15 | 2,20 | 2,25 |
+  | **LZQ** (Spindel Ø 4) | 4,17 | 4,25 | 4,33 | 4,41 | 4,49 | | 0,90 | 0,95 | 1,00 | 1,05 | 1,10 |
 
   - Rückmeldung je Platte: „Reihe x, Spalte y“ für das Loch, in dem der Ø leicht läuft und die Fläche spaltfrei anliegt.
 - Kammer hinter der Lo-Außentülle (Ø 20,4) braucht noch Support → ggf. Tropfendach

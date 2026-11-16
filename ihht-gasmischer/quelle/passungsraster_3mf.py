@@ -1,8 +1,8 @@
 """Passungs-Raster für die D-Bohrungen (NEMA-Welle Ø 5, LZQ-Spindel Ø 4) als Bambu-3MF.
 
-Zwei Platten 40 x 40 x 5 mm, je 4 x 4 D-Löcher, Lochachsen senkrecht.
-  Reihe  (1-4, Kerben am linken Rand)   = Bohrungs-Ø
-  Spalte (1-4, Kerben am vorderen Rand) = Abstand Abflachung-Achse
+Zwei Platten 64 x 64 x 5 mm, je 5 x 5 D-Löcher, Lochachsen senkrecht.
+  Reihe  (1-5, Kerben am linken Rand)   = Bohrungs-Ø
+  Spalte (1-5, Kerben am vorderen Rand) = Abstand Abflachung-Achse
   Abgeschrägte Ecke vorn links = Reihe 1 / Spalte 1.
   NEMA-Platte: eine abgeschrägte Ecke. LZQ-Platte: zweite Schräge hinten rechts.
   Abflachungen zeigen alle nach hinten (+y), weg von den Spaltenkerben.
@@ -18,11 +18,11 @@ TEMPLATE = os.environ.get('BAMBU_VORLAGE', os.path.expanduser('~/Desktop/project
 OUT = os.path.join(HERE, '..', 'druck', 'passungsraster.3mf')
 
 PLATES = [  # Name, Bohrungs-Ø je Reihe, Abstand Fläche-Achse je Spalte, zweite Schräge
-    ('Passung NEMA', [5.10, 5.18, 5.26, 5.34], [2.10, 2.15, 2.20, 2.25], False),
-    ('Passung LZQ',  [4.25, 4.33, 4.41, 4.49], [0.95, 1.00, 1.05, 1.10], True),
+    ('Passung NEMA', [5.02, 5.10, 5.18, 5.26, 5.34], [2.05, 2.10, 2.15, 2.20, 2.25], False),
+    ('Passung LZQ',  [4.17, 4.25, 4.33, 4.41, 4.49], [0.90, 0.95, 1.00, 1.05, 1.10], True),
 ]
-W, T = 40.0, 5.0            # Plattenkante, Dicke
-PITCH, FIRST = 8.5, 7.9     # Lochraster, erste Lochmitte ab Kante
+W, T, N = 64.0, 5.0, 5      # Plattenkante, Dicke, Löcher je Reihe/Spalte
+PITCH, FIRST = 12.0, 8.0    # Lochraster, erste Lochmitte ab Kante
 CH = 0.5                    # Fase unten (Elefantenfuß)
 NW, ND, NP = 1.0, 1.5, 2.0  # Kerbe: Breite, Tiefe, Raster innerhalb einer Gruppe
 CORNER = 5.0                # Schenkel der Eckschräge
@@ -53,7 +53,7 @@ def plate(dias, flats, second_corner):
             x, y, r = FIRST + j * PITCH, FIRST + i * PITCH, d / 2
             cuts += [cyl(r, -1, T + 1, x, y), cone(r + CH, r, -0.01, CH, x, y)]
             keys.append(box(x - r - 0.3, x + r + 0.3, y + f, y + r + 0.6, CH, T))   # Keil: Fläche bei y+f, bis hinter die Bohrungswand, ab Fasenoberkante
-    for i in range(4):                                     # Kerben: i+1 Stück je Reihe (links) und Spalte (vorn)
+    for i in range(N):                                     # Kerben: i+1 Stück je Reihe (links) und Spalte (vorn)
         c = FIRST + i * PITCH
         for k in range(i + 1):
             o = c + (k - i / 2) * NP
@@ -73,10 +73,10 @@ for (name, dias, flats, _), m in zip(PLATES, meshes):
     sec = m.section(plane_origin=[0, 0, T / 2], plane_normal=[0, 0, 1])
     loops = [np.asarray(sec.vertices)[e.points][:, :2] for e in sec.entities]
     holes = [p for p in loops if np.ptp(p[:, 0]) < 10]
-    assert len(holes) == 16 and len(loops) == 17, (len(holes), len(loops))
+    assert len(holes) == N * N and len(loops) == N * N + 1, (len(holes), len(loops))
     outer = max(loops, key=lambda p: np.ptp(p[:, 0])); xo, yo = outer[:, 0], outer[:, 1]
     area = abs(np.dot(xo, np.roll(yo, 1)) - np.dot(yo, np.roll(xo, 1))) / 2
-    assert abs(area - (W * W - 20 * NW * ND - (2 if PLATES[[n for n, *_ in PLATES].index(name)][3] else 1) * CORNER ** 2 / 2)) < 1e-3, area   # 20 Kerben + Eckschrägen
+    assert abs(area - (W * W - N * (N + 1) * NW * ND - (2 if PLATES[[n for n, *_ in PLATES].index(name)][3] else 1) * CORNER ** 2 / 2)) < 1e-3, area   # Kerben + Eckschrägen
     low = m.section(plane_origin=[0, 0, CH / 2], plane_normal=[0, 0, 1])                                  # in der Fase: Loch rund, kein Keil
     for e in low.entities:
         q = np.asarray(low.vertices)[e.points][:, :2]
@@ -88,7 +88,7 @@ for (name, dias, flats, _), m in zip(PLATES, meshes):
         assert abs(p[:, 1].max() - cy - flats[j]) < 1e-4, (name, i, j, 'Fläche')        # Abstand Fläche-Achse
         assert abs(cy - p[:, 1].min() - dias[i] / 2) < 0.01, (name, i, j, 'Radius')
     web = PITCH - max(dias) - 2 * CH
-    print('%s: 16 Löcher geprüft, Steg min. %.2f mm, Rand min. %.2f mm' % (name, web, min(FIRST - max(dias) / 2 - CH - ND, W - FIRST - 3 * PITCH - max(dias) / 2 - CH)))
+    print('%s: alle Löcher geprüft, Steg min. %.2f mm, Rand min. %.2f mm' % (name, web, min(FIRST - max(dias) / 2 - CH - ND, W - FIRST - (N - 1) * PITCH - max(dias) / 2 - CH)))
 
 # ---------- 3MF (Aufbau wie kupplung_v1_3mf.py) ----------
 NS = 'xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02" xmlns:BambuStudio="http://schemas.bambulab.com/package/2021" xmlns:p="http://schemas.microsoft.com/3dmanufacturing/production/2015/06" requiredextensions="p"'
