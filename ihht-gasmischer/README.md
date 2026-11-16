@@ -91,6 +91,7 @@ Ein NEMA steuert jetzt zwei LZQ: Zufuhr direkt, Ablass über ein Zahnradpaar geg
 
 - **LZQ-Passung:** `druck/passungsraster_lzq.3mf` drucken (eine Platte 70 × 70 × 6 mm, 7 × 7 Löcher, 0,20-mm-Schichten). Von der abgeschrägten Ecke aus zählen: Einzelkerben = Reihen R1–R7 = Bohrungs-Ø 3,70 / 3,78 / 3,86 / 3,94 / 4,02 / 4,10 / 4,18; Doppelkerben = Spalten S1–S7 = Abstand Abflachung–Achse 0,82 / 0,88 / 0,94 / 1,00 / 1,06 / 1,12 / 1,18. Die erste LZQ-Platte (Ø 4,17–4,49) war für alle LZQ viel zu groß, daher liegt das Raster darunter.
 - **Danach:** NEMA- und LZQ-Maß in Zahnradkupplung und Zahnradnabe (gen5.py) eintragen; Idee für später: dünne Opferrippen in der Bohrung, die beim Aufschieben abgeschert werden (spielfrei, nur einmal montierbar)
+- **Erstes Passungs-Raster (ausgewertet):** `druck/passungsraster.3mf`, Skript `quelle/passungsraster_3mf.py`. NEMA-Ergebnis siehe „Festgelegte Maße“; die LZQ-Platte war für alle LZQ zu groß.
   - Zwei Platten 64 × 64 × 5 mm, je 5 × 5 D-Löcher, 0,20-mm-Schichten, ohne Stützen, ohne Brim. Unten 0,5-mm-Fase, Abflachung beginnt darüber.
   - Lesen: abgeschrägte Ecke vorn links = Reihe 1 / Spalte 1. Kerben am linken Rand = Reihe, Kerben am vorderen Rand = Spalte (je 1–5). Abflachungen zeigen nach hinten.
   - NEMA-Platte hat eine abgeschrägte Ecke, LZQ-Platte eine zweite diagonal gegenüber.
