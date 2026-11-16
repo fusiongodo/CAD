@@ -92,21 +92,21 @@ for (name, dias, flats, _), m in zip(PLATES, meshes):
 
 # ---------- 3MF (Aufbau wie kupplung_v1_3mf.py) ----------
 NS = 'xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02" xmlns:BambuStudio="http://schemas.bambulab.com/package/2021" xmlns:p="http://schemas.microsoft.com/3dmanufacturing/production/2015/06" requiredextensions="p"'
-def mesh_xml(m):
+def mesh_xml(m, oid=1):
     vv = '\n'.join('     <vertex x="%.5f" y="%.5f" z="%.5f"/>' % tuple(p) for p in m.vertices)
     tt = '\n'.join('     <triangle v1="%d" v2="%d" v3="%d"/>' % tuple(f) for f in m.faces)
     return ('<?xml version="1.0" encoding="UTF-8"?>\n<model unit="millimeter" xml:lang="en-US" %s>\n <metadata name="BambuStudio:3mfVersion">1</metadata>\n <resources>\n'
-            '  <object id="1" p:UUID="%s" type="model">\n   <mesh>\n    <vertices>\n%s\n    </vertices>\n    <triangles>\n%s\n    </triangles>\n   </mesh>\n  </object>\n </resources>\n <build/>\n</model>\n') % (NS, uuid.uuid4(), vv, tt)
+            '  <object id="%d" p:UUID="%s" type="model">\n   <mesh>\n    <vertices>\n%s\n    </vertices>\n    <triangles>\n%s\n    </triangles>\n   </mesh>\n  </object>\n </resources>\n <build/>\n</model>\n') % (NS, oid, uuid.uuid4(), vv, tt)
 zin = zipfile.ZipFile(TEMPLATE); files = {}
 GAP = 8.0
 objs = []                                                   # (Objekt-ID, Mesh-Index, x, y, Name, Dreiecke); Platten nebeneinander um die Bettmitte (128, 128)
 for i, m in enumerate(meshes):
-    files['3D/Objects/variant_%d.model' % i] = mesh_xml(m)
-    objs.append((i + 2, i, 128 - W - GAP / 2 + i * (W + GAP), 128 - W / 2, PLATES[i][0], len(m.faces)))
+    files['3D/Objects/variant_%d.model' % i] = mesh_xml(m, 2 * i + 1)   # eigene ID je Datei (sonst lädt Bambu überall das erste Netz)
+    objs.append((2 * i + 2, i, 128 - W - GAP / 2 + i * (W + GAP), 128 - W / 2, PLATES[i][0], len(m.faces)))
 tpl = zin.read('3D/3dmodel.model').decode(); head = tpl[:tpl.index(' <resources>')]
 res = [' <resources>']
 for o, vi, x, y, name, nf in objs:
-    res.append('  <object id="%d" p:UUID="%s" type="model">\n   <components>\n    <component p:path="/3D/Objects/variant_%d.model" objectid="1" p:UUID="%s" transform="1 0 0 0 1 0 0 0 1 0 0 0"/>\n   </components>\n  </object>' % (o, uuid.uuid4(), vi, uuid.uuid4()))
+    res.append('  <object id="%d" p:UUID="%s" type="model">\n   <components>\n    <component p:path="/3D/Objects/variant_%d.model" objectid="%d" p:UUID="%s" transform="1 0 0 0 1 0 0 0 1 0 0 0"/>\n   </components>\n  </object>' % (o, uuid.uuid4(), vi, 2 * vi + 1, uuid.uuid4()))
 res += [' </resources>', ' <build p:UUID="%s">' % uuid.uuid4()]
 for o, vi, x, y, name, nf in objs:
     res.append('  <item objectid="%d" p:UUID="%s" transform="1 0 0 0 1 0 0 0 1 %.4f %.4f 0" printable="1"/>' % (o, uuid.uuid4(), x, y))

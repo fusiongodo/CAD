@@ -22,7 +22,7 @@ Stand: 15.11.2026 (v5). Alle Teile sind Onshape-FeatureScripts (je ein Feature, 
 | `quelle/gen.py`, `gen2.py`, `mkgeom.py` | Generator (Python) für chassis_v2.fs: `python3 gen2.py chassis_v2.fs parts.json` |
 | `quelle/splitter_v3.patch`, `kamerahalter_v3.patch` | Änderungen gegenüber gen2.py für Splitter v3 / Kamerahalter v3 |
 | `quelle/kupplung_v1_3mf.py` | baut die Kupplungs-3MF (Bambu-Vorlage nötig) |
-| `quelle/passungsraster_3mf.py` | baut das Passungs-Raster für die D-Bohrungen als 3MF (NEMA-Platte ausgewertet, LZQ-Platte war zu groß) |
+| `quelle/passungsraster_3mf.py` | baut das Passungs-Raster für die D-Bohrungen als 3MF. Die gedruckte Fassung enthielt wegen doppelter Objekt-IDs zweimal die NEMA-Platte (Skript inzwischen korrigiert) |
 | `passungen.html` | **Messungs-Timeline** aller Passungstests (NEMA/LZQ), neue Einträge oben |
 | `quelle/nachtdruck_3mf.py`, `druck/nachtdruck_2026-11-16.3mf`, `ansicht/sockel_kennung.png` | Nachtdruck 16./17.11.: LZQ-Raster A+B, NEMA-Platte A+B, 27 Steg-Zylinder; Lesehilfe Sockel |
 | `quelle/passungsraster_lzq_3mf.py`, `druck/passungsraster_lzq.3mf`, `ansicht/passungsraster_lzq.png` | LZQ-Raster 7 × 7, 6 mm dick, 0,20-mm-Schichten; Draufsicht mit Beschriftung |
@@ -93,7 +93,7 @@ Ein NEMA steuert jetzt zwei LZQ: Zufuhr direkt, Ablass über ein Zahnradpaar geg
 
 - **Nachtdruck 16./17.11. auswerten** (`druck/nachtdruck_2026-11-16.3mf`): Platten von der abgeschrägten Ecke aus lesen (Einzelkerben = Reihen = Ø, Doppelkerben = Spalten = Abflachung; A = 1 Loch, B = 2 Löcher in der Gegenecke). Zylinder am Sockel: Einzelkerben = Tiefe, Doppelkerben = Abstand, Löcher = Höhe (je Stufe 1–3). Ergebnisse in `passungen.html` eintragen.
 - **Danach:** NEMA- und LZQ-Maß in Zahnradkupplung und Zahnradnabe (gen5.py) eintragen; Idee für später: dünne Opferrippen in der Bohrung, die beim Aufschieben abgeschert werden (spielfrei, nur einmal montierbar)
-- **Erstes Passungs-Raster (ausgewertet):** `druck/passungsraster.3mf`, Skript `quelle/passungsraster_3mf.py`. NEMA-Ergebnis siehe „Festgelegte Maße“; die LZQ-Platte war für alle LZQ zu groß.
+- **Erstes Passungs-Raster (ausgewertet):** `druck/passungsraster.3mf`, Skript `quelle/passungsraster_3mf.py`. NEMA-Ergebnis siehe „Festgelegte Maße“; die „LZQ-Platte“ war wegen doppelter Objekt-IDs in der 3MF eine zweite NEMA-Platte.
   - Zwei Platten 64 × 64 × 5 mm, je 5 × 5 D-Löcher, 0,20-mm-Schichten, ohne Stützen, ohne Brim. Unten 0,5-mm-Fase, Abflachung beginnt darüber.
   - Lesen: abgeschrägte Ecke vorn links = Reihe 1 / Spalte 1. Kerben am linken Rand = Reihe, Kerben am vorderen Rand = Spalte (je 1–5). Abflachungen zeigen nach hinten.
   - NEMA-Platte hat eine abgeschrägte Ecke, LZQ-Platte eine zweite diagonal gegenüber.
