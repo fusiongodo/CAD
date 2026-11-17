@@ -23,6 +23,7 @@ Stand: 15.11.2026 (v5). Alle Teile sind Onshape-FeatureScripts (je ein Feature, 
 | `quelle/splitter_v3.patch`, `kamerahalter_v3.patch` | Änderungen gegenüber gen2.py für Splitter v3 / Kamerahalter v3 |
 | `quelle/kupplung_v1_3mf.py` | baut die Kupplungs-3MF (Bambu-Vorlage nötig) |
 | `quelle/passungsraster_3mf.py` | baut das Passungs-Raster für die D-Bohrungen als 3MF. Die gedruckte Fassung enthielt wegen doppelter Objekt-IDs zweimal die NEMA-Platte (Skript inzwischen korrigiert) |
+| `quelle/druck2_3mf.py`, `druck/druck2_2026-11-17.3mf` | Druck 2: LZQ-Platte A+B (Ø 4,14–4,34 × SW 3,08–3,20), 18 NEMA- und 18 LZQ-Steg-Zylinder |
 | `passungen.html` | **Messungs-Timeline** aller Passungstests (NEMA/LZQ), neue Einträge oben |
 | `quelle/nachtdruck_3mf.py`, `druck/nachtdruck_2026-11-16.3mf`, `ansicht/sockel_kennung.png` | Nachtdruck 16./17.11.: LZQ-Raster A+B, NEMA-Platte A+B, 27 Steg-Zylinder; Lesehilfe Sockel |
 | `quelle/passungsraster_lzq_3mf.py`, `druck/passungsraster_lzq.3mf`, `ansicht/passungsraster_lzq.png` | LZQ-Raster 7 × 7, 6 mm dick, 0,20-mm-Schichten; Draufsicht mit Beschriftung |
@@ -79,7 +80,8 @@ Ein NEMA steuert jetzt zwei LZQ: Zufuhr direkt, Ablass über ein Zahnradpaar geg
 
 ## Festgelegte Maße (aus Testdrucken)
 
-- **NEMA-Seite (0,20-mm-Schichten), aktueller Stand:** bester Sitz **Ø 5,18 / Abflachung 2,05**, nächst lockerer Ø 5,26 / 2,05. Alle Messungen samt früherer Ablesungen: `passungen.html`
+- **NEMA-Seite (0,20-mm-Schichten), aktueller Stand:** glatte Bohrung **Ø 5,26 / Abflachung 1,95**; mit Opferstegen Ø 5,26 / 2,10 + Stege 0,15 tief (Abstand 2, Höhe 0,4–0,6). Alle Messungen: `passungen.html`
+- **Faustregel Bohrungen (P1S, PLA, 0,4-Düse, 0,20 mm, stehend):** Loch im CAD ≈ gemessener Wellen-Ø + 0,18–0,2; Opferstege erst ab 0,15 mm Tiefe druckbar
 - **LZQ-Seite:** noch offen (siehe „Offen“). Alt: Ø 4,50 / 1,06 – zu viel Spiel. Spindel gemessen ca. Ø 4, über die Abflachung ca. 3 mm (4 gleiche LZQ; ein fünftes mit dickerer Spindel wird nicht verwendet)
 - **Kupplung allgemein:** Außen-Ø 9, stehend drucken, NEMA-Seite unten; Passmaße gelten nur für die Schichthöhe, mit der getestet wurde
 - **Innentüllen Splitter → Rotameter:** Wellenscheitel Ø 11,25 (Kern 10,75), Bohrung Ø 6,5 Tropfenprofil
@@ -91,7 +93,7 @@ Ein NEMA steuert jetzt zwei LZQ: Zufuhr direkt, Ablass über ein Zahnradpaar geg
 
 - v5: Zahnradpaar und Lagerzapfen-Passung (Ø 6 in Ø 7,0) im Druck prüfen; Spindelhub der LZQ über den Stellweg messen (Zahnräder vertragen ±5 mm Versatz, LZQ-Bohrung 12 mm Hub)
 
-- **Nachtdruck 16./17.11. auswerten** (`druck/nachtdruck_2026-11-16.3mf`): Platten von der abgeschrägten Ecke aus lesen (Einzelkerben = Reihen = Ø, Doppelkerben = Spalten = Abflachung; A = 1 Loch, B = 2 Löcher in der Gegenecke). Zylinder am Sockel: Einzelkerben = Tiefe, Doppelkerben = Abstand, Löcher = Höhe (je Stufe 1–3). Ergebnisse in `passungen.html` eintragen.
+- **Druck 2 auswerten** (`druck/druck2_2026-11-17.3mf`): LZQ-Platte von der abgeschrägten Ecke lesen (Einzelkerben = Reihen = Ø 4,14–4,34, Doppelkerben = Spalten = SW 3,08–3,20). Zylinder am Sockel: Einzelkerben = Tiefe (1–6 = 0,15–0,40), Löcher = Höhe (1–3 = 0,2/0,4/0,6); Zylinder-Ø 11 = NEMA, Ø 9 = LZQ. Ergebnisse in `passungen.html`.
 - **Danach:** NEMA- und LZQ-Maß in Zahnradkupplung und Zahnradnabe (gen5.py) eintragen; Idee für später: dünne Opferrippen in der Bohrung, die beim Aufschieben abgeschert werden (spielfrei, nur einmal montierbar)
 - **Erstes Passungs-Raster (ausgewertet):** `druck/passungsraster.3mf`, Skript `quelle/passungsraster_3mf.py`. NEMA-Ergebnis siehe „Festgelegte Maße“; die „LZQ-Platte“ war wegen doppelter Objekt-IDs in der 3MF eine zweite NEMA-Platte.
   - Zwei Platten 64 × 64 × 5 mm, je 5 × 5 D-Löcher, 0,20-mm-Schichten, ohne Stützen, ohne Brim. Unten 0,5-mm-Fase, Abflachung beginnt darüber.
