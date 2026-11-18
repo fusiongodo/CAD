@@ -316,8 +316,13 @@ HUB_D, HUB_D1, HUB_Y1 = 11.0, 9.0, Y_STEM_TIP + 8.0        # Nabe Ø 11, vordere
 HUB_YS = Y_STEM_TIP - 4.0                                  # Übergang Ø 11 -> Ø 9
 STEM_BORE_Y0 = Y_STEM_TIP - 12.0                           # LZQ-Bohrung 12 mm tiefer als die Spindelspitze (Spindelhub)
 NEMA_BORE_Y1 = Y_NEMA_TIP + 2.0                            # NEMA-Bohrung 2 mm über die Wellenspitze hinaus
-FIT_NEMA_D, FIT_NEMA_FLAT = 5.32, 2.22                     # aus den Kupplungs-Testdrucken
-FIT_LZQ_D, FIT_LZQ_FLAT = 4.50, 1.06
+# Passmaße aus den Steg-Zylindern vom 17.11.2026 (ihht-pi CAD/passungen, gelten nur für 0,20-mm-Schichten, Bohrung stehend).
+# Quetschrillen (Opferstege) = waagerechte Rippen auf der Abflachung, alle 2 mm; bewusst die lockerere der guten Varianten.
+FIT_NEMA_D, FIT_NEMA_FLAT = 5.26, 2.10
+FIT_LZQ_D, FIT_LZQ_FLAT = 4.34, 1.07                       # Schlüsselweite 3,24
+RIB_NEMA = (0.20, 0.4)                                     # Tiefe, Höhe (Favorit wäre 0,25 / 0,4)
+RIB_LZQ = (0.15, 0.4)                                      # Tiefe, Höhe ("gut"; Favorit wäre 0,20 / 0,2)
+RIB_PITCH, LAYER = 2.0, 0.2
 PIN_BORE = 7.0                                             # Nennmaß; gedruckt ca. 6,4–6,7 -> Laufsitz auf dem Zapfen Ø 6
 def gear_profile(n, m, phase, backlash, steps=6):
     r = n * m / 2; pa = math.radians(20.0); rb = r * math.cos(pa); ra = r + m; rf = r - 1.25 * m
@@ -345,6 +350,16 @@ def stem_cut(x):
             K(x, Z_V, HUB_Y1 - 0.6, HUB_Y1 + 0.01, FIT_LZQ_D / 2, FIT_LZQ_D / 2 + 0.6)]                # Einführfase
 def stem_flat(x):
     return B(x - 2.6, x + 2.6, Y_STEM_TIP - 1.5, Y_STEM_TIP + LZQ_STEM_FLAT_L, Z_V + FIT_LZQ_FLAT, Z_V + 3.4)
+def ribs(x, d, flat, rib, y0, y1):
+    # Quetschrillen auf der Abflachung von y0 bis y1; Druck steht auf GEAR_Y0 -> Rillen auf ganze Schichten legen
+    t, h = rib; out = []
+    y = GEAR_Y0 + math.ceil(round((y0 - GEAR_Y0) / LAYER, 6)) * LAYER
+    while y + h <= y1 + 1e-9:
+        out.append(B(x - d / 2 - 0.3, x + d / 2 + 0.3, round(y, 3), round(y + h, 3), Z_V + flat - t, Z_V + flat + 0.01))
+        y += RIB_PITCH
+    return out
+def stem_ribs(x):                                          # nur dort, wo die Spindel-Abflachung sitzt
+    return ribs(x, FIT_LZQ_D, FIT_LZQ_FLAT, RIB_LZQ, Y_STEM_TIP + 0.5, Y_STEM_TIP + LZQ_STEM_FLAT_L - 0.3)
 for i, x in enumerate(XS_MOTOR):
     g = Part('gearDrive%d' % (i + 1), 'Zahnradkupplung v5 %s (NEMA -> Zufuhr, 48 mm)' % ('hi', 'lo')[i], ORANGE)
     g.add(*hub_body(x, 0.0))
@@ -353,6 +368,7 @@ for i, x in enumerate(XS_MOTOR):
           K(x, Z_V, GEAR_Y0 - 0.01, GEAR_Y0 + 0.6, FIT_NEMA_D / 2 + 0.6, FIT_NEMA_D / 2),
           *stem_cut(x))
     g.add(B(x - 3, x + 3, GEAR_Y0, NEMA_BORE_Y1, Z_V + FIT_NEMA_FLAT, Z_V + 3.6), stem_flat(x))          # D-Abflachungen wie Kupplung v1
+    g.add(*ribs(x, FIT_NEMA_D, FIT_NEMA_FLAT, RIB_NEMA, GEAR_Y0 + 1.0, Y_NEMA_TIP - 0.3), *stem_ribs(x))   # Quetschrillen NEMA + LZQ
 for i, x in enumerate(XS_GEAR):
     g = Part('gearIdle%d' % (i + 1), 'Zahnradnabe v5 %s (Ablass, läuft auf Lagerzapfen, 48 mm)' % ('hi', 'lo')[i], (0.95, 0.7, 0.25, 1.0))
     g.add(*hub_body(x, math.pi / GEAR_N))
@@ -360,7 +376,7 @@ for i, x in enumerate(XS_GEAR):
           K(x, Z_V, PIN_Y1 + 1.49, PIN_Y1 + 1.5 + PIN_BORE / 2 - 0.6, PIN_BORE / 2, 0.6),                      # Kegeldach
           K(x, Z_V, GEAR_Y0 - 0.01, GEAR_Y0 + 0.8, PIN_BORE / 2 + 0.8, PIN_BORE / 2),
           *stem_cut(x))
-    g.add(stem_flat(x))
+    g.add(stem_flat(x), *stem_ribs(x))                                                                   # Lagerzapfen bleibt glatt (Laufsitz)
 
 # ================= KAMERA =================
 # Pi-Cam OV5647: Lochbild 21 x 13 mm, Löcher 2,5 mm -> M2. Portal: flache 3-mm-Platte (2 Beine + Querträger), Füße außen neben den NEMAs.

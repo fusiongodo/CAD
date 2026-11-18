@@ -22,6 +22,7 @@ Stand: 15.11.2026 (v5). Alle Teile sind Onshape-FeatureScripts (je ein Feature, 
 | `quelle/gen.py`, `gen2.py`, `mkgeom.py` | Generator (Python) für chassis_v2.fs: `python3 gen2.py chassis_v2.fs parts.json` |
 | `quelle/splitter_v3.patch`, `kamerahalter_v3.patch` | Änderungen gegenüber gen2.py für Splitter v3 / Kamerahalter v3 |
 | `quelle/kupplung_v1_3mf.py` | baut die Kupplungs-3MF (Bambu-Vorlage nötig) |
+| `quelle/zahnrad_v5_3mf.py` | baut `druck/zahnrad_v5.3mf` (2 Zahnradkupplungen + 2 Zahnradnaben, 0,20 mm) aus den v5-STLs |
 | `quelle/passungsraster_3mf.py` | baut das Passungs-Raster für die D-Bohrungen als 3MF. Die gedruckte Fassung enthielt wegen doppelter Objekt-IDs zweimal die NEMA-Platte (Skript inzwischen korrigiert) |
 | `quelle/druck2_3mf.py`, `druck/druck2_2026-11-17.3mf` | Druck 2: LZQ-Platte A+B (Ø 4,14–4,34 × SW 3,08–3,20), 18 NEMA- und 18 LZQ-Steg-Zylinder |
 | `passungen.html` | **Messungs-Timeline** aller Passungstests (NEMA/LZQ), neue Einträge oben |
@@ -51,8 +52,8 @@ Ein NEMA steuert jetzt zwei LZQ: Zufuhr direkt, Ablass über ein Zahnradpaar geg
 - **Anordnung (x):** Ablass hi −44,65 · Zufuhr hi −22,65 · Zufuhr lo +22,65 · Ablass lo +44,65. Die Zufuhr-LZQ und die beiden NEMAs bleiben auf ±22,65 (45,3 mm Abstand wie v3). Die Ablass-LZQ rücken auf **22 mm Achsabstand** an ihre Zufuhr (2 mm Luft zwischen den Körpern).
 - **Motor auf der Zufuhr, Zahnrad auf dem Ablass:** Das Flankenspiel liegt damit auf dem Ablass, nicht auf dem Ventil, das die Mischung einstellt.
 - **Zahnräder:** Stirnräder 1:1, direkt kämmend (kein Zwischenrad), 16 Zähne, Modul 1,375, Eingriffswinkel 20°, Kopfkreis Ø 24,75, 14 mm breit, Flankenspiel 0,15 mm. Beide Ventile haben Rechtsgewinde → eins schließt, während das andere öffnet.
-  - **Zahnradkupplung** (2×): Zahnrad + Kupplung in einem Teil. NEMA-Bohrung Ø 5,32 / Fläche 2,22 (14 mm tief), LZQ-Bohrung Ø 4,50 / Fläche 1,06 – Passmaße aus Kupplung v1.
-  - **Zahnradnabe** (2×): sitzt auf der Ablass-Spindel (gleiche LZQ-Passung) und läuft hinten auf einem **Lagerzapfen Ø 6 × 12 mm** der Motorbrücke. Zapfenbohrung Nennmaß Ø 7,0 (Schätzwert für Laufsitz, noch nicht gedruckt).
+  - **Zahnradkupplung** (2×): Zahnrad + Kupplung in einem Teil. NEMA-Bohrung Ø 5,26 / Abflachung 2,10 (14 mm tief) mit Quetschrillen 0,20 / 0,4, LZQ-Bohrung Ø 4,34 / SW 3,24 mit Quetschrillen 0,15 / 0,4 (Rillen alle 2 mm, nur wo die Spindel-Abflachung sitzt). Bewusst die lockerere der guten Varianten aus Druck 2. Druckdatei mit 2 Kupplungen + 2 Naben: `druck/zahnrad_v5.3mf` (0,20 mm, Pflicht für diese Passmaße).
+  - **Zahnradnabe** (2×): sitzt auf der Ablass-Spindel (gleiche LZQ-Passung mit Quetschrillen) und läuft hinten auf einem **Lagerzapfen Ø 6 × 12 mm** der Motorbrücke. Zapfenbohrung Nennmaß Ø 7,0 (Schätzwert für Laufsitz, noch nicht gedruckt).
   - Beide stehend drucken, Zahnrad unten (Brückenseite auf dem Bett), ohne Support.
 - **Motorbrücke v4:** 2 Motor-Lochbilder statt 4, dazu 2 Lagerzapfen bei x ±44,65. Fuß, Langloch und Verstellweg wie v3.
 - **Rahmen v4:** 134 mm breit (v3: 188), Länge 253 mm und alle Höhen unverändert. Kamera-Schienen unverändert.
@@ -82,7 +83,8 @@ Ein NEMA steuert jetzt zwei LZQ: Zufuhr direkt, Ablass über ein Zahnradpaar geg
 
 - **NEMA-Seite (0,20-mm-Schichten), aktueller Stand:** glatte Bohrung **Ø 5,26 / Abflachung 1,95**; mit Opferstegen Ø 5,26 / 2,10 + Stege 0,15 tief (Abstand 2, Höhe 0,4–0,6). Alle Messungen: `passungen.html`
 - **Faustregel Bohrungen (P1S, PLA, 0,4-Düse, 0,20 mm, stehend):** Loch im CAD ≈ gemessener Wellen-Ø + 0,18–0,2; Opferstege erst ab 0,15 mm Tiefe druckbar
-- **LZQ-Seite:** noch offen (siehe „Offen“). Alt: Ø 4,50 / 1,06 – zu viel Spiel. Spindel gemessen ca. Ø 4, über die Abflachung ca. 3 mm (4 gleiche LZQ; ein fünftes mit dickerer Spindel wird nicht verwendet)
+- **Zahnradkupplung/-nabe v5 (eingebaut 18.11.):** NEMA Ø 5,26 / 2,10 + Quetschrillen 0,20 / 0,4; LZQ Ø 4,34 / SW 3,24 + Quetschrillen 0,15 / 0,4; Rillen alle 2 mm (Quelle: ihht-pi `CAD/passungen/`)
+- **LZQ-Seite:** glatte D-Bohrung ohne Rillen noch nicht ermittelt. Alt: Ø 4,50 / 1,06 – zu viel Spiel. Spindel gemessen ca. Ø 4, über die Abflachung ca. 3 mm (4 gleiche LZQ; ein fünftes mit dickerer Spindel wird nicht verwendet)
 - **Kupplung allgemein:** Außen-Ø 9, stehend drucken, NEMA-Seite unten; Passmaße gelten nur für die Schichthöhe, mit der getestet wurde
 - **Innentüllen Splitter → Rotameter:** Wellenscheitel Ø 11,25 (Kern 10,75), Bohrung Ø 6,5 Tropfenprofil
 - **Splitter-Kanal:** 8 mm, volles Tropfenprofil (druckt ohne Support); Lo-Außentülle auf z 30 (+4 mm)
@@ -94,7 +96,8 @@ Ein NEMA steuert jetzt zwei LZQ: Zufuhr direkt, Ablass über ein Zahnradpaar geg
 - v5: Zahnradpaar und Lagerzapfen-Passung (Ø 6 in Ø 7,0) im Druck prüfen; Spindelhub der LZQ über den Stellweg messen (Zahnräder vertragen ±5 mm Versatz, LZQ-Bohrung 12 mm Hub)
 
 - **Druck 2 auswerten** (`druck/druck2_2026-11-17.3mf`): LZQ-Platte von der abgeschrägten Ecke lesen (Einzelkerben = Reihen = Ø 4,14–4,34, Doppelkerben = Spalten = SW 3,08–3,20). Zylinder am Sockel: Einzelkerben = Tiefe (1–6 = 0,15–0,40), Löcher = Höhe (1–3 = 0,2/0,4/0,6); Zylinder-Ø 11 = NEMA, Ø 9 = LZQ. Ergebnisse in `passungen.html`.
-- **Danach:** NEMA- und LZQ-Maß in Zahnradkupplung und Zahnradnabe (gen5.py) eintragen; Idee für später: dünne Opferrippen in der Bohrung, die beim Aufschieben abgeschert werden (spielfrei, nur einmal montierbar)
+- **Zahnradkupplung/-nabe mit Quetschrillen drucken und prüfen** (`druck/zahnrad_v5.3mf`): sitzen sie nach dem ersten Aufschieben spielfrei? Zu locker → Favoriten nehmen (NEMA 0,25 / 0,4, LZQ 0,20 / 0,2), Werte oben in gen5.py (`RIB_NEMA`, `RIB_LZQ`).
+- Spindelhub prüfen: LZQ-Abflachung und Rillen sitzen nur auf 6,5 mm an der Nennlage der Spindelspitze; wandert die Spindel tiefer in die Bohrung, verliert sie den Formschluss bzw. der runde Spindelteil läuft gegen die Abflachung.
 - **Erstes Passungs-Raster (ausgewertet):** `druck/passungsraster.3mf`, Skript `quelle/passungsraster_3mf.py`. NEMA-Ergebnis siehe „Festgelegte Maße“; die „LZQ-Platte“ war wegen doppelter Objekt-IDs in der 3MF eine zweite NEMA-Platte.
   - Zwei Platten 64 × 64 × 5 mm, je 5 × 5 D-Löcher, 0,20-mm-Schichten, ohne Stützen, ohne Brim. Unten 0,5-mm-Fase, Abflachung beginnt darüber.
   - Lesen: abgeschrägte Ecke vorn links = Reihe 1 / Spalte 1. Kerben am linken Rand = Reihe, Kerben am vorderen Rand = Spalte (je 1–5). Abflachungen zeigen nach hinten.
