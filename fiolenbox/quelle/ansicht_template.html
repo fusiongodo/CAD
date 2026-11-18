@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fiolenbox v1</title>
+<title>Fiolenbox __VER__</title>
 <style>
 html,body{margin:0;height:100%;overflow:hidden;background:linear-gradient(#f7f8fb,#e6e9f0);font:14px system-ui,sans-serif;color:#2b2f38}
 #ui{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.9);padding:10px 12px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
@@ -9,7 +9,7 @@ button{font:inherit;border:1px solid #c9cfdb;background:#fff;border-radius:7px;p
 button.on{background:#2f6fe4;color:#fff;border-color:#2f6fe4}
 #hint{position:absolute;bottom:10px;left:10px;font-size:12px;color:#778}
 </style></head><body>
-<div id="ui"><h1>Fiolenbox v1 · 4 × 3</h1>
+<div id="ui"><h1>Fiolenbox __VER__ · 4 × 3</h1>
 <div class="m">__MASSE__</div>
 <button id="bLid">Deckel ab</button><button id="bCut">Schnitt</button><button id="bVial" class="on">Fiolen</button><button id="bPrint">Drucklage</button>
 </div>
@@ -29,13 +29,16 @@ const ctl = new OrbitControls(cam, ren.domElement); ctl.target.set(0,0,22); ctl.
 scene.add(new THREE.HemisphereLight(0xffffff, 0x8890a0, 1.6));
 const dl = new THREE.DirectionalLight(0xffffff, 1.6); dl.position.set(80,-120,200); scene.add(dl);
 const dl2 = new THREE.DirectionalLight(0xffffff, .6); dl2.position.set(-100,80,50); scene.add(dl2);
-const clip = new THREE.Plane(new THREE.Vector3(-1,0,0), 0);   // Schnitt bei x = 0 (Mitte der Rastnasen)
+const clip = new THREE.Plane(new THREE.Vector3(-1,0,0), INFO.cut_x || 0);   // Schnitt quer durch Rastnasen
 const clips = [];
-const mat = c => new THREE.MeshStandardMaterial({color:c, roughness:.55, metalness:0, side:THREE.DoubleSide, clippingPlanes:clips});
+const mat = c => new THREE.MeshStandardMaterial({color:c, roughness:.55, metalness:0, side:THREE.FrontSide, clippingPlanes:clips});
 const L = new STLLoader();
 const base = new THREE.Mesh(L.parse(b64(STL_BASE)), mat(0x4f8fd6));
 const lid = new THREE.Mesh(L.parse(b64(STL_LID)), mat(0xf0a24a));
 const root = new THREE.Group(); scene.add(root); root.add(base); root.add(lid);
+// Schnittflächen-Imitat: Rückseiten dunkel einfärben
+const cap = c => new THREE.MeshBasicMaterial({color:c, side:THREE.BackSide, clippingPlanes:clips});
+base.add(new THREE.Mesh(base.geometry, cap(0x1f3f66))); lid.add(new THREE.Mesh(lid.geometry, cap(0x8a5418)));
 const vials = new THREE.Group(); root.add(vials);
 const vg = new THREE.CylinderGeometry(INFO.vial_d/2, INFO.vial_d/2, INFO.vial_h, 40); vg.rotateX(Math.PI/2);
 const vm = new THREE.MeshStandardMaterial({color:0xcfe8f7, transparent:true, opacity:.55, roughness:.1, clippingPlanes:clips});
@@ -53,7 +56,7 @@ const bLid = document.getElementById('bLid');
 bLid.onclick = () => { target = lift > 5 ? 0 : 30; };
 const bCut = document.getElementById('bCut');
 bCut.onclick = () => { if (clips.length) clips.pop(); else clips.push(clip); bCut.classList.toggle('on', !!clips.length);
-  if (clips.length) { cam.position.set(125, 0, 28); ctl.target.set(0,0,21); } };
+  if (clips.length) { cam.position.set(140, 0, 30); ctl.target.set(INFO.cut_x||0,0,21); } };
 const bVial = document.getElementById('bVial');
 bVial.onclick = () => { vials.visible = !vials.visible; bVial.classList.toggle('on', vials.visible); };
 const bPrint = document.getElementById('bPrint');
