@@ -4,13 +4,20 @@ Box für 12 Fiolen (Ø 16 × 38 mm), 4 × 3, mit Stülpdeckel zum Aufrasten.
 
 | Datei | Inhalt |
 |---|---|
-| `quelle/fiolenbox_v2.py` | **Aktuell.** CadQuery-Modell v2, alle Maße oben als Parameter |
+| `quelle/fiolenbox_v3.py` | **Aktuell (Deckel).** Deckel v3 = Maße von Deckelring 6; Unterteil bleibt v2 |
+| `quelle/fiolenbox_v2.py` | **Aktuell (Unterteil).** CadQuery-Modell v2, alle Maße oben als Parameter |
 | `quelle/fiolenbox_v1.py` | v1 (Röhrchen, Einsteck-Deckel) |
 | `quelle/ansicht_bauen.py`, `ansicht_template.html` | baut `ansicht/index.html` (3D-Ansicht, offline) |
 | `druck/fiolenbox_v2.3mf`, `quelle/fiolenbox_v2_3mf.py` | Druckdatei P1S: Unterteil stehend + Deckel kopfüber, 0,2 mm, 3 Wände, 15 % Infill, kein Support |
 | `quelle/deckelringe_3mf.py`, `druck/deckelringe_2026-11-18.3mf` | Testdruck: 7 Deckelringe (Spiel × Versatz der Rastnase) für das gedruckte Unterteil v2 |
 | `passungen.html` | **Messungs-Timeline** Deckelpassung, neue Einträge oben |
 | `druck/fiolenbox_v*_*.stl/.step` | Unterteil und Deckel (Deckel in geschlossener Lage, zum Drucken umdrehen) |
+
+## v3 (18.11.2026) – nur Deckel
+- Testdruck Deckelringe: Ring 6 passt am besten (siehe `passungen.html`)
+- Spiel 0,06 je Seite (v2: 0,25), Rastnase 0,41 hoch (v2: 0,6) und 0,40 über Rillenmitte → zieht den Deckel auf den Absatz, kein Wackeln
+- Außen 82,0 × 63,0 mm → 0,19 mm je Seite schmaler als das Unterteil (Wand 1,6 wie beim Testring beibehalten)
+- Unterteil unverändert v2
 
 ## v2 (Skizze, 18.11.2026)
 - Feedback zu v1: Löcher in einer durchgehenden Ebene bis zur Oberkante, mit der Wand verbunden; Deckel klippt außen über das Unterteil
