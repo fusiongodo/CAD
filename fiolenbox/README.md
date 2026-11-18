@@ -7,7 +7,8 @@ Box für 12 Fiolen (Ø 16 × 38 mm), 4 × 3, mit Stülpdeckel zum Aufrasten.
 | `quelle/fiolenbox_v2.py` | **Aktuell.** CadQuery-Modell v2, alle Maße oben als Parameter |
 | `quelle/fiolenbox_v1.py` | v1 (Röhrchen, Einsteck-Deckel) |
 | `quelle/ansicht_bauen.py`, `ansicht_template.html` | baut `ansicht/index.html` (3D-Ansicht, offline) |
-| `druck/fiolenbox_v1_*.stl/.step` | Unterteil und Deckel (Deckel in geschlossener Lage, zum Drucken umdrehen) |
+| `druck/fiolenbox_v2.3mf`, `quelle/fiolenbox_v2_3mf.py` | Druckdatei P1S: Unterteil stehend + Deckel kopfüber, 0,2 mm, 3 Wände, 15 % Infill, kein Support |
+| `druck/fiolenbox_v*_*.stl/.step` | Unterteil und Deckel (Deckel in geschlossener Lage, zum Drucken umdrehen) |
 
 ## v2 (Skizze, 18.11.2026)
 - Feedback zu v1: Löcher in einer durchgehenden Ebene bis zur Oberkante, mit der Wand verbunden; Deckel klippt außen über das Unterteil
