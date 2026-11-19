@@ -318,10 +318,12 @@ STEM_BORE_Y0 = Y_STEM_TIP - 12.0                           # LZQ-Bohrung 12 mm t
 NEMA_BORE_Y1 = Y_NEMA_TIP + 2.0                            # NEMA-Bohrung 2 mm über die Wellenspitze hinaus
 # Passmaße aus den Steg-Zylindern vom 17.11.2026 (ihht-pi CAD/passungen, gelten nur für 0,20-mm-Schichten, Bohrung stehend).
 # Quetschrillen (Opferstege) = waagerechte Rippen auf der Abflachung, alle 2 mm; bewusst die lockerere der guten Varianten.
-FIT_NEMA_D, FIT_NEMA_FLAT = 5.26, 2.10
-FIT_LZQ_D, FIT_LZQ_FLAT = 4.34, 1.07                       # Schlüsselweite 3,24
-RIB_NEMA = (0.20, 0.4)                                     # Tiefe, Höhe (Favorit wäre 0,25 / 0,4)
-RIB_LZQ = (0.15, 0.4)                                      # Tiefe, Höhe ("gut"; Favorit wäre 0,20 / 0,2)
+WIDEN_D, WIDEN_FLAT = 0.15, 0.08                         # 19.11.: Druck vom 18.11. ging nicht auf die LZQ -> beide Seiten gleich weiter
+FIT_NEMA_D, FIT_NEMA_FLAT = 5.26 + WIDEN_D, 2.10 + WIDEN_FLAT
+FIT_LZQ_D, FIT_LZQ_FLAT = 4.34 + WIDEN_D, 1.07 + WIDEN_FLAT   # Schlüsselweite 3,24 + 0,155
+KEY_LZQ_L = 4.5                                            # LZQ-Abflachung nur bis 4,5 mm hinter der Spindelspitze (vorher 6,5): falls die echte Spindel-Abflachung kürzer ist, klemmt der runde Teil sonst
+RIB_NEMA = (0.15, 0.4)                                     # Tiefe, Höhe (18.11.: 0,20 / 0,4)
+RIB_LZQ = (0.15, 0.4)                                      # Tiefe, Höhe (unverändert, flacher druckt die Düse nicht)
 RIB_PITCH, LAYER = 2.0, 0.2
 PIN_BORE = 7.0                                             # Nennmaß; gedruckt ca. 6,4–6,7 -> Laufsitz auf dem Zapfen Ø 6
 def gear_profile(n, m, phase, backlash, steps=6):
@@ -349,7 +351,7 @@ def stem_cut(x):
     return [Cy(x, STEM_BORE_Y0, HUB_Y1 + 1, Z_V, FIT_LZQ_D),
             K(x, Z_V, HUB_Y1 - 0.6, HUB_Y1 + 0.01, FIT_LZQ_D / 2, FIT_LZQ_D / 2 + 0.6)]                # Einführfase
 def stem_flat(x):
-    return B(x - 2.6, x + 2.6, Y_STEM_TIP - 1.5, Y_STEM_TIP + LZQ_STEM_FLAT_L, Z_V + FIT_LZQ_FLAT, Z_V + 3.4)
+    return B(x - 2.6, x + 2.6, Y_STEM_TIP - 1.5, Y_STEM_TIP + KEY_LZQ_L, Z_V + FIT_LZQ_FLAT, Z_V + 3.4)
 def ribs(x, d, flat, rib, y0, y1):
     # Quetschrillen auf der Abflachung von y0 bis y1; Druck steht auf GEAR_Y0 -> Rillen auf ganze Schichten legen
     t, h = rib; out = []
@@ -359,7 +361,7 @@ def ribs(x, d, flat, rib, y0, y1):
         y += RIB_PITCH
     return out
 def stem_ribs(x):                                          # nur dort, wo die Spindel-Abflachung sitzt
-    return ribs(x, FIT_LZQ_D, FIT_LZQ_FLAT, RIB_LZQ, Y_STEM_TIP + 0.5, Y_STEM_TIP + LZQ_STEM_FLAT_L - 0.3)
+    return ribs(x, FIT_LZQ_D, FIT_LZQ_FLAT, RIB_LZQ, Y_STEM_TIP + 0.5, Y_STEM_TIP + KEY_LZQ_L - 0.3)
 for i, x in enumerate(XS_MOTOR):
     g = Part('gearDrive%d' % (i + 1), 'Zahnradkupplung v5 %s (NEMA -> Zufuhr, 48 mm)' % ('hi', 'lo')[i], ORANGE)
     g.add(*hub_body(x, 0.0))
