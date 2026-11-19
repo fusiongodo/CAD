@@ -324,7 +324,7 @@ FIT_LZQ_D, FIT_LZQ_FLAT = 4.34 + WIDEN_D, 1.07 + WIDEN_FLAT   # Schlüsselweite 
 KEY_LZQ_L = 4.5                                            # LZQ-Abflachung nur bis 4,5 mm hinter der Spindelspitze (vorher 6,5): falls die echte Spindel-Abflachung kürzer ist, klemmt der runde Teil sonst
 RIB_NEMA = (0.15, 0.4)                                     # Tiefe, Höhe (18.11.: 0,20 / 0,4)
 RIB_LZQ = (0.15, 0.4)                                      # Tiefe, Höhe (unverändert, flacher druckt die Düse nicht)
-RIB_PITCH, LAYER = 2.0, 0.2
+LAYER = 0.2
 PIN_BORE = 7.0                                             # Nennmaß; gedruckt ca. 6,4–6,7 -> Laufsitz auf dem Zapfen Ø 6
 def gear_profile(n, m, phase, backlash, steps=6):
     r = n * m / 2; pa = math.radians(20.0); rb = r * math.cos(pa); ra = r + m; rf = r - 1.25 * m
@@ -353,12 +353,12 @@ def stem_cut(x):
 def stem_flat(x):
     return B(x - 2.6, x + 2.6, Y_STEM_TIP - 1.5, Y_STEM_TIP + KEY_LZQ_L, Z_V + FIT_LZQ_FLAT, Z_V + 3.4)
 def ribs(x, d, flat, rib, y0, y1):
-    # Quetschrillen auf der Abflachung von y0 bis y1; Druck steht auf GEAR_Y0 -> Rillen auf ganze Schichten legen
+    # 19.11.: nur 2 Quetschrillen je Bohrung (vorher alle 2 mm) - eine oben, eine in der Mitte des Steckbereichs y0..y1.
+    # Druck steht auf GEAR_Y0 -> Rillen auf ganze Schichten legen
     t, h = rib; out = []
-    y = GEAR_Y0 + math.ceil(round((y0 - GEAR_Y0) / LAYER, 6)) * LAYER
-    while y + h <= y1 + 1e-9:
+    snap = lambda y: GEAR_Y0 + round((y - GEAR_Y0) / LAYER) * LAYER
+    for y in (snap((y0 + y1) / 2 - h / 2), snap(y1 - h)):
         out.append(B(x - d / 2 - 0.3, x + d / 2 + 0.3, round(y, 3), round(y + h, 3), Z_V + flat - t, Z_V + flat + 0.01))
-        y += RIB_PITCH
     return out
 def stem_ribs(x):                                          # nur dort, wo die Spindel-Abflachung sitzt
     return ribs(x, FIT_LZQ_D, FIT_LZQ_FLAT, RIB_LZQ, Y_STEM_TIP + 0.5, Y_STEM_TIP + KEY_LZQ_L - 0.3)
