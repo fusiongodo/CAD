@@ -22,6 +22,8 @@ MODULE = [
     dict(datei='quetschventil_v3.fs', titel='Quetschventil v3 (M8-Kern, 608 + 6905)', var='quetschventilV3', prefix='qv3_',
          teile=['qv_welle', 'qv_klemmhuelse', 'qv_hohlrad', 'qv_ritzel', 'qv_getriebeplatte', 'qv_rueckwand', 'qv_steg',
                 'qv_amboss', 'qv_distanzscheibe', 'qv_dummies']),
+    dict(datei='development_wand.fs', titel='Development-Wand (Lochraster, 2 QV)', var='developmentWand', prefix='dw_',
+         teile=['wand_platte', 'wand_grundplatte', 'wand_knotenblech', 'wand_traeger', 'wand_dummies']),
 ]
 OHNE_FS = ['sammler_mix', 'zahnrad', 'dummies']        # nur fuer Ansicht/Pruefung, kein eigenes Feature Studio
 
