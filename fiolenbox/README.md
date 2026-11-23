@@ -1,17 +1,27 @@
 # Fiolenbox
 
-Box für 12 Fiolen (Ø 16 × 38 mm), 4 × 3, mit Stülpdeckel zum Aufrasten.
+Box für 12 Fiolen (Ø 16 × 38 mm), 4 × 3, mit Stülpdeckel zum Aufrasten. Stichworte: Phiolenhalter, Fiolenhalter, Vial-Box.
+
+**Fiolenbox 11** (kleine Fiolen Ø 11,6 × 32 mm): gleiche Bauweise, Raster 4 × 3 oder 5 × 4 → `quelle/fiolenbox_11_v1.py`, Druck `druck/fiolenbox_11_4x3_v1.3mf` / `fiolenbox_11_5x4_v1.3mf`.
 
 | Datei | Inhalt |
 |---|---|
 | `quelle/fiolenbox_v3.py` | **Aktuell (Deckel).** Deckel v3 = Maße von Deckelring 6; Unterteil bleibt v2 |
 | `quelle/fiolenbox_v2.py` | **Aktuell (Unterteil).** CadQuery-Modell v2, alle Maße oben als Parameter |
 | `quelle/fiolenbox_v1.py` | v1 (Röhrchen, Einsteck-Deckel) |
+| `quelle/fiolenbox_11_v1.py` | **Fiolenbox 11** für Ø 11,6 × 32: `~/.cache/cq312/bin/python fiolenbox_11_v1.py 4x3` (oder `5x4`) → STL/STEP + `info_11_<raster>.json` |
 | `quelle/ansicht_bauen.py`, `ansicht_template.html` | baut `ansicht/index.html` (3D-Ansicht, offline) |
-| `druck/fiolenbox_v2.3mf`, `quelle/fiolenbox_v2_3mf.py` | Druckdatei P1S: Unterteil stehend + Deckel kopfüber, 0,2 mm, 3 Wände, 15 % Infill, kein Support |
+| `druck/fiolenbox_v2.3mf`, `quelle/fiolenbox_v2_3mf.py` | Druckdatei P1S: Unterteil stehend + Deckel kopfüber, 0,2 mm, 3 Wände, 15 % Infill, kein Support. `fiolenbox_v2_3mf.py <NAME> masse` → 4 Wände, 6/5 Schichten, Cubic 35 % (Masse + Isolation) |
 | `quelle/deckelringe_3mf.py`, `druck/deckelringe_2026-11-18.3mf` | Testdruck: 7 Deckelringe (Spiel × Versatz der Rastnase) für das gedruckte Unterteil v2 |
 | `passungen.html` | **Messungs-Timeline** Deckelpassung, neue Einträge oben |
 | `druck/fiolenbox_v*_*.stl/.step` | Unterteil und Deckel (Deckel in geschlossener Lage, zum Drucken umdrehen) |
+
+## Fiolenbox 11 v1 (23.11.2026) – Fiolen Ø 11,6 × 32
+- Unterteil wie v2 (Spiel 0,5, Steg 2 mm → Loch Ø 12,6, Raster 14,6), H_BASE 20 → Fiolen ragen 13,5 mm heraus; Hals 7 mm, Rille wie v2
+- Deckel wie v3 / Ring 6 (Spiel 0,06, Nase 0,41, 0,40 über Rillenmitte, Nase 30 mm lang)
+- 4 × 3: außen 64,8 × 50,2 × 36,1 mm · 5 × 4: 79,4 × 64,8 × 36,1 mm
+- Druck: PLA, 4 Wände, 6/5 Deck-/Bodenschichten, Cubic 35 % (viel Masse, geschlossene Luftkammern isolieren)
+- Ansicht: `ansicht/fiolenbox_11_4x3.html`, `fiolenbox_11_5x4.html` (`ansicht_bauen.py <three.js> info_11_<raster>.json <ausgabe>.html`)
 
 ## v3 (18.11.2026) – nur Deckel
 - Testdruck Deckelringe: Ring 6 passt am besten (siehe `passungen.html`)

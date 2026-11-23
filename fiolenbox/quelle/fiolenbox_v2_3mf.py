@@ -1,13 +1,18 @@
 """Druck Fiolenbox v2: Unterteil (stehend) + Deckel (kopfüber), Bambu-3MF für P1S, 0,20-mm-Schichten, kein Support.
 
-Aufruf:  python3 fiolenbox_v2_3mf.py   (STL aus ../druck, Vorlage ../../ihht-gasmischer/druck/passungsraster.3mf)
+Aufruf:  python3 fiolenbox_v2_3mf.py [NAME] [masse]   (STL aus ../druck, Vorlage ../../ihht-gasmischer/druck/passungsraster.3mf)
+         NAME = Dateipräfix, Standard fiolenbox_v2; z. B. fiolenbox_11_4x3_v1
+         masse = viel PLA + isolierend: 4 Wände, 6/5 Deck-/Bodenschichten, Cubic 35 % (geschlossene Luftkammern)
 """
 import numpy as np, trimesh, json, zipfile, uuid, os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DRUCK = os.path.join(HERE, '..', 'druck')
 TEMPLATE = os.environ.get('BAMBU_VORLAGE', os.path.join(HERE, '..', '..', 'ihht-gasmischer', 'druck', 'passungsraster.3mf'))
-OUT = os.path.join(DRUCK, 'fiolenbox_v2.3mf')
+import sys
+NAME = sys.argv[1] if len(sys.argv) > 1 else 'fiolenbox_v2'
+MASSE = 'masse' in sys.argv[2:]
+OUT = os.path.join(DRUCK, NAME + '.3mf')
 
 def load(name, flip=False):
     m = trimesh.load(os.path.join(DRUCK, name), force='mesh'); m.merge_vertices()
@@ -15,11 +20,11 @@ def load(name, flip=False):
     m.apply_translation(-m.bounds[0]); assert m.is_watertight, name
     return m
 
-base, lid = load('fiolenbox_v2_unterteil.stl'), load('fiolenbox_v2_deckel.stl', flip=True)
+base, lid = load(NAME + '_unterteil.stl'), load(NAME + '_deckel.stl', flip=True)
 gap = 12.0
 x0 = (256 - (base.extents[0] + lid.extents[0] + gap)) / 2
-parts = [('Fiolenbox v2 Unterteil', base, x0, (256 - base.extents[1]) / 2),
-         ('Fiolenbox v2 Deckel', lid, x0 + base.extents[0] + gap, (256 - lid.extents[1]) / 2)]
+parts = [(NAME + ' Unterteil', base, x0, (256 - base.extents[1]) / 2),
+         (NAME + ' Deckel', lid, x0 + base.extents[0] + gap, (256 - lid.extents[1]) / 2)]
 for name, m, x, y in parts:
     assert x >= 0 and y >= 0 and x + m.extents[0] <= 256 and y + m.extents[1] <= 256, name
     print('%-24s %5.1f × %5.1f × %5.1f mm  Volumen %.1f cm³' % (name, *m.extents, m.volume / 1000))
@@ -67,6 +72,7 @@ files['Metadata/model_settings.config'] = '\n'.join(ms)
 files['Metadata/cut_information.xml'] = '<?xml version="1.0" encoding="utf-8"?>\n<objects>\n' + ''.join(' <object id="%d">\n  <cut_id id="0" check_sum="1" connectors_cnt="0"/>\n </object>\n' % (i + 1) for i in range(len(objs))) + '</objects>\n'
 d = json.loads(zin.read('Metadata/project_settings.config'))
 proc = {'layer_height': '0.2', 'wall_loops': '3', 'sparse_infill_density': '15%', 'enable_support': '0', 'brim_type': 'no_brim'}
+if MASSE: proc.update({'wall_loops': '4', 'top_shell_layers': '6', 'bottom_shell_layers': '5', 'sparse_infill_pattern': 'cubic', 'sparse_infill_density': '35%'})
 d.update(proc)
 diff = list(d['different_settings_to_system'])
 diff[0] = ';'.join(sorted((set(x for x in diff[0].split(';') if x) | set(proc)) - {'support_on_build_plate_only', 'support_remove_small_overhang'}))
