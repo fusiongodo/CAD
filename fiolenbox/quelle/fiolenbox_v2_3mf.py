@@ -2,7 +2,7 @@
 
 Aufruf:  python3 fiolenbox_v2_3mf.py [NAME] [masse]   (STL aus ../druck, Vorlage ../../ihht-gasmischer/druck/passungsraster.3mf)
          NAME = Dateipräfix, Standard fiolenbox_v2; z. B. fiolenbox_11_4x3_v1
-         masse = viel PLA + isolierend: 4 Wände, 6/5 Deck-/Bodenschichten, Cubic 35 % (geschlossene Luftkammern)
+         masse = viel PLA + isolierend: Deckel 3 Wände, Unterteil 2 Wände (Löcher), 6/5 Deck-/Bodenschichten, Cubic 35 % (geschlossene Luftkammern)
 """
 import numpy as np, trimesh, json, zipfile, uuid, os
 
@@ -54,9 +54,11 @@ res.append(' </build>\n</model>\n')
 files['3D/3dmodel.model'] = head + '\n'.join(res)
 files['3D/_rels/3dmodel.model.rels'] = '<?xml version="1.0" encoding="UTF-8"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">\n' + \
     '\n'.join(' <Relationship Target="/3D/Objects/part_%d.model" Id="rel-%d" Type="http://schemas.microsoft.com/3dmanufacturing/2013/01/3dmodel"/>' % (i, i + 1) for i in range(len(parts))) + '\n</Relationships>\n'
+PER_OBJ = {0: {'wall_loops': '2'}} if MASSE else {}   # objekt 0 = Unterteil: 2 Wände um jedes Loch reichen
 ms = ['<?xml version="1.0" encoding="UTF-8"?>', '<config>']
 for o, vi, x, y, name, nf in objs:
     ms += ['  <object id="%d">' % o, '    <metadata key="name" value="%s"/>' % name, '    <metadata key="extruder" value="1"/>', '    <metadata face_count="%d"/>' % nf,
+           *['    <metadata key="%s" value="%s"/>' % kv for kv in PER_OBJ.get(vi, {}).items()],
            '    <part id="1" subtype="normal_part" uuid="%s">' % uuid.uuid4(), '      <metadata key="name" value="%s"/>' % name,
            '      <metadata key="matrix" value="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"/>', '      <mesh_stat face_count="%d" edges_fixed="0" degenerate_facets="0" facets_removed="0" facets_reversed="0" backwards_edges="0"/>' % nf,
            '    </part>', '  </object>']
@@ -72,7 +74,7 @@ files['Metadata/model_settings.config'] = '\n'.join(ms)
 files['Metadata/cut_information.xml'] = '<?xml version="1.0" encoding="utf-8"?>\n<objects>\n' + ''.join(' <object id="%d">\n  <cut_id id="0" check_sum="1" connectors_cnt="0"/>\n </object>\n' % (i + 1) for i in range(len(objs))) + '</objects>\n'
 d = json.loads(zin.read('Metadata/project_settings.config'))
 proc = {'layer_height': '0.2', 'wall_loops': '3', 'sparse_infill_density': '15%', 'enable_support': '0', 'brim_type': 'no_brim'}
-if MASSE: proc.update({'wall_loops': '4', 'top_shell_layers': '6', 'bottom_shell_layers': '5', 'sparse_infill_pattern': 'cubic', 'sparse_infill_density': '35%'})
+if MASSE: proc.update({'wall_loops': '3', 'top_shell_layers': '6', 'bottom_shell_layers': '5', 'sparse_infill_pattern': 'cubic', 'sparse_infill_density': '35%'})
 d.update(proc)
 diff = list(d['different_settings_to_system'])
 diff[0] = ';'.join(sorted((set(x for x in diff[0].split(';') if x) | set(proc)) - {'support_on_build_plate_only', 'support_remove_small_overhang'}))
