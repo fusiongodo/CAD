@@ -7,7 +7,7 @@
 #
 # Die Teile sind in den Ventil-Koordinaten der alten Generatoren (ihht-pi CAD/quetschventil) beschrieben:
 #   z = Hauptachse (vorn +), y = Richtung zu den Ambossen (Amboss oben +y), x = Schlauchrichtung.
-#   Rückwand z -8 .. 0, Ambosse z 0 .. 34, Steg z 34 .. 42, Getriebe hinter der Rückwand, Motor bei y -26.
+#   Rückwand z -8 .. 0, Ambosse z 0 .. 34, Steg z 34 .. 42, Getriebe hinter der Rückwand, Motor bei y -A (Übersetzung aus MOTOR_NCM).
 # Die Helfer Q* drehen das in die Builder-Koordinaten (X = x, Y = -z, Z = y): Achse läuft in Y, vorn = -Y.
 import math
 from ihht.geo import B, C
@@ -43,17 +43,29 @@ def QP(x, y, z0, z1, pts):                            # Polygon (dx, dy) um (x, 
     return ('prism', (x, y), tuple((round(a, 4), round(b, 4)) for a, b in pts), -z1, -z0)
 
 
-# ---------------- Getriebe 5 : 1 (wie Getriebe v1, nur 2,2 mm weiter hinten) ----------------
-MOD, ZP, ZR = 1.0, 13, 65
-A = MOD * (ZR - ZP) / 2                 # Achsabstand 26, Motor bei y -26
+E = 4.5                                 # Exzentrizität: Spalt zu 3,0 / Neutral 7,5 / offen 12,0 (Amboss 28,5, Rolle Ø 42)
+
+# ---------------- Getriebe: Übersetzung aus dem Motormoment ----------------
+# Bezug (VERSUCHE.md V4, 23.11.): Pancake 17 Ncm bei Nennstrom x 5 : 1 hat bei e 3,5 bis Spalt 2,4 unter Last gequetscht.
+# Bedarf am Exzenter skaliert mit dem Hebelarm e, dazu RESERVE. Ritzel so groß wie möglich (schneller), solange es
+# das Moment noch bringt. Hohlrad bleibt 65 Zähne; der Motor rückt mit dem Achsabstand A näher an die Achse.
+MOTOR_NCM = 42.0                        # Haltemoment bei Nennstrom: StepperOnline 17HE15-1504S, 1,5 A (bestellt 23.11.)
+SHAFT_TIP = 23.5                        # NEMA-Wellenspitze ab Flansch (17HE15-1504S: 23,5)
+REF_NCM, REF_I, REF_E, RESERVE = 17.0, 5.0, 3.5, 1.25
+T_NEED = REF_NCM * REF_I * E / REF_E * RESERVE        # Ncm am Exzenter (e 4,5: 137)
+MOD, ZR = 1.0, 65
+ZP = max(13, min(20, int(ZR * MOTOR_NCM / T_NEED)))   # 13 = 5 : 1 (Pancake); 20 = Grenze, sonst trifft das Ritzel die Nabe
+I_GEAR = ZR / ZP                        # 42 Ncm: 65 / 19 = 3,42 -> 144 Ncm am Exzenter
+A = MOD * (ZR - ZP) / 2                 # Achsabstand (13 Zähne: 26; 19 Zähne: 23)
 BACKLASH = 0.3
 RP_TIP, RP_ROOT = ZP * MOD / 2 + 0.9, ZP * MOD / 2 - 1.25
 RR_TIP, RR_ROOT = ZR * MOD / 2 - 0.65, ZR * MOD / 2 + 1.25      # Kopfkreis Hohlrad gekürzt (Ø 63,7)
 RIM_R = RR_ROOT + 2.75                  # Hohlrad außen Ø 73
-FACE, GAP, DISK, HUB_D = 8.0, 0.6, 3.0, 30.0
+FACE, GAP, DISK = 8.0, 0.6, 3.0
+HUB_D = min(30.0, round(2 * (A - RP_TIP - 0.6), 1))   # Nabe um den M8-Kopf, 0,6 Luft zum Ritzelkopf (Sechskant SW 13 braucht 15,4)
+assert HUB_D >= 21.0, 'Ritzel zu groß: Nabe um den M8-Kopf wird zu dünn'
 
 # ---------------- Lager, Stahl, Passungen ----------------
-E = 4.5                                 # Exzentrizität: Spalt zu 3,0 / Neutral 7,5 / offen 12,0 (Amboss 28,5, Rolle Ø 42)
 L608 = (8.0, 22.0, 7.0)                 # d, D, B
 L6905 = (25.0, 42.0, 9.0)
 SEAT_D, SEAT_RIB, SEAT_RIB_W = 22.3, 0.25, 1.2   # 608-Sitz: Grundbohrung + 6 Quetschrippen -> Innenkreis 21,8 (Schätzwert)
@@ -66,7 +78,6 @@ NUT_AF, NUT_H = 13.3, 6.7               # Tasche Mutter DIN 934 (SW 13, 6,5)
 HEAD_POCKET = 5.6                       # Tasche Kopf DIN 933 (SW 13, 5,3)
 DS_T = 1.2                              # Distanzscheibe 8,4 / 11,5 zwischen 608-Innenring und Hohlrad bzw. Mutter
 NEMA_D, NEMA_FLAT, RIB_T, RIB_H = 5.50, 2.25, 0.45, 0.2      # NEMA-Konsens (ihht-pi CAD/passungen, 21.11.2026)
-SHAFT_TIP = 19.0                        # NEMA-Wellenspitze ab Flansch; bis 24 passt auch
 M3_CLR, M3_SELF, HEAD_D, HEAD_T = 3.4, 2.6, 6.4, 3.2
 
 # ---------------- Rahmen (Ambosse = Rahmen v2) ----------------

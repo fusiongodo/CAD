@@ -72,7 +72,7 @@ print('  keine' if n_bad == 0 and worst == 0 else '  Kollisionen')
 ok &= n_bad == 0 and worst == 0
 
 g = 0.0
-for k in range(24):                                   # eine Teilung des Hohlrads; Ritzel 5-mal so schnell, gleiche Richtung
+for k in range(24):                                   # eine Teilung des Hohlrads; Ritzel ZR/ZP-mal so schnell, gleiche Richtung
     th = 2 * math.pi / ZR * k / 24
     g = max(g, inter(rot(M['qvHohlrad'], th), rot(M['qvRitzel'], th * ZR / ZP, (0.0, -A))))
 print('Zahneingriff: größte Durchdringung %.3f mm3' % g)
