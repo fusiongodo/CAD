@@ -1,6 +1,6 @@
 FeatureScript 3112;
 import(path : "onshape/std/geometry.fs", version : "3112.0");
-// Splitter hi + lo v5 QV (Exzenter-Quetschventil): erzeugt von gen_splitter_qv.py (Basis gen5.py). Innen je 2 glatte Tuellen aussen 8 / innen 6 / 12 mm, Wurzel-Fase 2 mm, statt LZQ-Tuelle 10,75. Lage wie v4.
+// Splitter v5 Quetschventil: erzeugt von build.py aus teile/splitter_hi_qv.py, teile/splitter_lo_qv.py (Bibliothek ihht/). Nicht von Hand aendern.
 
 // IHHT-Gasmischer – v5 Entwicklungs-Setup: 2 NEMA, Ventilpaare über Zahnräder gekoppelt, Kameraportal, Rahmen 250 mm (generiert). Änderungen bitte per Chat.
 // Koordinaten: X = links/rechts, Y = vorne(-)/hinten(+), Z = oben. Y=0: Vorderseite LZQ-Montagewand, Z=0: Unterseite Boden.

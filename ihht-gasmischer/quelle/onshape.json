@@ -1,0 +1,10 @@
+{
+  "dokument": {"name": "claude_chassis", "d": "3612f94598b9063b3e785e72", "w": "fd3cf4738ad9022e6496f173"},
+  "module": {
+    "chassis_v6.fs":           {"name": "Chassis v6 (2 mm)",         "var": "chassisV6",         "featureStudio": "a3aa6366d6dbaa94a4ab5b57", "partStudios": ["40a4815804339e6d2fe3c704"]},
+    "splitter_v5_qv.fs":       {"name": "Splitter v5 Quetschventil", "var": "splitterV5QV",      "featureStudio": "a4a164b09e3ca3e0fc6bf3f3", "partStudios": ["2e955d8f2ae0f3b8c3da14b8"]},
+    "splitter_lo_o2.fs":       {"name": "Splitter lo O2-Tüllen",     "var": "splitterLoO2",      "featureStudio": "6e2f5cbd97f8a56e4b2e663d", "partStudios": ["9dae909dc8b0a8e049215918"]},
+    "sammler_mix_acryl_v1.fs": {"name": "Sammler Mix Acryl",         "var": "sammlerMixAcrylV1", "featureStudio": null, "partStudios": []},
+    "splitter_v4_lzq.fs":      {"name": "Splitter v4 LZQ",           "var": "splitterV4LZQ",     "featureStudio": null, "partStudios": []}
+  }
+}

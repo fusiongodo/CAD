@@ -1,6 +1,6 @@
 FeatureScript 3112;
 import(path : "onshape/std/geometry.fs", version : "3112.0");
-// Sammler Mix Acryl: erzeugt von gen_sammler_acryl.py (Basis gen5.py). Gewindestutzen 20 x 2.5 rechts, Huelse ID 12.4, 45 mm, aussen 26 -> 13.6.
+// Sammler Mix Acryl: erzeugt von build.py aus teile/sammler_mix_acryl.py (Bibliothek ihht/). Nicht von Hand aendern.
 
 // IHHT-Gasmischer – v5 Entwicklungs-Setup: 2 NEMA, Ventilpaare über Zahnräder gekoppelt, Kameraportal, Rahmen 250 mm (generiert). Änderungen bitte per Chat.
 // Koordinaten: X = links/rechts, Y = vorne(-)/hinten(+), Z = oben. Y=0: Vorderseite LZQ-Montagewand, Z=0: Unterseite Boden.

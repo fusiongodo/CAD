@@ -1,6 +1,6 @@
 FeatureScript 3112;
 import(path : "onshape/std/geometry.fs", version : "3112.0");
-// Splitter lo O2: erzeugt von gen_splitter_lo_o2.py (Basis gen6.py, Anschluesse aus anschluesse.py). Lage wie Splitter lo v4.
+// Splitter lo O2-Tüllen: erzeugt von build.py aus teile/splitter_lo_o2.py (Bibliothek ihht/). Nicht von Hand aendern.
 
 // IHHT-Gasmischer – v5 Entwicklungs-Setup: 2 NEMA, Ventilpaare über Zahnräder gekoppelt, Kameraportal, Rahmen 250 mm (generiert). Änderungen bitte per Chat.
 // Koordinaten: X = links/rechts, Y = vorne(-)/hinten(+), Z = oben. Y=0: Vorderseite LZQ-Montagewand, Z=0: Unterseite Boden.

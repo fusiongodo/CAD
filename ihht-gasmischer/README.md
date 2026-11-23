@@ -2,25 +2,44 @@
 
 Stand: 15.11.2026 (v5). Alle Teile sind Onshape-FeatureScripts (je ein Feature, keine Parameter).
 
+## Aufbau der Quellen (seit 23.11.2026)
+
+Quelle ist Python, Onshape bekommt nur das generierte FeatureScript. **Nie eine `.fs` von Hand ändern.**
+
+| Ort | Was |
+|---|---|
+| `quelle/teile/<teil>.py` | **Eine Datei je Teil** (Rahmen, Regal, Motorbrücke, Kameraportal, Kamerahalter, Splitter-Varianten, Sammler, Zahnräder, Dummies). Jede hat `bauen()` |
+| `quelle/ihht/anschluesse.py` | **Alle Schlauchanschlüsse an einer Stelle**: `'o2'` (dünne O2-Tülle), `'cpap'`, `'lzq'`, `'qv'`. Maß hier ändern → ändert sich an jedem Teil, das den Typ verwendet |
+| `quelle/ihht/splitter.py` | Gemeinsamer Bauplan aller Splitter/Sammler: Platz (`'hi'`, `'lo'`, `'mix'`) + Anschluss-Typ innen/außen. Ein neuer Splitter ist 4 Zeilen |
+| `quelle/ihht/masse.py` | Alle Lage- und Grundmaße des Aufbaus |
+| `quelle/ihht/geo.py`, `emit.py`, `netz.py` | Geometrie-Bausteine, FeatureScript-Ausgabe, Netze für die Prüfung |
+| `quelle/build.py` | `python3 build.py` schreibt alle `.fs` neu; die Liste `MODULE` legt fest, welche Teile in welches Feature Studio gehen |
+| `quelle/pruefen.py` | Netzprüfung (wasserdicht, ein Körper, Überschneidungen, STL); braucht trimesh, manifold3d, shapely |
+| `quelle/sicht.py` | Kamera: Bildwinkel und Sichtlinien |
+| `quelle/onshape.json`, `onshape_sync.js` | Zuordnung Modul → Feature Studio / Part Studio im Dokument claude_chassis; nach dem Push im Onshape-Tab `await ihhtSync('<commit>')` |
+| `quelle/alt/` | Alte Generatoren (`gen.py` … `gen6.py`, `gen_*.py`) und alte `.fs` (v2–v5). Nur noch Archiv, die Tabelle unten beschreibt diesen Altstand |
+
+Ablauf einer Änderung: Maß in `teile/…` oder `ihht/…` ändern → `python3 build.py` → committen, pushen → `ihhtSync`.
+
 ## Inhalt
 
 | Datei | Was |
 |---|---|
-| `quelle/chassis_v5.fs` | **Aktuell.** Entwicklungs-Chassis v5 (2 NEMA, Zahnradpaare, Kameraportal, Rahmen 250 mm), ein Feature „IHHT Entwicklung v5“ mit allen Teilen. Änderungen siehe unten |
-| `quelle/gen5.py`, `build5.py` | Generator für chassis_v5.fs: `python3 gen5.py chassis_v5.fs parts_v5.json`; Prüfung + STL + Viewer-Daten: `python3 build5.py parts_v5.json <ordner>` |
+| `quelle/alt/chassis_v5.fs` | **Aktuell.** Entwicklungs-Chassis v5 (2 NEMA, Zahnradpaare, Kameraportal, Rahmen 250 mm), ein Feature „IHHT Entwicklung v5“ mit allen Teilen. Änderungen siehe unten |
+| `quelle/alt/gen5.py`, `build5.py` | Generator für chassis_v5.fs: `python3 gen5.py chassis_v5.fs parts_v5.json`; Prüfung + STL + Viewer-Daten: `python3 build5.py parts_v5.json <ordner>` |
 | `druck/v5_*.stl` | Rahmen, Motorbrücke, Regal (Lage wie im Modell); Kameraportal, Kamerahalter, Zahnradkupplung, Zahnradnabe in Drucklage (Zahnradteile je 2×) |
 | `druck/v4_splitter_*.stl` | Splitter hi/lo mit 22 mm Tüllenabstand – in v5 unverändert, nur 13 mm näher an der Wand montiert |
 | `ansicht/index.html` | 3D-Ansicht v5 im Browser (Teile ein/aus; Kamera-Abstand, Kamera-Höhe, Motorbrücke verschieben; Sichtlinien) |
-| `quelle/chassis_v4.fs`, `gen4.py`, `build4.py` | Entwicklungs-Chassis v4 (erste Fassung mit 2 NEMA und Zahnradpaaren; Kamerasäule v3, Rahmen 253 mm) |
-| `quelle/chassis_v3.fs` | Entwicklungs-Chassis v3 (4 NEMA), ein Feature „IHHT Entwicklung v3“ mit allen Teilen (Rahmen, Regal, Motorbrücke, Kamerasäule, Splitter v3, Kamerahalter v3, Kupplungen, Dummies). Änderungen siehe unten |
-| `quelle/gen3.py` | Generator für chassis_v3.fs: `python3 gen3.py chassis_v3.fs parts_v3.json` (Splitter-v3- und Kamerahalter-v3-Patch sind eingearbeitet) |
+| `quelle/alt/chassis_v4.fs`, `gen4.py`, `build4.py` | Entwicklungs-Chassis v4 (erste Fassung mit 2 NEMA und Zahnradpaaren; Kamerasäule v3, Rahmen 253 mm) |
+| `quelle/alt/chassis_v3.fs` | Entwicklungs-Chassis v3 (4 NEMA), ein Feature „IHHT Entwicklung v3“ mit allen Teilen (Rahmen, Regal, Motorbrücke, Kamerasäule, Splitter v3, Kamerahalter v3, Kupplungen, Dummies). Änderungen siehe unten |
+| `quelle/alt/gen3.py` | Generator für chassis_v3.fs: `python3 gen3.py chassis_v3.fs parts_v3.json` (Splitter-v3- und Kamerahalter-v3-Patch sind eingearbeitet) |
 | `druck/v3_*.stl` | Rahmen, Motorbrücke, Kamerasäule, Regal v3 (aus dem Generator, Lage wie im Modell) |
-| `quelle/chassis_v2.fs` | Entwicklungs-Chassis v2 (Rotameter mit Drehknopf unten): Rahmen 1 mm Wand / 1 mm Boden + Randsteg, Regal, Motorbrücke 1 mm mit Distanzringen, alte Kupplungen, Kamerasäule, alte Splitter, Dummies; Feature „IHHT Ablage“ mit den v1-Teilen |
-| `quelle/splitter_v3.fs` | Splitter hi + lo v3 (ersetzt die beiden unteren Splitter aus chassis_v2) |
-| `quelle/kamerahalter_v3.fs` | Kamerahalter v3 (ersetzt den Halter aus chassis_v2) |
+| `quelle/alt/chassis_v2.fs` | Entwicklungs-Chassis v2 (Rotameter mit Drehknopf unten): Rahmen 1 mm Wand / 1 mm Boden + Randsteg, Regal, Motorbrücke 1 mm mit Distanzringen, alte Kupplungen, Kamerasäule, alte Splitter, Dummies; Feature „IHHT Ablage“ mit den v1-Teilen |
+| `quelle/alt/splitter_v3.fs` | Splitter hi + lo v3 (ersetzt die beiden unteren Splitter aus chassis_v2) |
+| `quelle/alt/kamerahalter_v3.fs` | Kamerahalter v3 (ersetzt den Halter aus chassis_v2) |
 | `quelle/kupplung_v1.fs` | Steckkupplung NEMA 17 ↔ LZQ, 4 Stück |
-| `quelle/gen.py`, `gen2.py`, `mkgeom.py` | Generator (Python) für chassis_v2.fs: `python3 gen2.py chassis_v2.fs parts.json` |
-| `quelle/splitter_v3.patch`, `kamerahalter_v3.patch` | Änderungen gegenüber gen2.py für Splitter v3 / Kamerahalter v3 |
+| `quelle/alt/gen.py`, `gen2.py`, `mkgeom.py` | Generator (Python) für chassis_v2.fs: `python3 gen2.py chassis_v2.fs parts.json` |
+| `quelle/alt/splitter_v3.patch`, `kamerahalter_v3.patch` | Änderungen gegenüber gen2.py für Splitter v3 / Kamerahalter v3 |
 | `quelle/kupplung_v1_3mf.py` | baut die Kupplungs-3MF (Bambu-Vorlage nötig) |
 | `quelle/zahnrad_v5_3mf.py` | baut `druck/zahnrad_v5.3mf` (2 Zahnradkupplungen + 2 Zahnradnaben, 0,20 mm) aus den v5-STLs |
 | `quelle/passungsraster_3mf.py` | baut das Passungs-Raster für die D-Bohrungen als 3MF. Die gedruckte Fassung enthielt wegen doppelter Objekt-IDs zweimal die NEMA-Platte (Skript inzwischen korrigiert) |
