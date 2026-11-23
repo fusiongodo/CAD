@@ -19,6 +19,9 @@ MODULE = [
          teile=['sammler_mix_acryl']),
     dict(datei='splitter_v4_lzq.fs', titel='Splitter v4 LZQ', var='splitterV4LZQ', prefix='v4_',
          teile=['splitter_hi', 'splitter_lo']),
+    dict(datei='quetschventil_v3.fs', titel='Quetschventil v3 (M8-Kern, 608 + 6905)', var='quetschventilV3', prefix='qv3_',
+         teile=['qv_welle', 'qv_klemmhuelse', 'qv_hohlrad', 'qv_ritzel', 'qv_getriebeplatte', 'qv_rueckwand', 'qv_steg',
+                'qv_amboss', 'qv_distanzscheibe', 'qv_dummies']),
 ]
 OHNE_FS = ['sammler_mix', 'zahnrad', 'dummies']        # nur fuer Ansicht/Pruefung, kein eigenes Feature Studio
 

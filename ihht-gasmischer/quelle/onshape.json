@@ -5,6 +5,7 @@
     "splitter_v5_qv.fs":       {"name": "Splitter v5 Quetschventil", "var": "splitterV5QV",      "featureStudio": "a4a164b09e3ca3e0fc6bf3f3", "partStudios": ["2e955d8f2ae0f3b8c3da14b8"]},
     "splitter_lo_o2.fs":       {"name": "Splitter lo O2-Tüllen",     "var": "splitterLoO2",      "featureStudio": "6e2f5cbd97f8a56e4b2e663d", "partStudios": ["9dae909dc8b0a8e049215918"]},
     "sammler_mix_acryl_v1.fs": {"name": "Sammler Mix Acryl",         "var": "sammlerMixAcrylV1", "featureStudio": null, "partStudios": []},
-    "splitter_v4_lzq.fs":      {"name": "Splitter v4 LZQ",           "var": "splitterV4LZQ",     "featureStudio": null, "partStudios": []}
+    "splitter_v4_lzq.fs":      {"name": "Splitter v4 LZQ",           "var": "splitterV4LZQ",     "featureStudio": null, "partStudios": []},
+    "quetschventil_v3.fs":     {"name": "Quetschventil v3 (M8-Kern, 608 + 6905)", "var": "quetschventilV3", "featureStudio": null, "partStudios": []}
   }
 }
