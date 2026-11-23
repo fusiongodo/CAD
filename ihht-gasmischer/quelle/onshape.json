@@ -6,6 +6,6 @@
     "splitter_lo_o2.fs":       {"name": "Splitter lo O2-Tüllen",     "var": "splitterLoO2",      "featureStudio": "6e2f5cbd97f8a56e4b2e663d", "partStudios": ["9dae909dc8b0a8e049215918"]},
     "sammler_mix_acryl_v1.fs": {"name": "Sammler Mix Acryl",         "var": "sammlerMixAcrylV1", "featureStudio": null, "partStudios": []},
     "splitter_v4_lzq.fs":      {"name": "Splitter v4 LZQ",           "var": "splitterV4LZQ",     "featureStudio": null, "partStudios": []},
-    "quetschventil_v3.fs":     {"name": "Quetschventil v3 (M8-Kern, 608 + 6905)", "var": "quetschventilV3", "featureStudio": null, "partStudios": []}
+    "quetschventil_v3.fs":     {"name": "Quetschventil v3 (M8-Kern, 608 + 6905)", "var": "quetschventilV3", "featureStudio": "a8c86b21345db26a9a920f71", "partStudios": ["954a47a53f0d7be24ef36c1b"]}
   }
 }
