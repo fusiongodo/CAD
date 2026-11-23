@@ -199,12 +199,7 @@ for name, label, xin, xout, zc, kind, col in SPL:
         rail_holes(shelf, SHELF_TOP6, xa, xb, SPL_HOLE_EXTRA)
 
 # ================= SPLITTER =================
-# Außentüllen nach Handoff: (r_innen, r_tal, r_spitze, ansatz, wellen, plateau, rampe, länge)
-TUELLE_PROF = {
-    'lo': (10.2, 11.4, 12.2, 3.0, 4, 0.8, 2.5, 16.2),     # CPAP, hypoxisch
-    'hi': (2.6, 3.5, 3.75, 2.0, 4, 0.5, 2.0, 12.0),       # O2, hyperoxisch
-    'mix': (10.2, 11.4, 12.2, 3.0, 4, 0.8, 2.5, 16.2),    # Mischausgang = gleiche CPAP-Tülle
-}
+from anschluesse import TUELLE_PROF     # Außentüllen-Profile zentral in anschluesse.py
 Z_OUT = {'lo': 30.0 + LIFT, 'mix': Z_PT + 7.0}   # lo +4 mm (Platz für übergestülpten Schlauch)
 TUELLE_AD = 10.75    # Kern-Ø Innentülle; Wellenscheitel = 10,75 + 2*0,25 = 11,25 (Ring-Test: zwischen Nr. 3 und 4)
 KANAL = 8.0          # Innenkanal Splitter (Tropfenprofil)
