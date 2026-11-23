@@ -1,11 +1,11 @@
-# Development-Wand: Grundplatte 240 x 150 x 6 (L-Fuß statt 2 Füße). Schrauben von unten, Köpfe versenkt.
+# Development-Wand: Grundplatte 246 x 150 x 6 (L-Fuß statt 2 Füße). Schrauben von unten, Köpfe versenkt.
 # Druck: Unterseite unten.
 from ihht.geo import Part, B, Cz
 from ihht.wand import *
 
 
 def bauen():
-    g = Part('dwGrund', 'Dev-Wand Grundplatte 240 x 150 (Schrauben von unten)', BEIGE)
+    g = Part('dwGrund', 'Dev-Wand Grundplatte 246 x 150 (Schrauben von unten)', BEIGE)
     g.add(B(-WX, WX, BY0, BY1, 0, BT))
     pts = [(x, FUSS_Y) for x in FUSS_X]
     for s in ('v', 'h'):

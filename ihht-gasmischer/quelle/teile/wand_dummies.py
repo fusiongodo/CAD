@@ -1,5 +1,5 @@
 # Development-Wand, nicht gedruckt: QV (Rahmen v2 + Getriebe v1 + Gegenlager 6200) vereinfacht, NEMA 17,
-# OCS hi / lo / Mix (Bauraum), Mischer, Raspberry Pi, BTT SKR Pico. Für Ansicht und Kollisionsprüfung.
+# OCS hi / lo / Mix (Bauraum), Y-Stück, Raspberry Pi, BTT SKR Pico. Für Ansicht und Kollisionsprüfung.
 # QV in Ventil-Koordinaten wie ihht-pi CAD/quetschventil (z = Achse, Rahmenplatte z -6 .. 0) -> Rückseite auf Y = 0.
 from ihht.geo import Part, B, Cy
 from ihht.wand import *
@@ -34,10 +34,9 @@ def qv(cx, s):
 
 def bauen():
     t = qv(-QX, 'L') + qv(QX, 'R')
-    for k, (x0, x1, z0, z1, d) in OCS.items():
-        t.append(Part('dwOCS' + k.capitalize(), 'OCS %s Bauraum (Dummy)' % k, BLAU, printed=False).add(B(x0, x1, -d, 0, z0, z1)))
-    x0, x1, z0, z1, d = MISCHER
-    t.append(Part('dwMischer', 'Mischer (Dummy)', HELL, printed=False).add(B(x0, x1, -d, 0, z0, z1)))
+    for k, (x0, x1, y0, y1, z0, z1) in OCS.items():
+        t.append(Part('dwOCS' + k.capitalize(), 'OCS %s Bauraum (Dummy)' % k, BLAU, printed=False).add(B(x0, x1, y0, y1, z0, z1)))
+    t.append(Part('dwYStueck', 'Y-Stück Bauraum 30 x 30 x 15 (Dummy)', HELL, printed=False).add(B(*YSTUECK)))
     for name, (w, h, d) in (('Pi', (85.0, 70.0, 30.0)), ('Pico', (90.0, 64.0, 12.0))):
         cx, cz = TR_POS[name]
         y0 = WT + TR_T + TR_BOSS_H
