@@ -19,7 +19,10 @@ def bauen():
     w.add(P(-WX, WZ1, WT - 0.01, YR, [(FASE - 1, 0), (FASE + RW * math.sqrt(2), 0), (0, -FASE - RW * math.sqrt(2)), (0, -FASE + 1)]))
     bx, bz = QV_CUT_BOX
     for cx in (-QX, QX):
-        w.cut(Cy(cx, -1, YR + 1, QZ, 2 * QV_CUT_R), B(cx - bx, cx + bx, -1, YR + 1, QZ - bz, QZ + bz))
+        r = QV_CUT_ECKE                                                        # Ecken um die Pfosten gerundet (sonst trifft
+        w.cut(Cy(cx, -1, YR + 1, QZ, 2 * QV_CUT_R),                            # die Ecke oben links genau die Fasenkante)
+              B(cx - bx + r, cx + bx - r, -1, YR + 1, QZ - bz, QZ + bz), B(cx - bx, cx + bx, -1, YR + 1, QZ - bz + r, QZ + bz - r),
+              *[Cy(cx + sx * (bx - r), -1, YR + 1, QZ + sz * (bz - r), 2 * r) for sx in (-1, 1) for sz in (-1, 1)])
         for x, z in QV_SCREWS:
             w.cut(Cy(cx + x, -1, WT + 1, QZ + z, M3_CLR))
     for x, z in ABLASS:
