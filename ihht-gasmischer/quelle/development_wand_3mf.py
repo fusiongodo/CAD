@@ -5,7 +5,11 @@ Dummies des Moduls; dazu die echten QV-Teile an beiden Plätzen gegen Wand, Grun
 die übrigen Dummies:
   QV v3   teile/qv_*.py (dieses Repo), Rückwand-Rückseite auf Y = 0
   QV v2   ihht-pi CAD/quetschventil gen_rahmen.py + gen_getriebe.py (Pfad IHHT_QV, sonst übersprungen), mit NEMA-Dummy
-Ausgabe ../druck/development_wand_1_wand.3mf, _2_grundplatte_traeger.3mf, _3_knotenbleche.3mf (0,20 mm, 4 Wände, 40 %, Brim 5, Wand Brim 3).
+Ausgabe ../druck/development_wand_1_wand.3mf, _2_grundplatte_traeger.3mf, _3_knotenbleche.3mf für Bambu P1S, PLA,
+texturierte PEI, 0,20 mm, Gyroid, Lüfter erst ab Schicht 4, erste Schicht 50 mm/s (DRUCK unten):
+  1 Wand         3 Wände, 15 %, Deckel 5 / Boden 4, ohne Brim (Bett voll), Bett 65 °C
+  2 Grundplatte  3 Wände, 20 %, 5 / 4, Brim 5, Bett 60 °C
+  3 Knotenbleche 5 Wände, 40 %, 6 / 5, Brim 3, Bett 55 °C
 
 Braucht numpy trimesh manifold3d shapely mapbox_earcut:   <venv>/bin/python development_wand_3mf.py
 """
@@ -132,16 +136,29 @@ def HINTEN(n):                                                          # Halter
     return m
 PLATTEN = {
     'development_wand_1_wand.3mf': [('Wandplatte', VORN('dwWand'), 128.0, 128.0)],
-    'development_wand_2_grundplatte_traeger.3mf': [('Grundplatte', lay(M['dwGrund'], X, 0.0), 128.0, 85.0),
-                                                   ('Traeger Pi', VORN('dwTraegerPi'), 62.0, 212.0),
-                                                   ('Traeger Pico', VORN('dwTraegerPico'), 154.0, 212.0),
-                                                   ('Halter T', HINTEN('dwHalterT'), 224.0, 212.0)],
+    'development_wand_2_grundplatte_traeger.3mf': [('Grundplatte', lay(M['dwGrund'], X, 0.0), 128.0, 171.0),   # hinten: vorn links sperrt der P1S
+                                                   ('Traeger Pi', VORN('dwTraegerPi'), 72.0, 46.0),
+                                                   ('Traeger Pico', VORN('dwTraegerPico'), 160.0, 46.0),
+                                                   ('Halter T', HINTEN('dwHalterT'), 226.0, 46.0)],
     'development_wand_3_knotenbleche.3mf': [('Knotenblech VL', lay(M['dwKnotenVL'], Y, -math.pi / 2), 64.0, 64.0),
                                             ('Knotenblech VR', lay(M['dwKnotenVR'], Y, math.pi / 2), 192.0, 64.0),
                                             ('Knotenblech HL', lay(M['dwKnotenHL'], Y, -math.pi / 2), 64.0, 192.0),
                                             ('Knotenblech HR', lay(M['dwKnotenHR'], Y, math.pi / 2), 192.0, 192.0),
                                             ('Halter Hi', HINTEN('dwHalterHi'), 128.0, 64.0),
                                             ('Halter Lo', HINTEN('dwHalterLo'), 128.0, 192.0)]}
+
+
+def proc(waende, infill, deckel, boden, brim, bett):
+    return {'layer_height': '0.2', 'print_settings_id': '0.20mm Standard @BBL P1S', 'sparse_infill_pattern': 'gyroid',
+            'wall_loops': str(waende), 'sparse_infill_density': '%d%%' % infill, 'top_shell_layers': str(deckel),
+            'bottom_shell_layers': str(boden), 'brim_type': 'outer_only' if brim else 'no_brim', 'brim_width': str(brim),
+            'initial_layer_speed': ['50', '50'], 'close_fan_the_first_x_layers': ['3', '3', '3'],
+            'textured_plate_temp': [str(bett), '90', '90'], 'textured_plate_temp_initial_layer': [str(bett), '90', '90']}
+
+
+DRUCK_PROC = {'development_wand_1_wand.3mf': proc(3, 15, 5, 4, 0, 65),
+              'development_wand_2_grundplatte_traeger.3mf': proc(3, 20, 5, 4, 5, 60),
+              'development_wand_3_knotenbleche.3mf': proc(5, 40, 6, 5, 3, 55)}
 for datei, PRINT in PLATTEN.items():
     for name, m, x, y in PRINT:
         e = m.extents
@@ -149,5 +166,5 @@ for datei, PRINT in PLATTEN.items():
         print('%-15s Drucklage %5.1f x %5.1f x %5.1f  Bett x %5.1f..%5.1f  y %5.1f..%5.1f' % (name, e[0], e[1], e[2], x0, x1, y0, y1))
         assert m.is_watertight and abs(m.bounds[0][2]) < 1e-6, name
         assert x0 >= 5 and y0 >= 5 and x1 <= BED - 5 and y1 <= BED - 5, name + ': passt mit Brim nicht aufs Bett'
-    write_3mf(PRINT, os.path.join(DRUCK, datei), {'brim_width': '3'} if 'wand_1' in datei else None)
+    write_3mf(PRINT, os.path.join(DRUCK, datei), DRUCK_PROC[datei])
 raise SystemExit(0 if ok else 1)

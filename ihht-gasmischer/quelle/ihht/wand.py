@@ -32,6 +32,14 @@ RW, RD = 4.0, 10.0              # Randsteg: Breite, Tiefe (hinten, Y 6 .. 16)
 RB = 12.0                       # Randsteg unten höher (Z 6 .. 18): nimmt die Schrauben aus der Grundplatte
 RIB_Z = (140.0, 143.0)          # Quersteg hinten zwischen QV-Feld und Elektronikfeld
 YR = WT + RD                    # Rückseite der Stege 16
+FASE = 38.0                     # 45°-Fase oben links (X -123 / Z 252), Schenkel 38: Bambu P1S sperrt vorn links 18 x 28
+                                # und prüft die Hülle des Teils (Rechteck-Ausklinkung reicht nicht). Wand liegt mit dieser
+                                # Ecke vorn links auf dem Bett. 38 geht gerade durch, QV-Schraube oben außen bleibt (4,6 Abstand).
+
+
+def fase_abstand(x, z):
+    """Abstand eines Punkts (x, z) der Wand von der Fasenkante (positiv = im Material)."""
+    return ((x + WX) + (WZ1 - z) - FASE) / math.sqrt(2)
 
 # ---------------- QV ----------------
 QX, QZ = 73.0, 198.0            # Achsen bei X ±73 (Pfosten außen bis 117,5, Seitensteg ab 119), Z 198
@@ -129,6 +137,7 @@ def grid_points():
                 frei &= not (abs(x - cx) < bx + 2 + r and abs(z - QZ) < bz + 2 + r)
                 frei &= all(math.hypot(x - cx - sx, z - QZ - sz) >= 4.5 + r for sx, sz in QV_SCREWS)
             frei &= all(math.hypot(x - ax, z - az) >= ABLASS_D / 2 + 2 + r for ax, az in ABLASS)
+            frei &= fase_abstand(x, z) >= RW + 3.3 + r                           # Randsteg entlang der Fase
             if frei:
                 out.append((x, z))
     return out

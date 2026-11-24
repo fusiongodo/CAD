@@ -36,6 +36,9 @@ Die Spalte „frei“ ist die Länge der Mittellinie zwischen den Tüllenspitzen
 
 - **Wand** 246 × 246 × 6, steht auf der Grundplatte. Hinten ein Randsteg (4 breit, 10 tief, unten 12 hoch), ein Quersteg bei Z 140
   und je ein Ringsteg um die QV-Ausschnitte. Die Vorderseite ist flach.
+  Oben links (von vorn, über QV hi) hat sie eine 45°-Fase mit 38 mm Schenkellänge und Randsteg. Grund: Der P1S sperrt vorn links 18 × 28 mm
+  und prüft die Hülle des Teils, eine rechteckige Ausklinkung reicht nicht. Die QV-Platte steht dort als Dreieck etwa 20 × 20 frei,
+  die obere äußere QV-Schraube bleibt (Lochrand 2,9 mm von der Fase).
 - **Lochraster** M3 (Ø 3,4), Abstand 10, Spalten X ±5 … ±105, Zeilen Z 26 … 236 (278 Bohrungen).
 - **QV-Aufnahmen** bei X ±73, Achse Z 198: Ausschnitt Ø 75 für das Hohlrad und ein Feld 91 × 41 für die 4 Getriebepfosten.
   Die Rückplatte des QV liegt vorn flach an. Gehalten wird es von 4 × M3 × 20 von hinten durch die Wand in die Ambosse.
@@ -56,11 +59,18 @@ Prüfung (`development_wand_3mf.py`):
 - Es gibt keine Überschneidung im Modul. Das gilt auch für die Schlauch-Dummies und die echten QV-v2- und QV-v3-Teile an beiden Plätzen.
 - Alle Schrauben der Knotenbleche, Träger und Halter sitzen auf Rasterbohrungen.
 
-## Druck (Bambu, 256 × 256, alle ohne Stützen, 0,20 / 4 Wände / 40 %)
+## Druck (Bambu P1S, PLA, texturierte PEI, alle ohne Stützen)
 
-1. `development_wand_1_wand.3mf`: Wand mit der Vorderseite nach unten, Brim 3. Sie füllt die Platte.
-2. `development_wand_2_grundplatte_traeger.3mf`: Grundplatte, 2 Träger und der T-Halter, Brim 5.
-3. `development_wand_3_knotenbleche.3mf`: 4 Knotenbleche und die 2 Rückenhalter, Brim 5.
+Für alle Platten gilt: 0,20 mm, Gyroid, Lüfter erst ab Schicht 4, erste Schicht 50 mm/s. Tür zu, Deckel einen Spalt offen.
+Alle drei Platten habe ich mit Bambu Studio im P1S-Profil gesliced (24.11.), es gab keine Fehler.
+
+| Datei | Teile | Wände | Infill | Deckel / Boden | Brim | Bett | Zeit | PLA |
+|---|---|---|---|---|---|---|---|---|
+| `development_wand_1_wand.3mf` | Wand (Vorderseite unten, Fase vorn links) | 3 | 15 % | 5 / 4 | – | 65 °C | 6 h 37 | 249 g |
+| `development_wand_2_grundplatte_traeger.3mf` | Grundplatte (hinten), 2 Träger, T-Halter | 3 | 20 % | 5 / 4 | 5 | 60 °C | 4 h 09 | 177 g |
+| `development_wand_3_knotenbleche.3mf` | 4 Knotenbleche, 2 Rückenhalter | 5 | 40 % | 6 / 5 | 3 | 55 °C | 2 h 40 | 113 g |
+
+Summe etwa 13,5 h und 540 g. Wand und Grundplatte passen nicht zusammen auf ein Bett, weil die Wand das Bett allein füllt.
 
 ## Schrauben und Kaufteile
 

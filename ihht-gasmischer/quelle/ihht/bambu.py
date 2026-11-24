@@ -5,6 +5,7 @@ import json, os, uuid, zipfile
 TEMPLATE = os.environ.get('BAMBU_VORLAGE', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'druck', 'passungsraster.3mf'))
 PROC = {'layer_height': '0.2', 'wall_loops': '4', 'sparse_infill_density': '40%', 'enable_support': '0',
         'brim_type': 'outer_only', 'brim_width': '5'}
+FIL_PREFIX = ('close_fan_the_first_x_layers', 'textured_plate_temp', 'hot_plate_temp')
 
 
 def write_3mf(PRINT, out3, proc=None, template=TEMPLATE):
@@ -55,8 +56,11 @@ def write_3mf(PRINT, out3, proc=None, template=TEMPLATE):
     d = json.loads(zin.read('Metadata/project_settings.config'))
     proc = dict(PROC, **(proc or {}))
     d.update(proc)
+    nfil = len(d['filament_settings_id'])
+    fil = {k for k in proc if k.startswith(FIL_PREFIX)}                 # Filament-Werte (Liste je Filament) -> Filament-Diff
     diff = list(d['different_settings_to_system'])
-    diff[0] = ';'.join(sorted((set(x for x in diff[0].split(';') if x) | set(proc)) - {'support_on_build_plate_only', 'support_remove_small_overhang'}))
+    diff[0] = ';'.join(sorted((set(x for x in diff[0].split(';') if x) | set(proc) - fil) - {'support_on_build_plate_only', 'support_remove_small_overhang'}))
+    diff[1] = ';'.join(sorted(set(x for x in diff[1].split(';') if x) | fil))
     d['different_settings_to_system'] = diff
     files['Metadata/project_settings.config'] = json.dumps(d, indent=4, ensure_ascii=False)
     zout = zipfile.ZipFile(out3, 'w', zipfile.ZIP_DEFLATED, compresslevel=9)

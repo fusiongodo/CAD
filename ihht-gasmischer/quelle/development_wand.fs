@@ -126,8 +126,9 @@ function dw_dwWand(context is Context, id is Id, prog is box)
     fCuboid(context, A0 + "s3", { "corner1" : vector(-123, 5.99, 6) * millimeter, "corner2" : vector(-119, 16, 252) * millimeter });
     fCuboid(context, A0 + "s4", { "corner1" : vector(119, 5.99, 6) * millimeter, "corner2" : vector(123, 16, 252) * millimeter });
     fCuboid(context, A0 + "s5", { "corner1" : vector(-119.01, 5.99, 140) * millimeter, "corner2" : vector(119.01, 16, 143) * millimeter });
-    fCylinder(context, A0 + "s6", { "bottomCenter" : vector(-73, 5.99, 198) * millimeter, "topCenter" : vector(-73, 16, 198) * millimeter, "radius" : 49.5 * millimeter });
-    fCylinder(context, A0 + "s7", { "bottomCenter" : vector(73, 5.99, 198) * millimeter, "topCenter" : vector(73, 16, 198) * millimeter, "radius" : 49.5 * millimeter });
+    prismOp(context, A0 + "s6", vector(-123, 5.99, 252) * millimeter, [[38, 0], [43.657, 0], [0, -43.657], [0, -38]], 10.01);
+    fCylinder(context, A0 + "s7", { "bottomCenter" : vector(-73, 5.99, 198) * millimeter, "topCenter" : vector(-73, 16, 198) * millimeter, "radius" : 49.5 * millimeter });
+    fCylinder(context, A0 + "s8", { "bottomCenter" : vector(73, 5.99, 198) * millimeter, "topCenter" : vector(73, 16, 198) * millimeter, "radius" : 49.5 * millimeter });
     prog[] = "Vereinigen Stufe 0";
     unionAll(context, id + "dwWand_u0", qUnion([qCreatedBy(A0, EntityType.BODY)]));
     prog[] = "Schnittkörper Stufe 1";
@@ -432,6 +433,7 @@ function dw_dwWand(context is Context, id is Id, prog is box)
     fCylinder(context, C1 + "o297", { "bottomCenter" : vector(5, -1, 236) * millimeter, "topCenter" : vector(5, 7, 236) * millimeter, "radius" : 1.7 * millimeter });
     fCylinder(context, C1 + "o298", { "bottomCenter" : vector(15, -1, 236) * millimeter, "topCenter" : vector(15, 7, 236) * millimeter, "radius" : 1.7 * millimeter });
     fCylinder(context, C1 + "o299", { "bottomCenter" : vector(25, -1, 236) * millimeter, "topCenter" : vector(25, 7, 236) * millimeter, "radius" : 1.7 * millimeter });
+    prismOp(context, C1 + "o300", vector(-123, -1, 252) * millimeter, [[-1, 1], [39, 1], [-1, -39]], 18);
     prog[] = "Abziehen Stufe 1";
     cutAll(context, id + "dwWand_x1", qUnion([qCreatedBy(A0, EntityType.BODY)]), qCreatedBy(C1, EntityType.BODY));
     prog[] = "Name/Farbe";
