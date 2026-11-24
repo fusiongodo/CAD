@@ -24,6 +24,8 @@ MODULE = [
                 'qv_amboss', 'qv_distanzscheibe', 'qv_dummies']),
     dict(datei='development_wand.fs', titel='Development-Wand (Lochraster, 2 QV)', var='developmentWand', prefix='dw_',
          teile=['wand_platte', 'wand_grundplatte', 'wand_knotenblech', 'wand_traeger', 'wand_halter', 'wand_dummies']),
+    dict(datei='cpap_reservoir.fs', titel='CPAP-Inline-Reservoir-Adapter (Einwegventil)', var='cpapReservoir', prefix='cr_',
+         teile=['cpap_reservoir']),
 ]
 OHNE_FS = ['sammler_mix', 'zahnrad', 'dummies']        # nur fuer Ansicht/Pruefung, kein eigenes Feature Studio
 

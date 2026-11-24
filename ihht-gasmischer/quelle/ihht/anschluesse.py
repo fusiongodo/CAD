@@ -6,7 +6,7 @@
 #   koerper(x, z, y0, d)                  -> Koerper-Ops; ab Wandflaeche y0 in Richtung d (+1 = +Y, -1 = -Y)
 #   bohrung(x, z, y0, d, y_kanal, tief)   -> Schnitt-Ops; Durchgang von der Spitze bis zur Kanalachse (+ tief)
 #   laenge, r_max                         -> Laenge ab Wand, groesster Radius
-from .geo import Cy, K, T
+from .geo import C, Cy, K, T
 
 class Wellentuelle:
     """Schlauchtuelle mit Saegezahn-Wellen (Stufe zur Wand, Rampe zur Spitze)."""
@@ -23,6 +23,19 @@ class Wellentuelle:
     def bohrung(s, x, z, y0, d, y_kanal, tief=0.0):
         ya, yb = y_kanal - d * tief, y0 + d * (s.laenge + 1)
         return [Cy(x, min(ya, yb), max(ya, yb), z, 2 * s.r_innen)]
+    def koerper_achse(s, p0, n):
+        """Wie koerper(), aber auf beliebiger Achse: p0 = Mitte der Wandflaeche, n = Einheitsvektor zur Spitze."""
+        pt = lambda t: tuple(p0[i] + n[i] * t for i in range(3))
+        ops = [C(pt(-0.5), pt(s.laenge), 2 * s.r_tal)]
+        for w in range(s.wellen):
+            a = s.ansatz + w * (s.plateau + s.rampe)
+            ops.append(C(pt(a), pt(a + s.plateau), 2 * s.r_spitze))
+            ops.append(('cone', pt(a + s.plateau), pt(a + s.plateau + s.rampe), s.r_spitze, s.r_tal))
+        return ops
+    def bohrung_achse(s, p0, n, t0):
+        """Bohrung r_innen auf der Achse von p0 + n*t0 bis 1 mm ueber die Spitze."""
+        pt = lambda t: tuple(p0[i] + n[i] * t for i in range(3))
+        return [C(pt(t0), pt(s.laenge + 1), 2 * s.r_innen)]
 
 class Stecktuelle:
     """Kurze Tuelle mit 3 flachen Wellen und 45°-Fase am Sockel (steckt im Schlauchstueck zum LZQ)."""
@@ -63,6 +76,9 @@ ANSCHLUSS = {
     'o2':     Wellentuelle(r_innen=2.6, r_tal=3.5, r_spitze=3.75, ansatz=2.0, wellen=4, plateau=0.5, rampe=2.0, laenge=12.0),
     # CPAP-Schlauch 22 mm: Kern Ø 22,8, Wellen Ø 24,4, Bohrung Ø 20,4, 16,2 mm
     'cpap':   Wellentuelle(r_innen=10.2, r_tal=11.4, r_spitze=12.2, ansatz=3.0, wellen=4, plateau=0.8, rampe=2.5, laenge=16.2),
+    # CPAP-Schlauch 22 mm nach dem CPAP-auf-CPAP-Adapter im Onshape-Dokument „IHHT Retrofit“ (segm1 Ø 22,5, Wulst Ø 24);
+    # Y-Split (getestet) hat 21,4/23, 'cpap' oben ist mit 22,8/24,4 groesser als beide. Bohrung Ø 20,4, 16,2 mm.
+    'cpap_pi': Wellentuelle(r_innen=10.2, r_tal=11.25, r_spitze=12.0, ansatz=3.0, wellen=4, plateau=0.8, rampe=2.5, laenge=16.2),
     # Schlauchstueck zum LZQ-Rotameter: Kern Ø 10,75 (Wellenscheitel 11,25, Ring-Test zwischen Nr. 3 und 4), Tropfen Ø 6,5
     'lzq':    Stecktuelle(od=10.75, laenge=12.0, bohr=6.5, tropfen=True),
     # Quetschventil-Silikonschlauch 6/12: aussen Ø 8, innen Ø 6, glatt, Wurzel-Fase 2 mm
