@@ -40,7 +40,7 @@ Die Spalte „frei“ ist die Länge der Mittellinie zwischen den Tüllenspitzen
   und prüft die Hülle des Teils, eine rechteckige Ausklinkung reicht nicht. Die QV-Platte steht dort als Dreieck etwa 20 × 20 frei,
   die obere äußere QV-Schraube bleibt (Lochrand 2,9 mm von der Fase).
 - **Lochraster** M3 (Ø 3,4), Abstand 10, Spalten X ±5 … ±105, Zeilen Z 26 … 236 (278 Bohrungen).
-- **QV-Aufnahmen** bei X ±73, Achse Z 198: Ausschnitt Ø 75 für das Hohlrad und ein Feld 91 × 41 für die 4 Getriebepfosten.
+- **QV-Aufnahmen** bei X ±73, Achse Z 198: Ausschnitt Ø 75 für das Hohlrad und ein Feld 91 × 41 für die 4 Getriebepfosten (Ecken mit r 5,5 um die Pfosten gerundet).
   Die Rückplatte des QV liegt vorn flach an. Gehalten wird es von 4 × M3 × 20 von hinten durch die Wand in die Ambosse.
   Das passt für Rahmen v2 + Getriebe v1 und für QV v3.
 - **2 Ablass-Durchlässe** Ø 18 bei X ±13,5, Z 222,5.
