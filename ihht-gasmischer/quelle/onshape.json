@@ -9,6 +9,6 @@
     "quetschventil_v3.fs":     {"name": "Quetschventil v3 (M8-Kern, 608 + 6905)", "var": "quetschventilV3", "featureStudio": "a8c86b21345db26a9a920f71", "partStudios": ["954a47a53f0d7be24ef36c1b"]},
     "gegenlager_6200.fs":      {"name": "Quetschventil Gegenlager 6200 (Rahmen v2)", "var": "quetschventilGegenlager6200", "featureStudio": "faa84bba10adb02eeb0efa18", "partStudios": ["a6bb24d9dda7d62eca012b8d"]},
     "development_wand.fs":     {"name": "Development-Wand (Lochraster, 2 QV)", "var": "developmentWand", "featureStudio": "b17afd4e38fe778fbb5603db", "partStudios": ["21eed7eb162c534944e4b264"]},
-    "cpap_reservoir.fs":       {"name": "CPAP-Inline-Reservoir-Adapter (Einwegventil)", "var": "cpapReservoir", "featureStudio": null, "partStudios": []}
+    "cpap_reservoir.fs":       {"name": "CPAP-Inline-Reservoir-Adapter (Einwegventil)", "var": "cpapReservoir", "featureStudio": "0bcce45512b6ac53b8a46896", "partStudios": ["aee75640abeaf133528c3d25"]}
   }
 }
