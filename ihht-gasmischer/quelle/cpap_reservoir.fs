@@ -116,6 +116,96 @@ function prismXOp(context is Context, id is Id, origin is Vector, pts is array, 
     opDeleteBodies(context, id + "del", { "entities" : qCreatedBy(id + "sk", EntityType.BODY) });
 }
 
+
+// ===================== Gewinde (Helix um Z, Rechtsgewinde) =====================
+function helixIsRightHand(context is Context, edge is Query, turns is number) returns boolean
+{
+    const p0 = evEdgeTangentLine(context, { "edge" : edge, "parameter" : 0 }).origin;
+    const p1 = evEdgeTangentLine(context, { "edge" : edge, "parameter" : 0.25 / turns }).origin;
+    const crossZ = (p0[0] * p1[1] - p0[1] * p1[0]) / (millimeter * millimeter);
+    const dz = (p1[2] - p0[2]) / millimeter;
+    return crossZ * dz > 0;
+}
+
+function makeThread(context is Context, id is Id, rRoot is ValueWithUnits, rCrest is ValueWithUnits,
+    overlapR is ValueWithUnits, zStart is ValueWithUnits, pitch is ValueWithUnits, turns is number)
+{
+    const depth = abs(rCrest - rRoot);
+    const crest = pitch / 8;
+    const wRoot = crest + 2 * depth * tan(30 * degree);
+    const rMid = (rRoot + rCrest) / 2;
+
+    var helixId = id + "helix";
+    for (var attempt = 0; attempt < 2; attempt += 1)
+    {
+        helixId = id + "helix" + ("a" ~ attempt);
+        opHelix(context, helixId, {
+                    "direction" : vector(0, 0, 1),
+                    "axisStart" : vector(0, 0, 0) * millimeter,
+                    "startPoint" : vector(rMid, 0 * millimeter, zStart),
+                    "interval" : vector(0, turns),
+                    "clockwise" : attempt == 0,
+                    "helicalPitch" : pitch,
+                    "spiralPitch" : 0 * millimeter
+                });
+        if (helixIsRightHand(context, qCreatedBy(helixId, EntityType.EDGE), turns))
+            break;
+        opDeleteBodies(context, id + "helix" + ("del" ~ attempt), { "entities" : qCreatedBy(helixId, EntityType.BODY) });
+        if (attempt == 1)
+            throw regenError("Rechtsgewinde konnte nicht erzeugt werden");
+    }
+
+    const sk = newSketchOnPlane(context, id + "profile", {
+                "sketchPlane" : plane(vector(0, 0, 0) * millimeter, vector(0, -1, 0), vector(1, 0, 0))
+            });
+    const pts = [
+            vector(overlapR, zStart - wRoot / 2),
+            vector(rRoot, zStart - wRoot / 2),
+            vector(rCrest, zStart - crest / 2),
+            vector(rCrest, zStart + crest / 2),
+            vector(rRoot, zStart + wRoot / 2),
+            vector(overlapR, zStart + wRoot / 2)
+        ];
+    for (var i = 0; i < size(pts); i += 1)
+        skLineSegment(sk, "l" ~ i, { "start" : pts[i], "end" : pts[(i + 1) % size(pts)] });
+    skSolve(sk);
+    opSweep(context, id + "sweep", { "profiles" : qSketchRegion(id + "profile"), "path" : qCreatedBy(helixId, EntityType.EDGE) });
+    opDeleteBodies(context, id + "clean", { "entities" : qUnion([qCreatedBy(helixId, EntityType.BODY),
+                    qCreatedBy(id + "profile", EntityType.BODY)]) });
+}
+
+function gewKoerper(context is Context, id is Id, p is Vector) returns Query
+{
+    const q = qContainsPoint(qBodyType(qCreatedBy(id, EntityType.BODY), BodyType.SOLID), p);
+    if (size(evaluateQuery(context, q)) != 1)
+        throw regenError("Koerper fuer Gewinde nicht gefunden");
+    return q;
+}
+
+// ===================== CPAP-Reservoir: Innengewinde A, Aussengewinde B =====================
+function crGewinde(context is Context, id is Id)
+{
+    const a = gewKoerper(context, id, vector(-15.2, 0, 64) * millimeter);
+    makeThread(context, id + "giA", 12.7 * millimeter, 14.233 * millimeter, 12.3 * millimeter, 72.4 * millimeter, 2.5 * millimeter, 5.7);
+    opBoolean(context, id + "giAx", { "tools" : qCreatedBy(id + "giA" + "sweep", EntityType.BODY), "targets" : a,
+                "operationType" : BooleanOperationType.SUBTRACTION });
+    finishPart(context, a, "CPAP-Reservoir A: Grundkörper (Quelle, Beutel 45°, Innengewinde)", color(0.3, 0.6, 0.85));
+
+    const b = gewKoerper(context, id, vector(-15.2, 0, 87.45) * millimeter);
+    makeThread(context, id + "gaB", 12.45 * millimeter, 13.983 * millimeter, 12.05 * millimeter, 74.9 * millimeter, 2.5 * millimeter, 4.82);
+    fCylinder(context, id + "gaBtrim" + "big", { "bottomCenter" : vector(0, 0, 69.15) * millimeter,
+                "topCenter" : vector(0, 0, 79.184) * millimeter, "radius" : 14.983 * millimeter });
+    fCone(context, id + "gaBtrim" + "keep", { "bottomCenter" : vector(0, 0, 76.14) * millimeter,
+                "topCenter" : vector(0, 0, 79.194) * millimeter, "bottomRadius" : 11.95 * millimeter, "topRadius" : 14.993 * millimeter });
+    opBoolean(context, id + "gaBtrim" + "sub", { "tools" : qCreatedBy(id + "gaBtrim" + "keep", EntityType.BODY),
+                "targets" : qCreatedBy(id + "gaBtrim" + "big", EntityType.BODY), "operationType" : BooleanOperationType.SUBTRACTION });
+    opBoolean(context, id + "gaBu", { "tools" : qUnion([b, qCreatedBy(id + "gaB" + "sweep", EntityType.BODY)]),
+                "operationType" : BooleanOperationType.UNION });
+    opBoolean(context, id + "gaBx", { "tools" : qCreatedBy(id + "gaBtrim", EntityType.BODY), "targets" : b,
+                "operationType" : BooleanOperationType.SUBTRACTION });
+    finishPart(context, b, "CPAP-Reservoir B: Maskenkappe (Außengewinde, Ring andrücken)", color(0.85, 0.55, 0.3));
+}
+
 function cr_cpapResA(context is Context, id is Id, prog is box)
 {
     prog[] = "Körper Stufe 0";
@@ -129,69 +219,98 @@ function cr_cpapResA(context is Context, id is Id, prog is box)
     coneOp(context, A0 + "s6", vector(0, 0, 5.8) * millimeter, vector(0, 0, 3.3) * millimeter, 12, 11.25);
     fCylinder(context, A0 + "s7", { "bottomCenter" : vector(0, 0, 3.3) * millimeter, "topCenter" : vector(0, 0, 2.5) * millimeter, "radius" : 12 * millimeter });
     coneOp(context, A0 + "s8", vector(0, 0, 2.5) * millimeter, vector(0, 0, 0) * millimeter, 12, 11.25);
-    coneOp(context, A0 + "s9", vector(0, 0, 16.2) * millimeter, vector(0, 0, 18.7) * millimeter, 12, 14.5);
-    fCylinder(context, A0 + "s10", { "bottomCenter" : vector(0, 0, 18.69) * millimeter, "topCenter" : vector(0, 0, 78) * millimeter, "radius" : 14.5 * millimeter });
-    fCylinder(context, A0 + "s11", { "bottomCenter" : vector(0, 0, 26) * millimeter, "topCenter" : vector(25.456, 0, 51.456) * millimeter, "radius" : 14.5 * millimeter });
-    fCylinder(context, A0 + "s12", { "bottomCenter" : vector(25.102, 0, 51.102) * millimeter, "topCenter" : vector(36.911, 0, 62.911) * millimeter, "radius" : 11.25 * millimeter });
-    fCylinder(context, A0 + "s13", { "bottomCenter" : vector(27.577, 0, 53.577) * millimeter, "topCenter" : vector(28.143, 0, 54.143) * millimeter, "radius" : 12 * millimeter });
-    coneOp(context, A0 + "s14", vector(28.143, 0, 54.143) * millimeter, vector(29.911, 0, 55.911) * millimeter, 12, 11.25);
-    fCylinder(context, A0 + "s15", { "bottomCenter" : vector(29.911, 0, 55.911) * millimeter, "topCenter" : vector(30.476, 0, 56.476) * millimeter, "radius" : 12 * millimeter });
-    coneOp(context, A0 + "s16", vector(30.476, 0, 56.476) * millimeter, vector(32.244, 0, 58.244) * millimeter, 12, 11.25);
-    fCylinder(context, A0 + "s17", { "bottomCenter" : vector(32.244, 0, 58.244) * millimeter, "topCenter" : vector(32.81, 0, 58.81) * millimeter, "radius" : 12 * millimeter });
-    coneOp(context, A0 + "s18", vector(32.81, 0, 58.81) * millimeter, vector(34.578, 0, 60.578) * millimeter, 12, 11.25);
-    fCylinder(context, A0 + "s19", { "bottomCenter" : vector(34.578, 0, 60.578) * millimeter, "topCenter" : vector(35.143, 0, 61.143) * millimeter, "radius" : 12 * millimeter });
-    coneOp(context, A0 + "s20", vector(35.143, 0, 61.143) * millimeter, vector(36.911, 0, 62.911) * millimeter, 12, 11.25);
+    coneOp(context, A0 + "s9", vector(0, 0, 16.2) * millimeter, vector(0, 0, 20.2) * millimeter, 12, 16);
+    fCylinder(context, A0 + "s10", { "bottomCenter" : vector(0, 0, 20.19) * millimeter, "topCenter" : vector(0, 0, 84.15) * millimeter, "radius" : 16 * millimeter });
+    fCylinder(context, A0 + "s11", { "bottomCenter" : vector(0, 0, 54) * millimeter, "topCenter" : vector(26.87, 0, 27.13) * millimeter, "radius" : 16 * millimeter });
+    fCylinder(context, A0 + "s12", { "bottomCenter" : vector(26.517, 0, 27.483) * millimeter, "topCenter" : vector(38.325, 0, 15.675) * millimeter, "radius" : 11.25 * millimeter });
+    fCylinder(context, A0 + "s13", { "bottomCenter" : vector(28.991, 0, 25.009) * millimeter, "topCenter" : vector(29.557, 0, 24.443) * millimeter, "radius" : 12 * millimeter });
+    coneOp(context, A0 + "s14", vector(29.557, 0, 24.443) * millimeter, vector(31.325, 0, 22.675) * millimeter, 12, 11.25);
+    fCylinder(context, A0 + "s15", { "bottomCenter" : vector(31.325, 0, 22.675) * millimeter, "topCenter" : vector(31.891, 0, 22.109) * millimeter, "radius" : 12 * millimeter });
+    coneOp(context, A0 + "s16", vector(31.891, 0, 22.109) * millimeter, vector(33.658, 0, 20.342) * millimeter, 12, 11.25);
+    fCylinder(context, A0 + "s17", { "bottomCenter" : vector(33.658, 0, 20.342) * millimeter, "topCenter" : vector(34.224, 0, 19.776) * millimeter, "radius" : 12 * millimeter });
+    coneOp(context, A0 + "s18", vector(34.224, 0, 19.776) * millimeter, vector(35.992, 0, 18.008) * millimeter, 12, 11.25);
+    fCylinder(context, A0 + "s19", { "bottomCenter" : vector(35.992, 0, 18.008) * millimeter, "topCenter" : vector(36.557, 0, 17.443) * millimeter, "radius" : 12 * millimeter });
+    coneOp(context, A0 + "s20", vector(36.557, 0, 17.443) * millimeter, vector(38.325, 0, 15.675) * millimeter, 12, 11.25);
     prog[] = "Vereinigen Stufe 0";
     unionAll(context, id + "cpapResA_u0", qUnion([qCreatedBy(A0, EntityType.BODY)]));
     prog[] = "Schnittkörper Stufe 1";
     const C1 = id + "cpapResA_c1";
-    fCylinder(context, C1 + "o0", { "bottomCenter" : vector(0, 0, -1) * millimeter, "topCenter" : vector(0, 0, 51.3) * millimeter, "radius" : 10.2 * millimeter });
-    coneOp(context, C1 + "o1", vector(0, 0, 51.3) * millimeter, vector(0, 0, 52) * millimeter, 10.2, 9.5);
-    fCylinder(context, C1 + "o2", { "bottomCenter" : vector(0, 0, 51.99) * millimeter, "topCenter" : vector(0, 0, 55.01) * millimeter, "radius" : 9.5 * millimeter });
-    fCylinder(context, C1 + "o3", { "bottomCenter" : vector(0, 0, 55) * millimeter, "topCenter" : vector(0, 0, 68.01) * millimeter, "radius" : 11.25 * millimeter });
-    fCylinder(context, C1 + "o4", { "bottomCenter" : vector(0, 0, 68) * millimeter, "topCenter" : vector(0, 0, 79) * millimeter, "radius" : 12.6 * millimeter });
-    fCylinder(context, C1 + "o5", { "bottomCenter" : vector(0, 0, 26) * millimeter, "topCenter" : vector(37.618, 0, 63.618) * millimeter, "radius" : 10.2 * millimeter });
+    fCylinder(context, C1 + "o0", { "bottomCenter" : vector(0, 0, -1) * millimeter, "topCenter" : vector(0, 0, 60.01) * millimeter, "radius" : 10.2 * millimeter });
+    coneOp(context, C1 + "o1", vector(0, 0, 60) * millimeter, vector(0, 0, 62.5) * millimeter, 10.2, 12.7);
+    fCylinder(context, C1 + "o2", { "bottomCenter" : vector(0, 0, 62.49) * millimeter, "topCenter" : vector(0, 0, 85.15) * millimeter, "radius" : 12.7 * millimeter });
+    coneOp(context, C1 + "o3", vector(0, 0, 82.267) * millimeter, vector(0, 0, 84.16) * millimeter, 12.7, 14.593);
+    fCylinder(context, C1 + "o4", { "bottomCenter" : vector(0, 0, 54) * millimeter, "topCenter" : vector(39.032, 0, 14.968) * millimeter, "radius" : 10.2 * millimeter });
     prog[] = "Abziehen Stufe 1";
     cutAll(context, id + "cpapResA_x1", qUnion([qCreatedBy(A0, EntityType.BODY)]), qCreatedBy(C1, EntityType.BODY));
-    prog[] = "Körper Stufe 2";
-    const A2 = id + "cpapResA_a2";
-    prismOp(context, A2 + "s0", vector(0, -0.75, 55) * millimeter, [[-10.5, 0], [10.5, 0], [10.5, -3], [-1.5, -3], [-10.5, -12]], 1.5);
-    prismXOp(context, A2 + "s1", vector(-0.75, 0, 55) * millimeter, [[-10.5, 0], [10.5, 0], [10.5, -12], [0, -1.5], [-10.5, -12]], 1.5);
-    fCylinder(context, A2 + "s2", { "bottomCenter" : vector(0, 0, 54.25) * millimeter, "topCenter" : vector(0, 0, 56) * millimeter, "radius" : 1.25 * millimeter });
-    coneOp(context, A2 + "s3", vector(0, 0, 56) * millimeter, vector(0, 0, 59.464) * millimeter, 1.25, 3.25);
-    fCylinder(context, A2 + "s4", { "bottomCenter" : vector(0, 0, 59.464) * millimeter, "topCenter" : vector(0, 0, 59.764) * millimeter, "radius" : 3.25 * millimeter });
-    coneOp(context, A2 + "s5", vector(0, 0, 59.764) * millimeter, vector(0, 0, 61.264) * millimeter, 3.25, 0.5);
-    prog[] = "Vereinigen Stufe 2";
-    unionAll(context, id + "cpapResA_u2", qUnion([qCreatedBy(A0, EntityType.BODY), qCreatedBy(A2, EntityType.BODY)]));
     prog[] = "Name/Farbe";
-    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY), qCreatedBy(A2, EntityType.BODY)]), "CPAP-Reservoir A: Quelle + Beutel 45° + Ventilsitz (Membran Ø 21,5)", color(0.3, 0.6, 0.85));
+    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "CPAP-Reservoir A: Grundkörper (Quelle, Beutel 45°, Innengewinde)", color(0.3, 0.6, 0.85));
+}
+
+function cr_cpapResRing(context is Context, id is Id, prog is box)
+{
+    prog[] = "Körper Stufe 0";
+    const A0 = id + "cpapResRing_a0";
+    coneOp(context, A0 + "s0", vector(0, 0, 60.15) * millimeter, vector(0, 0, 62.4) * millimeter, 10.2, 12.45);
+    fCylinder(context, A0 + "s1", { "bottomCenter" : vector(0, 0, 62.39) * millimeter, "topCenter" : vector(0, 0, 76.15) * millimeter, "radius" : 12.45 * millimeter });
+    prog[] = "Vereinigen Stufe 0";
+    unionAll(context, id + "cpapResRing_u0", qUnion([qCreatedBy(A0, EntityType.BODY)]));
+    prog[] = "Schnittkörper Stufe 1";
+    const C1 = id + "cpapResRing_c1";
+    fCylinder(context, C1 + "o0", { "bottomCenter" : vector(0, 0, 59.15) * millimeter, "topCenter" : vector(0, 0, 63.16) * millimeter, "radius" : 9.5 * millimeter });
+    fCylinder(context, C1 + "o1", { "bottomCenter" : vector(0, 0, 63.15) * millimeter, "topCenter" : vector(0, 0, 77.15) * millimeter, "radius" : 11.25 * millimeter });
+    prog[] = "Abziehen Stufe 1";
+    cutAll(context, id + "cpapResRing_x1", qUnion([qCreatedBy(A0, EntityType.BODY)]), qCreatedBy(C1, EntityType.BODY));
+    prog[] = "Körper Stufe 2";
+    const A2 = id + "cpapResRing_a2";
+    prismOp(context, A2 + "s0", vector(0, -0.75, 63.15) * millimeter, [[-9.8, 0], [9.8, 0], [9.8, -3], [1.5, -3], [0, -1.5], [-1.5, -3], [-9.8, -3]], 1.5);
+    prismXOp(context, A2 + "s1", vector(-0.75, 0, 63.15) * millimeter, [[-9.8, 0], [9.8, 0], [9.8, -3], [1.5, -3], [0, -1.5], [-1.5, -3], [-9.8, -3]], 1.5);
+    fCylinder(context, A2 + "s2", { "bottomCenter" : vector(0, 0, 62.4) * millimeter, "topCenter" : vector(0, 0, 64.15) * millimeter, "radius" : 1.25 * millimeter });
+    coneOp(context, A2 + "s3", vector(0, 0, 64.15) * millimeter, vector(0, 0, 67.614) * millimeter, 1.25, 3.25);
+    fCylinder(context, A2 + "s4", { "bottomCenter" : vector(0, 0, 67.614) * millimeter, "topCenter" : vector(0, 0, 67.914) * millimeter, "radius" : 3.25 * millimeter });
+    coneOp(context, A2 + "s5", vector(0, 0, 67.914) * millimeter, vector(0, 0, 69.414) * millimeter, 3.25, 0.5);
+    prog[] = "Vereinigen Stufe 2";
+    unionAll(context, id + "cpapResRing_u2", qUnion([qCreatedBy(A0, EntityType.BODY), qCreatedBy(A2, EntityType.BODY)]));
+    prog[] = "Name/Farbe";
+    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY), qCreatedBy(A2, EntityType.BODY)]), "CPAP-Reservoir Ventilring (Y-Split-Sitz, Membran Ø 21,5)", color(0.95, 0.95, 0.95));
 }
 
 function cr_cpapResB(context is Context, id is Id, prog is box)
 {
     prog[] = "Körper Stufe 0";
     const A0 = id + "cpapResB_a0";
-    coneOp(context, A0 + "s0", vector(0, 0, 68) * millimeter, vector(0, 0, 78) * millimeter, 12.3, 12.6);
-    coneOp(context, A0 + "s1", vector(0, 0, 78) * millimeter, vector(0, 0, 79.9) * millimeter, 12.6, 14.5);
-    fCylinder(context, A0 + "s2", { "bottomCenter" : vector(0, 0, 79.89) * millimeter, "topCenter" : vector(0, 0, 81) * millimeter, "radius" : 14.5 * millimeter });
-    fCylinder(context, A0 + "s3", { "bottomCenter" : vector(0, 0, 80.5) * millimeter, "topCenter" : vector(0, 0, 97.2) * millimeter, "radius" : 11.25 * millimeter });
-    fCylinder(context, A0 + "s4", { "bottomCenter" : vector(0, 0, 84) * millimeter, "topCenter" : vector(0, 0, 84.8) * millimeter, "radius" : 12 * millimeter });
-    coneOp(context, A0 + "s5", vector(0, 0, 84.8) * millimeter, vector(0, 0, 87.3) * millimeter, 12, 11.25);
-    fCylinder(context, A0 + "s6", { "bottomCenter" : vector(0, 0, 87.3) * millimeter, "topCenter" : vector(0, 0, 88.1) * millimeter, "radius" : 12 * millimeter });
-    coneOp(context, A0 + "s7", vector(0, 0, 88.1) * millimeter, vector(0, 0, 90.6) * millimeter, 12, 11.25);
-    fCylinder(context, A0 + "s8", { "bottomCenter" : vector(0, 0, 90.6) * millimeter, "topCenter" : vector(0, 0, 91.4) * millimeter, "radius" : 12 * millimeter });
-    coneOp(context, A0 + "s9", vector(0, 0, 91.4) * millimeter, vector(0, 0, 93.9) * millimeter, 12, 11.25);
-    fCylinder(context, A0 + "s10", { "bottomCenter" : vector(0, 0, 93.9) * millimeter, "topCenter" : vector(0, 0, 94.7) * millimeter, "radius" : 12 * millimeter });
-    coneOp(context, A0 + "s11", vector(0, 0, 94.7) * millimeter, vector(0, 0, 97.2) * millimeter, 12, 11.25);
+    fCylinder(context, A0 + "s0", { "bottomCenter" : vector(0, 0, 76.15) * millimeter, "topCenter" : vector(0, 0, 84.46) * millimeter, "radius" : 12.45 * millimeter });
+    fCylinder(context, A0 + "s1", { "bottomCenter" : vector(0, 0, 84.45) * millimeter, "topCenter" : vector(0, 0, 90.45) * millimeter, "radius" : 16 * millimeter });
+    coneOp(context, A0 + "s2", vector(0, 0, 90.44) * millimeter, vector(0, 0, 94.45) * millimeter, 16, 12);
+    fCylinder(context, A0 + "s3", { "bottomCenter" : vector(0, 0, 93.95) * millimeter, "topCenter" : vector(0, 0, 110.65) * millimeter, "radius" : 11.25 * millimeter });
+    fCylinder(context, A0 + "s4", { "bottomCenter" : vector(0, 0, 97.45) * millimeter, "topCenter" : vector(0, 0, 98.25) * millimeter, "radius" : 12 * millimeter });
+    coneOp(context, A0 + "s5", vector(0, 0, 98.25) * millimeter, vector(0, 0, 100.75) * millimeter, 12, 11.25);
+    fCylinder(context, A0 + "s6", { "bottomCenter" : vector(0, 0, 100.75) * millimeter, "topCenter" : vector(0, 0, 101.55) * millimeter, "radius" : 12 * millimeter });
+    coneOp(context, A0 + "s7", vector(0, 0, 101.55) * millimeter, vector(0, 0, 104.05) * millimeter, 12, 11.25);
+    fCylinder(context, A0 + "s8", { "bottomCenter" : vector(0, 0, 104.05) * millimeter, "topCenter" : vector(0, 0, 104.85) * millimeter, "radius" : 12 * millimeter });
+    coneOp(context, A0 + "s9", vector(0, 0, 104.85) * millimeter, vector(0, 0, 107.35) * millimeter, 12, 11.25);
+    fCylinder(context, A0 + "s10", { "bottomCenter" : vector(0, 0, 107.35) * millimeter, "topCenter" : vector(0, 0, 108.15) * millimeter, "radius" : 12 * millimeter });
+    coneOp(context, A0 + "s11", vector(0, 0, 108.15) * millimeter, vector(0, 0, 110.65) * millimeter, 12, 11.25);
     prog[] = "Vereinigen Stufe 0";
     unionAll(context, id + "cpapResB_u0", qUnion([qCreatedBy(A0, EntityType.BODY)]));
     prog[] = "Schnittkörper Stufe 1";
     const C1 = id + "cpapResB_c1";
-    fCylinder(context, C1 + "o0", { "bottomCenter" : vector(0, 0, 67) * millimeter, "topCenter" : vector(0, 0, 98.2) * millimeter, "radius" : 10.2 * millimeter });
+    fCylinder(context, C1 + "o0", { "bottomCenter" : vector(0, 0, 75.15) * millimeter, "topCenter" : vector(0, 0, 111.65) * millimeter, "radius" : 10.2 * millimeter });
+    fCylinder(context, C1 + "o1", { "bottomCenter" : vector(16.034, 4.296, 83.45) * millimeter, "topCenter" : vector(16.034, 4.296, 90.45) * millimeter, "radius" : 1.5 * millimeter });
+    fCylinder(context, C1 + "o2", { "bottomCenter" : vector(11.738, 11.738, 83.45) * millimeter, "topCenter" : vector(11.738, 11.738, 90.45) * millimeter, "radius" : 1.5 * millimeter });
+    fCylinder(context, C1 + "o3", { "bottomCenter" : vector(4.296, 16.034, 83.45) * millimeter, "topCenter" : vector(4.296, 16.034, 90.45) * millimeter, "radius" : 1.5 * millimeter });
+    fCylinder(context, C1 + "o4", { "bottomCenter" : vector(-4.296, 16.034, 83.45) * millimeter, "topCenter" : vector(-4.296, 16.034, 90.45) * millimeter, "radius" : 1.5 * millimeter });
+    fCylinder(context, C1 + "o5", { "bottomCenter" : vector(-11.738, 11.738, 83.45) * millimeter, "topCenter" : vector(-11.738, 11.738, 90.45) * millimeter, "radius" : 1.5 * millimeter });
+    fCylinder(context, C1 + "o6", { "bottomCenter" : vector(-16.034, 4.296, 83.45) * millimeter, "topCenter" : vector(-16.034, 4.296, 90.45) * millimeter, "radius" : 1.5 * millimeter });
+    fCylinder(context, C1 + "o7", { "bottomCenter" : vector(-16.034, -4.296, 83.45) * millimeter, "topCenter" : vector(-16.034, -4.296, 90.45) * millimeter, "radius" : 1.5 * millimeter });
+    fCylinder(context, C1 + "o8", { "bottomCenter" : vector(-11.738, -11.738, 83.45) * millimeter, "topCenter" : vector(-11.738, -11.738, 90.45) * millimeter, "radius" : 1.5 * millimeter });
+    fCylinder(context, C1 + "o9", { "bottomCenter" : vector(-4.296, -16.034, 83.45) * millimeter, "topCenter" : vector(-4.296, -16.034, 90.45) * millimeter, "radius" : 1.5 * millimeter });
+    fCylinder(context, C1 + "o10", { "bottomCenter" : vector(4.296, -16.034, 83.45) * millimeter, "topCenter" : vector(4.296, -16.034, 90.45) * millimeter, "radius" : 1.5 * millimeter });
+    fCylinder(context, C1 + "o11", { "bottomCenter" : vector(11.738, -11.738, 83.45) * millimeter, "topCenter" : vector(11.738, -11.738, 90.45) * millimeter, "radius" : 1.5 * millimeter });
+    fCylinder(context, C1 + "o12", { "bottomCenter" : vector(16.034, -4.296, 83.45) * millimeter, "topCenter" : vector(16.034, -4.296, 90.45) * millimeter, "radius" : 1.5 * millimeter });
     prog[] = "Abziehen Stufe 1";
     cutAll(context, id + "cpapResB_x1", qUnion([qCreatedBy(A0, EntityType.BODY)]), qCreatedBy(C1, EntityType.BODY));
     prog[] = "Name/Farbe";
-    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "CPAP-Reservoir B: Maskenkappe (Zapfen konisch Ø 24,6-25,2)", color(0.85, 0.55, 0.3));
+    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "CPAP-Reservoir B: Maskenkappe (Außengewinde, Ring andrücken)", color(0.85, 0.55, 0.3));
 }
 
 annotation { "Feature Type Name" : "CPAP-Inline-Reservoir-Adapter (Einwegventil)" }
@@ -214,6 +333,15 @@ export const cpapReservoir = defineFeature(function(context is Context, id is Id
         }
         try
         {
+            cr_cpapResRing(context, id, prog);
+            okCount += 1;
+        }
+        catch (error)
+        {
+            failed = append(failed, "cpapResRing @ " ~ prog[] ~ " -> " ~ toString(error));
+        }
+        try
+        {
             cr_cpapResB(context, id, prog);
             okCount += 1;
         }
@@ -221,9 +349,17 @@ export const cpapReservoir = defineFeature(function(context is Context, id is Id
         {
             failed = append(failed, "cpapResB @ " ~ prog[] ~ " -> " ~ toString(error));
         }
+        try
+        {
+            crGewinde(context, id);
+        }
+        catch (error)
+        {
+            failed = append(failed, "Gewinde A/B -> " ~ toString(error));
+        }
         if (size(failed) > 0)
         {
-            var msg = "OK: " ~ toString(okCount) ~ " von 2 Teilen. Fehler: ";
+            var msg = "OK: " ~ toString(okCount) ~ " von 3 Teilen. Fehler: ";
             for (var s in failed)
                 msg = msg ~ s ~ " || ";
             reportFeatureWarning(context, id, msg);
