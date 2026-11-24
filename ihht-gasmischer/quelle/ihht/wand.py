@@ -6,10 +6,13 @@
 #
 # Anordnung v2 (23.11.2026, Alex): Fluss von außen nach innen und von oben nach unten, kein Schlauch kreuzt.
 #   Gas kommt außen an (hi links, lo rechts) und läuft waagerecht durch das QV zur Mitte. Oberer QV-Schlauch = Ablass:
-#   oben mittig durch 2 Durchlässe Ø 14 nach hinten. Unterer QV-Schlauch -> OCS hi / OCS lo hochkant in der Mitte
-#   (Tüllen nach vorn, oben Eingang auf Höhe des unteren QV-Schlauchs) -> Y-Stück darunter -> OCS Mix waagerecht
-#   unten (Eingang links vom Y, Ausgang rechts zum Patienten). Dafür QV nach außen (X ±73) und Wand 246 hoch.
-#
+#   oben mittig durch 2 Durchlässe nach hinten. QV nach außen (X ±73), Wand 246 hoch.
+# v2.1 (24.11.2026, Alex: Knickgefahr): OCS hi / lo stehen hochkant parallel zur Wand, Tüllen seitlich zum QV
+#   -> der untere QV-Schlauch läuft gerade auf den Eingang. Ausgänge mit U-Bogen (R ≥ 25) zu einem T-Stück in der Mitte,
+#   T-Ausgang gerade nach unten auf OCS Mix. OCS Mix steht quer zur Wand auf der Grundplatte (Tüllen oben), sein
+#   Ausgang liegt 38,5 vor dem Eingang -> Patientenschlauch geht vor allen anderen Schläuchen nach vorn weg.
+#   Alle Schlauchachsen in einer Ebene Y -22 (Schlauchmitte im QV); Schläuche als Dummies mit Biegeradius.
+
 # Builder-Koordinaten: X quer, Y Tiefe (vorn = -Y), Z oben. Wand-Vorderseite Y = 0, Oberseite Grundplatte Z = 6.
 #
 # QV-Aufnahme (gilt für Rahmen v2 + Getriebe v1 und für QV v3, beide haben dieselbe Rückplatte 89 x 83,3 mit
@@ -21,7 +24,7 @@ import math
 
 # ---------------- Grundmaße ----------------
 BT = 6.0                        # Grundplatte Z 0 .. 6
-BY0, BY1 = -70.0, 80.0          # Grundplatte Tiefe (150)
+BY0, BY1 = -80.0, 80.0          # Grundplatte Tiefe (160, vorn trägt sie OCS Mix)
 WX = 123.0                      # halbe Breite Wand und Grundplatte (246: mit Brim 5 genau 256)
 WZ0, WZ1 = BT, BT + 246.0       # Wand Z 6 .. 252
 WT = 6.0                        # Wanddicke, Y 0 .. 6
@@ -38,11 +41,11 @@ QV_SCREWS = [(sx * 26.0, sy * 33.5) for sx in (-1, 1) for sy in (-1, 1)]   # M3 
 QV_RING = (47.0, 49.5)          # Ringsteg hinten um den Ausschnitt (frei von Schraubenköpfen und Getriebeplatte, innerhalb der Randstege)
 TUBE_DY = 24.5                  # Schlauchmitte über/unter der Achse (Amboss 28,5, Rolle Ø 40..42)
 TUBE_Y = -22.0                  # Schlauchmitte vor der Wand (Schlauchmitte z 15 + Rückplatte 6 bzw. 8)
-TUBE_X = 37.5                   # Schlauch verlässt das QV am Amboss-Ende (QX - 35,5)
+TUBE_X = QX - 35.5              # Schlauch verlässt das QV am Amboss-Ende (X ±37,5)
 Z_ABLASS = QZ + TUBE_DY         # 222,5 oberer Schlauch
 Z_ZUFUHR = QZ - TUBE_DY         # 173,5 unterer Schlauch -> OCS
-ABLASS = [(-10.0, Z_ABLASS), (10.0, Z_ABLASS)]          # 2 Durchlässe nach hinten (je ein Schlauch 6/12)
-ABLASS_D = 14.0
+ABLASS = [(-13.5, Z_ABLASS), (13.5, Z_ABLASS)]          # 2 Durchlässe nach hinten (je ein Schlauch 6/12, Bogen R 25)
+ABLASS_D = 18.0
 
 # ---------------- Lochraster ----------------
 PITCH = 10.0
@@ -73,29 +76,35 @@ TR_BOSS_D, TR_BOSS_H = 6.0, 8.0
 TR_MOUNT = [(sx * 20.0, sz * 20.0) for sx in (-1, 1) for sz in (-1, 1)]   # auf Rasterpunkte, M3 x 12 + Mutter
 TR_POS = {'Pi': (-55.0, 56.0), 'Pico': (55.0, 56.0)}
 
-# ---------------- Modulhalter (ein Teil, 4 x): L-Winkel, Flansch an der Wand, Finne quer, Kabelbinder ----------------
-# Lokal: u entlang der Finne (Länge), v quer über den Flansch ab der Finnen-Außenseite, w nach vorn ab der Wand.
-H_L, H_FW, H_FT = 60.0, 16.5, 4.0       # Länge, Flanschbreite, Flanschdicke
-H_FIN_T, H_FD = 3.0, 30.0               # Finne: Dicke, Tiefe
-H_HOLE_U, H_HOLE_V = (15.0, 45.0), 12.0 # 2 x M3 x 12 + Mutter, Abstand 30 = Raster
-H_SLOT_U = (8.0, 22.0, 38.0, 52.0)      # Kabelbinder 2,5 (je Modul 2 davon nutzen, nicht auf Höhe einer Tülle)
-H_SLOT_W = (4.5, 6.5)                   # Schlitz zwischen Flansch und Modul
-H_MOD_W = 7.0                           # Modul-Rückseite ab Wand (Platz für die Schraubenköpfe)
-# (Name, Art, Finnen-Außenseite, Richtung, Start entlang u): 'seite' = Finne senkrecht, 'boden' = Finne waagerecht
-HALTER = [('Hi', 'seite', -27.0, 1, 81.0),         # OCS hi links neben der Finne, Löcher (-15, 96 / 126)
-          ('Lo', 'seite', 27.0, -1, 111.0),        # OCS lo, Löcher (15, 126 / 156)
-          ('Y', 'boden', 44.0, 1, -30.0),          # Y-Stück liegt auf der Finne, Löcher (±15, 56)
-          ('Mix', 'boden', 14.0, 1, -30.0)]        # OCS Mix liegt auf der Finne, Löcher (±15, 26)
+# ---------------- Schlauchebene, OCS, T-Stück, OCS Mix ----------------
+YS = -22.0                      # alle Schlauch- und Tüllenachsen
+SCHLAUCH_D = 12.0               # Schlauch 6/12
+R_MIN = 25.0                    # kleinster Biegeradius (ca. 2 x Außen-Ø)
+# OCS hochkant, Platine parallel zur Wand, Rohrseite zur Wand (Rohrmitte ≈ 8 vor der Rohr-Oberkante), Bauteile vorn.
+OCS_Y = (-37.0, -14.0)
+TUELLE_D = 6.4                  # Tüllenfuß
+OCS_HI = dict(x=(-24.0, -1.0), z=(Z_ZUFUHR - 32.5 - 56.25, Z_ZUFUHR - 32.5 + 56.25),   # 3F: Platine 112,5 x 22
+              tz=(Z_ZUFUHR, Z_ZUFUHR - 68.3), tx=(-24.0, -31.5))                        # Tüllen nach links, 7,5 lang
+OCS_LO = dict(x=(1.0, 25.0), z=(Z_ZUFUHR + 21.5 - 79.0, Z_ZUFUHR + 21.5),               # 3FRL2.0: 79 x 24, Tüllen 21,5 / 60 vom Ende
+              tz=(Z_ZUFUHR, Z_ZUFUHR - 38.5), tx=(25.0, 30.0))                          # Tüllen nach rechts, 5 lang
+T_Z = 53.0                      # T-Stück 6 mm: Arme ±18 (Ø 8), Körper Ø 10, Abgang 15 nach unten
+T_ARM, T_STEM = 18.0, 15.0
+MIX = dict(x=(-11.5, 11.5), y=(-79.5, -0.5), z=(BT, BT + 24.0), ty=(YS, YS - 38.5), tip=BT + 29.0)   # quer zur Wand, Tüllen oben
 
-# ---------------- Module vorn (Bauraum aus Materialliste/ocs-sensoren-masse.md) ----------------
-# OCS hochkant, Platine quer zur Wand, Tüllen nach vorn. Bauraum je (x0, x1, y0, y1, z0, z1).
-Y_MOD = (-H_MOD_W - 30.0, -H_MOD_W)                     # Tiefe 30 (Platine 22/24 + Tüllen)
-OCS = {'hi': (-24.0, -1.0) + Y_MOD + (Z_ZUFUHR - 32.5 - 61.0, Z_ZUFUHR - 32.5 + 61.0),   # 3F: 122 lang, Tüllen +32,5 / -35,8
-       'lo': (1.0, 24.0) + Y_MOD + (Z_ZUFUHR - 20.5 - 41.0, Z_ZUFUHR - 20.5 + 41.0),     # 3FRL2.0: 82 lang, Tüllen +20,5 / -18
-       'mix': (-41.0, 41.0) + Y_MOD + (17.0, 40.0)}                                      # waagerecht auf dem Halter
-TUELLEN = {'hi': (Z_ZUFUHR, Z_ZUFUHR - 68.3), 'lo': (Z_ZUFUHR, Z_ZUFUHR - 38.5),     # Eingang oben, Ausgang unten (Z)
-           'mix': (-18.0, 20.5)}                                                     # Eingang links, Ausgang rechts (X)
-YSTUECK = (-15.0, 15.0, -H_MOD_W - 15.0, -H_MOD_W, 47.0, 77.0)                       # Dummy 30 x 30 x 15
+# ---------------- Halter ----------------
+# Rückenhalter (OCS hi / lo): Flansch 24 x 60 an der Wand, 2 Finnen an den Rändern als Abstand (OCS liegt bei Y -14 an),
+# 4 Schlitze für Kabelbinder 2,5 x 150 quer durch beide Finnen. 2 x M3 x 16 + Mutter auf dem Raster (Mitte, ±15).
+H_L, H_W, H_FT, H_FIN_T, H_STAND = 60.0, 24.0, 4.0, 3.0, 14.0
+H_HOLE_U = (15.0, 45.0)
+H_SLOT_U = (8.0, 22.0, 38.0, 52.0)
+H_SLOT_W = (7.0, 9.0)
+RUECKEN = [('Hi', -15.0, 111.0), ('Lo', 15.0, 111.0)]      # Name, Mitte X, Unterkante Z -> Löcher (±15, 126 / 156)
+# T-Halter: Flansch 40 x 24, 2 waagerechte Finnen (4 dick, 30 tief) über und unter dem T-Körper, unten Gabel für den Abgang.
+TH_X, TH_Z, TH_FIN_X, TH_FIN_T, TH_D = (-20.0, 20.0), (44.0, 68.0), (-9.0, 9.0), 4.0, 30.0
+TH_HOLES = [(-15.0, 56.0), (15.0, 56.0)]
+TH_SLOT_X, TH_SLOT_W = (-6.5, 6.5), (9.0, 11.0)
+# OCS Mix: Kabelbinder durch Schlitze in der Grundplatte, Nut auf der Unterseite.
+MIX_BAND_Y = (-40.0, -72.0)
 
 BEIGE = (0.87, 0.81, 0.69, 1.0)
 HELL = (0.78, 0.8, 0.82, 1.0)
@@ -125,17 +134,39 @@ def grid_points():
     return out
 
 
-def halter_box(art, a, s, u0, u, v, w):
-    """Lokaler Quader (u0..u1, v0..v1, w0..w1) eines Modulhalters -> Builder-Quader-Grenzen (x0, x1, y0, y1, z0, z1)."""
-    vv = sorted((a + s * v[0], a + s * v[1]))
-    uu = (u0 + u[0], u0 + u[1])
-    ww = (-w[1], -w[0])
-    return (vv + list(ww) + list(uu)) if art == 'seite' else (list(uu) + list(ww) + vv)
+def _bogen(c, r, a0, a1, n=8):
+    """Kreisbogen in der XZ-Ebene (Y = YS): Mittelpunkt c = (x, z), Winkel a0 -> a1 in Grad."""
+    return [(c[0] + r * math.cos(math.radians(a0 + (a1 - a0) * k / n)), YS,
+             c[1] + r * math.sin(math.radians(a0 + (a1 - a0) * k / n))) for k in range(n + 1)]
 
 
-def halter_punkt(art, a, s, u0, u, v):
-    """Lokaler Punkt (u, v) auf der Wand -> (X, Z)."""
-    return (a + s * v, u0 + u) if art == 'seite' else (u0 + u, a + s * v)
+def schlaeuche():
+    """Schlauch-Mittellinien als Punktlisten (X, Y, Z) und kleinster Biegeradius je Strecke."""
+    hz0, hz1 = OCS_HI['tz']
+    lz0, lz1 = OCS_LO['tz']
+    hx, lx = OCS_HI['tx'][1], OCS_LO['tx'][1]
+    rh = (hz1 - T_Z) / 2                                                  # U-Bogen hi
+    out = {
+        'ZuHi': ([(-TUBE_X + 0.5, YS, Z_ZUFUHR), (hx, YS, Z_ZUFUHR)], None),
+        'ZuLo': ([(lx, YS, Z_ZUFUHR), (TUBE_X - 0.5, YS, Z_ZUFUHR)], None),
+        'HiT': ([(hx, YS, hz1)] + _bogen((hx - 2, T_Z + rh), rh, 90, 270, 12) + [(-T_ARM, YS, T_Z)], rh),   # 2 gerade ab Tülle
+        'LoT': ([(lx, YS, lz1)] + _bogen((lx + 2, lz1 - R_MIN), R_MIN, 90, 0) + _bogen((lx + 2, T_Z + R_MIN), R_MIN, 0, -90)
+                + [(T_ARM, YS, T_Z)], R_MIN),
+        'TMix': ([(0.0, YS, T_Z - T_STEM), (0.0, YS, MIX['tip'])], None),
+    }
+    for sx, n in ((-1, 'AbHi'), (1, 'AbLo')):                             # Ablass: Bogen in XY bis an die Wand
+        cx, cy, r = sx * (TUBE_X - 0.5), YS + R_MIN, R_MIN
+        f1 = math.acos((cy + 0.5) / r)                                    # bis 0,5 vor die Wand (dann im Durchlass)
+        pts = []
+        for k in range(9):
+            f = f1 * k / 8
+            pts.append((cx - sx * r * math.sin(f), cy - r * math.cos(f), Z_ABLASS))
+        out[n] = (pts, r)
+    y0, z0 = MIX['ty'][1], MIX['tip']                                     # Patient: hoch, dann nach vorn
+    out['Patient'] = ([(0.0, y0, z0), (0.0, y0, z0 + 10)] +
+                      [(0.0, y0 - R_MIN + R_MIN * math.cos(math.radians(90 * k / 8)), z0 + 10 + R_MIN * math.sin(math.radians(90 * k / 8)))
+                       for k in range(1, 9)] + [(0.0, y0 - R_MIN - 15, z0 + 10 + R_MIN)], R_MIN)
+    return out
 
 
 def kb_profile(seite):

@@ -1,7 +1,8 @@
 # Development-Wand, nicht gedruckt: QV (Rahmen v2 + Getriebe v1 + Gegenlager 6200) vereinfacht, NEMA 17,
-# OCS hi / lo / Mix (Bauraum), Y-Stück, Raspberry Pi, BTT SKR Pico. Für Ansicht und Kollisionsprüfung.
+# OCS hi / lo / Mix, T-Stück, Schläuche, Raspberry Pi, BTT SKR Pico. Für Ansicht und Kollisionsprüfung.
 # QV in Ventil-Koordinaten wie ihht-pi CAD/quetschventil (z = Achse, Rahmenplatte z -6 .. 0) -> Rückseite auf Y = 0.
-from ihht.geo import Part, B, Cy
+import math
+from ihht.geo import Part, B, C, Cx, Cy, Cz
 from ihht.wand import *
 
 PT2 = 6.0                               # Rahmenplatte v2
@@ -34,9 +35,30 @@ def qv(cx, s):
 
 def bauen():
     t = qv(-QX, 'L') + qv(QX, 'R')
-    for k, (x0, x1, y0, y1, z0, z1) in OCS.items():
-        t.append(Part('dwOCS' + k.capitalize(), 'OCS %s Bauraum (Dummy)' % k, BLAU, printed=False).add(B(x0, x1, y0, y1, z0, z1)))
-    t.append(Part('dwYStueck', 'Y-Stück Bauraum 30 x 30 x 15 (Dummy)', HELL, printed=False).add(B(*YSTUECK)))
+    for name, o, sx in (('Hi', OCS_HI, -1), ('Lo', OCS_LO, 1)):              # Platine + Rohr + Bauteile, Tüllen seitlich
+        q = Part('dwOCS' + name, 'OCS %s (Dummy, Tüllen zum QV)' % name.lower(), BLAU, printed=False)
+        q.add(B(o['x'][0], o['x'][1], OCS_Y[0], OCS_Y[1], o['z'][0], o['z'][1]))
+        for z in o['tz']:
+            q.add(Cx(o['tx'][0] - sx * 0.01, o['tx'][1], YS, z, TUELLE_D))
+        t.append(q)
+    m = Part('dwOCSMix', 'OCS Mix (Dummy, quer zur Wand, Tüllen oben)', BLAU, printed=False)
+    m.add(B(MIX['x'][0], MIX['x'][1], MIX['y'][0], MIX['y'][1], MIX['z'][0], MIX['z'][1]))
+    for y in MIX['ty']:
+        m.add(Cz(0, y, MIX['z'][1] - 0.01, MIX['tip'], TUELLE_D))
+    t.append(m)
+    tt = Part('dwTStueck', 'T-Stück 6 mm (Dummy)', HELL, printed=False)
+    tt.add(Cx(-T_ARM, T_ARM, YS, T_Z, 8.0), Cx(-6.0, 6.0, YS, T_Z, 10.0), Cz(0, YS, T_Z - T_STEM, T_Z, 8.0))
+    t.append(tt)
+    for name, (pts, r) in schlaeuche().items():                            # Schläuche 6/12 als Kette aus Zylindern
+        h = Part('dwSchlauch' + name, 'Schlauch 6/12 %s%s (Dummy)' % (name, ', R %.0f' % r if r else ''), (0.95, 0.95, 0.85, 1.0), printed=False)
+        n = len(pts) - 1
+        for k, (a_, b_) in enumerate(zip(pts, pts[1:])):
+            d = [b_[i] - a_[i] for i in range(3)]
+            L = math.sqrt(sum(c * c for c in d))
+            e0 = 0.6 if k > 0 else 0.0                                     # innen überlappen, an den Tüllen bündig enden
+            e1 = 0.6 if k < n - 1 else 0.0
+            h.add(C(tuple(a_[i] - d[i] / L * e0 for i in range(3)), tuple(b_[i] + d[i] / L * e1 for i in range(3)), SCHLAUCH_D))
+        t.append(h)
     for name, (w, h, d) in (('Pi', (85.0, 70.0, 30.0)), ('Pico', (90.0, 64.0, 12.0))):
         cx, cz = TR_POS[name]
         y0 = WT + TR_T + TR_BOSS_H

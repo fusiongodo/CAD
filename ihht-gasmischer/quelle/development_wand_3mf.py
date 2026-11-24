@@ -54,7 +54,7 @@ def pruefe(paare, titel):
 
 G = set(grid_points())
 noetig = [(sx * K_HOLE_X, z) for sx in (-1, 1) for z in K_HOLE_Z] + [(cx + x, cz + z) for cx, cz in TR_POS.values() for x, z in TR_MOUNT]
-noetig += [halter_punkt(art, a, sg, u0, u, H_HOLE_V) for _, art, a, sg, u0 in HALTER for u in H_HOLE_U]
+noetig += [(cx, z0 + u) for _, cx, z0 in RUECKEN for u in H_HOLE_U] + list(TH_HOLES)
 fehlt = [p for p in noetig if p not in G]
 print('Rasterbohrungen %d, Knotenblech/Träger/Halter auf dem Raster: %s' % (len(G), 'ja' if not fehlt else 'FEHLT %s' % fehlt))
 ok &= not fehlt
@@ -101,25 +101,13 @@ if os.path.isdir(IHHT_QV):
 else:
     print('--- QV v2: %s fehlt, übersprungen ---' % IHHT_QV)
 
-# ---------- Fluss: Tüllenhöhen und ungefähre Schlauchlängen (Mittellinie, Bogen als Viertelkreis R 15) ----------
-def weg(*pts):
-    return sum(math.dist(a, b) for a, b in zip(pts, pts[1:]))
-
-
-yt = OCS['hi'][2] - 3.0                                                  # Tüllenspitze vor dem Bauraum
-xh, xl = sum(OCS['hi'][:2]) / 2, sum(OCS['lo'][:2]) / 2
-ty, tm = YSTUECK, OCS['mix']
-print('--- Fluss (X, Z; Tüllen nach vorn bei Y %.0f) ---' % yt)
-print('  Ablass oben          Z %.1f  QV-Ende X ±%.1f -> Durchlass X ±%.0f: ca. %.0f mm bis zur Wand, dann nach hinten' % (
-    Z_ABLASS, QX - TUBE_X + 2, abs(ABLASS[0][0]), weg((QX - TUBE_X, TUBE_Y), (abs(ABLASS[0][0]), TUBE_Y), (abs(ABLASS[0][0]), 6)) + 20))
-for k, xm in (('hi', xh), ('lo', xl)):
-    ein, aus = TUELLEN[k]
-    print('  OCS %-3s Eingang Z %.1f (X %+.1f), Ausgang Z %.1f; QV -> OCS ca. %.0f mm, OCS -> Y ca. %.0f mm' % (
-        k, ein, xm, aus, weg((-(QX - TUBE_X) if k == 'hi' else QX - TUBE_X, 0, TUBE_Y), (xm, 0, TUBE_Y), (xm, 0, yt)) + 10,
-        weg((xm, aus, yt), (xm, ty[5] + 8, yt), (math.copysign(7, xm), ty[5], ty[2] - 3)) + 10))
-print('  Y-Stück Eingänge Z %.0f (X ±7), Ausgang Z %.0f -> OCS Mix Eingang X %.1f / Z %.1f: ca. %.0f mm' % (
-    ty[5], ty[4], TUELLEN['mix'][0], (tm[4] + tm[5]) / 2, weg((0, ty[4]), (0, tm[5] + 6), (TUELLEN['mix'][0], (tm[4] + tm[5]) / 2)) + 15))
-print('  OCS Mix Ausgang X %+.1f / Z %.1f -> rechts unten zum Patienten' % (TUELLEN['mix'][1], (tm[4] + tm[5]) / 2))
+# ---------- Fluss: Tüllenhöhen, Schlauchlängen (Mittellinie ohne Aufstecklänge) und Biegeradien ----------
+print('--- Fluss (Schlauchebene Y %.0f, X quer, Z Höhe) ---' % YS)
+print('  QV unten -> OCS-Eingang Z %.1f (hi Tülle X %.1f, lo X %.1f)' % (Z_ZUFUHR, OCS_HI['tx'][1], OCS_LO['tx'][1]))
+print('  OCS-Ausgang hi Z %.1f, lo Z %.1f -> T-Stück Z %.0f (Arme ±%.0f) -> OCS Mix Eingang Z %.0f' % (
+    OCS_HI['tz'][1], OCS_LO['tz'][1], T_Z, T_ARM, MIX['tip']))
+for n, (pts, r) in schlaeuche().items():
+    print('  %-8s %5.0f mm frei%s' % (n, sum(math.dist(a, b) for a, b in zip(pts, pts[1:])), ', kleinster Radius R %.0f' % r if r else ', gerade'))
 print('PRÜFUNG', 'OK' if ok else 'FEHLER')
 
 
@@ -144,11 +132,10 @@ def HINTEN(n):                                                          # Halter
     return m
 PLATTEN = {
     'development_wand_1_wand.3mf': [('Wandplatte', VORN('dwWand'), 128.0, 128.0)],
-    'development_wand_2_grundplatte_traeger.3mf': [('Grundplatte', lay(M['dwGrund'], X, 0.0), 128.0, 84.0),
-                                                   ('Traeger Pi', VORN('dwTraegerPi'), 62.0, 205.0),
-                                                   ('Traeger Pico', VORN('dwTraegerPico'), 154.0, 205.0),
-                                                   ('Halter Y', HINTEN('dwHalterY'), 214.0, 205.0),
-                                                   ('Halter Mix', HINTEN('dwHalterMix'), 238.0, 205.0)],
+    'development_wand_2_grundplatte_traeger.3mf': [('Grundplatte', lay(M['dwGrund'], X, 0.0), 128.0, 85.0),
+                                                   ('Traeger Pi', VORN('dwTraegerPi'), 62.0, 212.0),
+                                                   ('Traeger Pico', VORN('dwTraegerPico'), 154.0, 212.0),
+                                                   ('Halter T', HINTEN('dwHalterT'), 224.0, 212.0)],
     'development_wand_3_knotenbleche.3mf': [('Knotenblech VL', lay(M['dwKnotenVL'], Y, -math.pi / 2), 64.0, 64.0),
                                             ('Knotenblech VR', lay(M['dwKnotenVR'], Y, math.pi / 2), 192.0, 64.0),
                                             ('Knotenblech HL', lay(M['dwKnotenHL'], Y, -math.pi / 2), 64.0, 192.0),
