@@ -57,11 +57,12 @@ Die Spalte „frei“ ist die Länge der Mittellinie zwischen den Tüllenspitzen
   Darauf stehen Stützen Ø 5 bis an die Platinen-Rückseite, die Steckergehäuse (6 hoch) bleiben frei.
   - **Lo (3FRL 2.0):** 4 Zapfen Ø 3,4 stramm in die Löcher Ø 3,5 (quer 18,5, längs 72). Am J2-Ende sind es die Langlöcher, das Längenmaß ist also unkritisch.
     Die inneren runden Löcher (65,5) bleiben frei.
-  - **Hi (3F 3.0):** Die Löcher habe ich nur vom Foto (Paar A 25 vom J2-Ende, Paar B versetzt bei 97 / 101). Deshalb sitzt nur 1 Zapfen Ø 2,6 im Loch A an der Tüllenkante,
-    die anderen 3 Stützen sind flach. Zwei Randleisten mit Rastwulst (u 40 … 50 ab J2-Ende) halten die Platine. Einfach von vorn eindrücken.
+  - **Hi (3F 3.0):** Die Löcher habe ich nur vom Foto (Paar A 25 vom J2-Ende, Paar B versetzt bei 97 / 101). Die Platine ist gegenüber dem Foto um 180° gedreht (Alex):
+    Die Tüllen zeigen links, das J2-Ende ist unten. Nur 1 Zapfen Ø 2,6 sitzt im Loch A an der Gegenkante,
+    die anderen 3 Stützen sind flach. Zwei Randleisten mit Rastwulst (Z 143,5 … 153,5) halten die Platine. Einfach von vorn eindrücken.
 - **T-Halter:** Flansch 40 × 24 mit Finnen über und unter dem T-Stück. Unten sitzt eine Gabel für den Abgang, sie hält das T in X und Y.
 - **Kaufteil T-Stück 6 mm:** Arme etwa ±18, Abgang nach unten höchstens 15 lang, sonst stößt es auf OCS Mix.
-- **Lage der OCS:** Tüllen- und Rohrachse auf Y −22, J2-Ende oben.
+- **Lage der OCS:** Tüllen- und Rohrachse auf Y −22. J2-Ende: hi unten, lo oben.
   - OCS hi: X −24 … −2, Z 68,5 … 193,5, Platine Y −14,5 … −16
   - OCS lo: X 1 … 25, Z 116 … 195, Platine Y −13,7 … −15,3
   - Maße von Alex: hi Rohr 12 + Platine 1,5 = 13,5, dickste Stelle mit Stecker 20, Tüllen 7 über der Kante; lo dickste Stelle mit Stecker 25, Tüllen 5,5 über der Kante.
@@ -115,7 +116,7 @@ Summe: 22 × M3 × 12, 6 × M3 × 16, 12 × M3 × 20, 26 × Mutter M3, 8 × M2,5
    QV hi kommt links hin, QV lo rechts. Den unteren Schlauch etwa 15 mm über das Amboss-Ende hinaus stehen lassen.
 6. Die OCS montieren:
    - Die Stecker (J2 usw.) vorher einstecken, danach kommt man schlecht dran.
-   - OCS hi mit den Tüllen nach links und dem J2-Ende oben auf den Steckhalter Hi drücken, bis beide Rastwülste einschnappen.
+   - OCS hi mit den Tüllen nach links und dem J2-Ende unten auf den Steckhalter Hi drücken, bis beide Rastwülste einschnappen.
    - OCS lo mit den Tüllen nach rechts und dem J2-Ende (Langlöcher) oben auf die 4 Zapfen des Steckhalters Lo stecken.
    - Die Bauteilseite zeigt zur Wand, das Rohr nach vorn.
    - Den unteren QV-Schlauch direkt auf den oberen Eingang schieben.
