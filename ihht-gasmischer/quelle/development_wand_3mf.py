@@ -25,7 +25,7 @@ DRUCK = os.path.join(HERE, '..', 'druck')
 IHHT_QV = os.environ.get('IHHT_QV', os.path.expanduser('~/Desktop/projects/ihht-retrofit/ihht-pi/CAD/quetschventil'))
 BED = 256.0
 
-mods = ['wand_platte', 'wand_grundplatte', 'wand_knotenblech', 'wand_traeger', 'wand_halter', 'wand_dummies']
+mods = ['wand_platte', 'wand_grundplatte', 'wand_knotenblech', 'wand_traeger', 'wand_halter', 'wand_ocshalter', 'wand_dummies']
 P = {p.name: p for m in mods for p in build.teil(m).bauen()}
 M = {n: netz(p) for n, p in P.items()}
 ok = True
@@ -58,7 +58,7 @@ def pruefe(paare, titel):
 
 G = set(grid_points())
 noetig = [(sx * K_HOLE_X, z) for sx in (-1, 1) for z in K_HOLE_Z] + [(cx + x, cz + z) for cx, cz in TR_POS.values() for x, z in TR_MOUNT]
-noetig += [(cx, z0 + u) for _, cx, z0 in RUECKEN for u in H_HOLE_U] + list(TH_HOLES)
+noetig += [xz for h in OH.values() for xz in h['schrauben']] + list(TH_HOLES)
 fehlt = [p for p in noetig if p not in G]
 print('Rasterbohrungen %d, Knotenblech/Träger/Halter auf dem Raster: %s' % (len(G), 'ja' if not fehlt else 'FEHLT %s' % fehlt))
 ok &= not fehlt
@@ -144,8 +144,8 @@ PLATTEN = {
                                             ('Knotenblech VR', lay(M['dwKnotenVR'], Y, math.pi / 2), 192.0, 64.0),
                                             ('Knotenblech HL', lay(M['dwKnotenHL'], Y, -math.pi / 2), 64.0, 192.0),
                                             ('Knotenblech HR', lay(M['dwKnotenHR'], Y, math.pi / 2), 192.0, 192.0),
-                                            ('Halter Hi', HINTEN('dwHalterHi'), 128.0, 64.0),
-                                            ('Halter Lo', HINTEN('dwHalterLo'), 128.0, 192.0)]}
+                                            ('OCS-Halter Hi', HINTEN('dwOCSHalterHi'), 128.0, 64.0),
+                                            ('OCS-Halter Lo', HINTEN('dwOCSHalterLo'), 128.0, 192.0)]}
 
 
 def proc(waende, infill, deckel, boden, brim, bett):

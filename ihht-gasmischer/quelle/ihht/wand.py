@@ -12,6 +12,10 @@
 #   T-Ausgang gerade nach unten auf OCS Mix. OCS Mix steht quer zur Wand auf der Grundplatte (Tüllen oben), sein
 #   Ausgang liegt 38,5 vor dem Eingang -> Patientenschlauch geht vor allen anderen Schläuchen nach vorn weg.
 #   Alle Schlauchachsen in einer Ebene Y -22 (Schlauchmitte im QV); Schläuche als Dummies mit Biegeradius.
+# v2.2 (24.11.2026, Alex hat beide OCS ausgemessen): OCS hi = 3F 3.0 (125 x 22, Tüllen 85 auseinander), OCS lo =
+#   3FRL 2.0 (79 x 24). Beide mit der Bauteilseite (Stecker) zur Wand, Rohr nach vorn, auf Steckhaltern (Platine wird auf
+#   Zapfen gesteckt). Untere hi-Tülle liegt jetzt 85 tiefer -> U-Bogen R 25 geht links weit aus und läuft mit einer
+#   flachen S-Kurve von unten in den T-Arm (gerader U-Bogen hätte nur R 18).
 
 # Builder-Koordinaten: X quer, Y Tiefe (vorn = -Y), Z oben. Wand-Vorderseite Y = 0, Oberseite Grundplatte Z = 6.
 #
@@ -89,25 +93,56 @@ TR_POS = {'Pi': (-55.0, 56.0), 'Pico': (55.0, 56.0)}
 YS = -22.0                      # alle Schlauch- und Tüllenachsen
 SCHLAUCH_D = 12.0               # Schlauch 6/12
 R_MIN = 25.0                    # kleinster Biegeradius (ca. 2 x Außen-Ø)
-# OCS hochkant, Platine parallel zur Wand, Rohrseite zur Wand (Rohrmitte ≈ 8 vor der Rohr-Oberkante), Bauteile vorn.
-OCS_Y = (-37.0, -14.0)
-TUELLE_D = 6.4                  # Tüllenfuß
-OCS_HI = dict(x=(-24.0, -1.0), z=(Z_ZUFUHR - 32.5 - 56.25, Z_ZUFUHR - 32.5 + 56.25),   # 3F: Platine 112,5 x 22
-              tz=(Z_ZUFUHR, Z_ZUFUHR - 68.3), tx=(-24.0, -31.5))                        # Tüllen nach links, 7,5 lang
-OCS_LO = dict(x=(1.0, 25.0), z=(Z_ZUFUHR + 21.5 - 79.0, Z_ZUFUHR + 21.5),               # 3FRL2.0: 79 x 24, Tüllen 21,5 / 60 vom Ende
-              tz=(Z_ZUFUHR, Z_ZUFUHR - 38.5), tx=(25.0, 30.0))                          # Tüllen nach rechts, 5 lang
+# OCS hochkant, Platine parallel zur Wand, Bauteilseite (Stecker) zur Wand, Rohr nach vorn: Rohr- und Tüllenachse auf YS.
+# Maße von Alex (Geodreieck / Schieblehre), Löcher und Stecker vom Foto. Platinenmaß u ab dem J2-Ende (oben), v ab der
+# Tüllenkante. Dummy = Platine + Hüllquader Rohrseite (dickste Stelle mit Clip) + Steckergehäuse 6 hoch auf der Rückseite.
+TUELLE_D = 5.5                  # Tüllenhals
+STECKER_H = 6.0
+
+
+def _ocs(x0, x1, z1, L, d, mitte, vorn, ueber, tu, seite, stecker, loecher, rohr_b, rohr_t, clip_u):
+    """seite -1: Tüllen nach links (Tüllenkante x0), +1: nach rechts (x1). stecker / loecher in (v, u).
+    Rohrseite: Rohr rohr_b breit mittig, rohr_t vor der Platine; Clip mit Muttern über die volle Breite bei clip_u (u0, u1),
+    vorn bis zur dicksten Stelle."""
+    ob = YS + mitte                                                       # Platinen-Vorderseite (Rohrseite)
+    vx = (lambda v: x0 + v) if seite < 0 else (lambda v: x1 - v)
+    kante = x0 if seite < 0 else x1
+    xm = (x0 + x1) / 2
+    return dict(x=(x0, x1), z=(z1 - L, z1), y=(ob + d, ob), vorn=ob - vorn, hinten=ob + d + STECKER_H,
+                rohr=(xm - rohr_b / 2, xm + rohr_b / 2, ob - rohr_t), clip=(z1 - clip_u[1], z1 - clip_u[0]),
+                tz=tuple(z1 - u for u in tu), tx=(kante, kante + seite * ueber),
+                stecker=[(min(vx(v0), vx(v1)), max(vx(v0), vx(v1)), z1 - u1, z1 - u0) for v0, v1, u0, u1 in stecker],
+                loch={k: (vx(v), z1 - u) for k, (v, u) in loecher.items()})
+
+
+# hi 3F 3.0: 125 x 22 x 1,5, Rohr bis 12,5 vor der Platine (Mitte 6), Tüllen 20 von beiden Enden, 7 über die Kante.
+# Löcher (Foto): Ecke u 2,8; Paar A u 25,4 (v 3,2 / v 20,3); Paar B versetzt u 96,8 (v 3,2) / u 100,9 (v 20,3).
+OCS_HI = _ocs(-24.0, -2.0, Z_ZUFUHR + 20.0, 125.0, 1.5, 6.0, 12.5, 7.0, (20.0, 105.0), -1,
+              [(0, 5.7, 6, 17.6), (0, 5.7, 108, 117), (17.2, 22, 73, 84)],                     # J2, J5, J3
+              {'E': (3.2, 2.8), 'A1': (3.2, 25.2), 'A2': (20.3, 25.6), 'B1': (3.2, 96.7), 'B2': (20.3, 100.9)},
+              12.5, 12.0, (55.0, 70.0))
+# lo 3FRL 2.0: 79 x 24 x 1,6, 25 hoch (Stecker bis Clip), Rohrmitte 6,7 vor der Platine, Tüllen 21,5 (J2-Ende) / 60,
+# 5,5 über die Kante. Löcher Ø 3,5 quer 18,5: Ende ohne J2 rund (u 75,6), J2-Ende Langloch 4,5 (u 3,6) + rund (u 10,1).
+OCS_LO = _ocs(1.0, 25.0, Z_ZUFUHR + 21.5, 79.0, 1.6, 6.7, 17.4, 5.5, (21.5, 60.0), 1,
+              [(18.0, 24.0, 20.0, 30.0)],                                                        # J2 (Gegenkante)
+              {'L1': (2.75, 3.6), 'L2': (21.25, 3.6), 'R1': (2.75, 75.6), 'R2': (21.25, 75.6)},
+              13.4, 13.4, (34.0, 46.0))
 T_Z = 53.0                      # T-Stück 6 mm: Arme ±18 (Ø 8), Körper Ø 10, Abgang 15 nach unten
 T_ARM, T_STEM = 18.0, 15.0
 MIX = dict(x=(-11.5, 11.5), y=(-79.5, -0.5), z=(BT, BT + 24.0), ty=(YS, YS - 38.5), tip=BT + 29.0)   # quer zur Wand, Tüllen oben
 
 # ---------------- Halter ----------------
-# Rückenhalter (OCS hi / lo): Flansch 24 x 60 an der Wand, 2 Finnen an den Rändern als Abstand (OCS liegt bei Y -14 an),
-# 4 Schlitze für Kabelbinder 2,5 x 150 quer durch beide Finnen. 2 x M3 x 16 + Mutter auf dem Raster (Mitte, ±15).
-H_L, H_W, H_FT, H_FIN_T, H_STAND = 60.0, 24.0, 4.0, 3.0, 14.0
-H_HOLE_U = (15.0, 45.0)
-H_SLOT_U = (8.0, 22.0, 38.0, 52.0)
-H_SLOT_W = (7.0, 9.0)
-RUECKEN = [('Hi', -15.0, 111.0), ('Lo', 15.0, 111.0)]      # Name, Mitte X, Unterkante Z -> Löcher (±15, 126 / 156)
+H_FT = 4.0                      # Flanschdicke aller Halter (Y -4 .. 0)
+# OCS-Steckhalter: Flansch an der Wand (2 x M3 x 16 + Mutter auf dem Raster, vor dem Aufstecken), Stützen Ø 5 bis an die
+# Platinen-Rückseite, darauf Zapfen durch die Platinenlöcher. lo: 4 Zapfen Ø 3,4 stramm (Löcher Ø 3,5, am J2-Ende die
+# Langlöcher -> Längenmaß unkritisch). hi: Löcher nur vom Foto -> 1 Zapfen Ø 2,6 in A1 (Lage), Stützen ohne Zapfen in
+# A2 / B1 / B2, 2 Randleisten mit Rastwulst (u 40 .. 50, frei von Rohr, Clip und Tüllen) halten die Platine.
+OH_POST_D = 5.0
+OH = {'Hi': dict(ocs=OCS_HI, flansch=(-25.8, -0.2, 88.0, 173.0), schrauben=[(-15.0, 116.0), (-15.0, 156.0)],
+                 zapfen={'A1': 2.6}, stuetzen=('A1', 'A2', 'B1', 'B2'), leisten=(OCS_HI['z'][1] - 50.0, OCS_HI['z'][1] - 40.0)),
+      'Lo': dict(ocs=OCS_LO, flansch=(1.0, 25.0, 116.0, 195.0), schrauben=[(15.0, 126.0), (15.0, 156.0)],
+                 zapfen={'L1': 3.4, 'L2': 3.4, 'R1': 3.4, 'R2': 3.4}, stuetzen=('L1', 'L2', 'R1', 'R2'), leisten=None)}
+LEISTE_T, LEISTE_LUFT, WULST_D = 1.6, 0.2, 2.4
 # T-Halter: Flansch 40 x 24, 2 waagerechte Finnen (4 dick, 30 tief) über und unter dem T-Körper, unten Gabel für den Abgang.
 TH_X, TH_Z, TH_FIN_X, TH_FIN_T, TH_D = (-20.0, 20.0), (44.0, 68.0), (-9.0, 9.0), 4.0, 30.0
 TH_HOLES = [(-15.0, 56.0), (15.0, 56.0)]
@@ -155,11 +190,18 @@ def schlaeuche():
     hz0, hz1 = OCS_HI['tz']
     lz0, lz1 = OCS_LO['tz']
     hx, lx = OCS_HI['tx'][1], OCS_LO['tx'][1]
-    rh = (hz1 - T_Z) / 2                                                  # U-Bogen hi
+    # hi: U-Bogen R 25 nach unten (links ausladend), dann flache S-Kurve R 25 hoch in den linken T-Arm
+    zb = hz1 - 2 * R_MIN
+    th = math.acos(1 - (T_Z - zb) / (2 * R_MIN))
+    xs = -T_ARM - 3.0 - 2 * R_MIN * math.sin(th)                       # 3 gerade vor dem T-Arm
+    assert T_Z > zb and xs < hx - 2, 'hi-Schlauch passt nicht'
+    w = math.degrees(th)
+    hi_t = ([(hx, YS, hz1)] + _bogen((xs, hz1 - R_MIN), R_MIN, 90, 270, 12) + _bogen((xs, zb + R_MIN), R_MIN, -90, -90 + w, 4)[1:]
+            + _bogen((-T_ARM - 3.0, T_Z - R_MIN), R_MIN, 90 + w, 90, 4)[1:] + [(-T_ARM, YS, T_Z)])
     out = {
         'ZuHi': ([(-TUBE_X + 0.5, YS, Z_ZUFUHR), (hx, YS, Z_ZUFUHR)], None),
         'ZuLo': ([(lx, YS, Z_ZUFUHR), (TUBE_X - 0.5, YS, Z_ZUFUHR)], None),
-        'HiT': ([(hx, YS, hz1)] + _bogen((hx - 2, T_Z + rh), rh, 90, 270, 12) + [(-T_ARM, YS, T_Z)], rh),   # 2 gerade ab Tülle
+        'HiT': (hi_t, R_MIN),
         'LoT': ([(lx, YS, lz1)] + _bogen((lx + 2, lz1 - R_MIN), R_MIN, 90, 0) + _bogen((lx + 2, T_Z + R_MIN), R_MIN, 0, -90)
                 + [(T_ARM, YS, T_Z)], R_MIN),
         'TMix': ([(0.0, YS, T_Z - T_STEM), (0.0, YS, MIX['tip'])], None),
