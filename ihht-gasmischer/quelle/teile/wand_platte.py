@@ -11,7 +11,7 @@ def bauen():
           B(-WX, WX, WT - 0.01, YR, WZ1 - RW, WZ1), B(-WX, WX, WT - 0.01, YR, WZ0, WZ0 + RB),
           B(-WX, -WX + RW, WT - 0.01, YR, WZ0, WZ1), B(WX - RW, WX, WT - 0.01, YR, WZ0, WZ1),
           B(-WX + RW - 0.01, WX - RW + 0.01, WT - 0.01, YR, RIB_Z[0], RIB_Z[1]),
-          P(-WX, WZ1, WT - 0.01, YR, [(FASE, 0), (FASE + RW * math.sqrt(2), 0), (0, -FASE - RW * math.sqrt(2)), (0, -FASE)]))   # Randsteg an der Fase
+          P(-WX, WZ1, WT - 0.01, YR, [(FASE - 1, 0), (FASE + RW * math.sqrt(2), 0), (0, -FASE - RW * math.sqrt(2)), (0, -FASE + 1)]))   # Randsteg an der Fase (1 in den Fasenschnitt, keine deckungsgleichen Flächen)
     for cx in (-QX, QX):
         w.add(Cy(cx, WT - 0.01, YR, QZ, 2 * QV_RING[1]))
     w.cut(*[Cy(cx, WT, YR + 1, QZ, 2 * QV_RING[0]) for cx in (-QX, QX)])     # Ringsteg innen frei

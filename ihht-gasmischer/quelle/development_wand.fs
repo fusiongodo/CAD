@@ -126,7 +126,7 @@ function dw_dwWand(context is Context, id is Id, prog is box)
     fCuboid(context, A0 + "s3", { "corner1" : vector(-123, 5.99, 6) * millimeter, "corner2" : vector(-119, 16, 252) * millimeter });
     fCuboid(context, A0 + "s4", { "corner1" : vector(119, 5.99, 6) * millimeter, "corner2" : vector(123, 16, 252) * millimeter });
     fCuboid(context, A0 + "s5", { "corner1" : vector(-119.01, 5.99, 140) * millimeter, "corner2" : vector(119.01, 16, 143) * millimeter });
-    prismOp(context, A0 + "s6", vector(-123, 5.99, 252) * millimeter, [[38, 0], [43.657, 0], [0, -43.657], [0, -38]], 10.01);
+    prismOp(context, A0 + "s6", vector(-123, 5.99, 252) * millimeter, [[37, 0], [43.657, 0], [0, -43.657], [0, -37]], 10.01);
     fCylinder(context, A0 + "s7", { "bottomCenter" : vector(-73, 5.99, 198) * millimeter, "topCenter" : vector(-73, 16, 198) * millimeter, "radius" : 49.5 * millimeter });
     fCylinder(context, A0 + "s8", { "bottomCenter" : vector(73, 5.99, 198) * millimeter, "topCenter" : vector(73, 16, 198) * millimeter, "radius" : 49.5 * millimeter });
     prog[] = "Vereinigen Stufe 0";
