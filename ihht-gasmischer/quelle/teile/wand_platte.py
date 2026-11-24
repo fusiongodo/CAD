@@ -10,11 +10,13 @@ def bauen():
     w.add(B(-WX, WX, 0, WT, WZ0, WZ1),
           B(-WX, WX, WT - 0.01, YR, WZ1 - RW, WZ1), B(-WX, WX, WT - 0.01, YR, WZ0, WZ0 + RB),
           B(-WX, -WX + RW, WT - 0.01, YR, WZ0, WZ1), B(WX - RW, WX, WT - 0.01, YR, WZ0, WZ1),
-          B(-WX + RW - 0.01, WX - RW + 0.01, WT - 0.01, YR, RIB_Z[0], RIB_Z[1]),
-          P(-WX, WZ1, WT - 0.01, YR, [(FASE - 1, 0), (FASE + RW * math.sqrt(2), 0), (0, -FASE - RW * math.sqrt(2)), (0, -FASE + 1)]))   # Randsteg an der Fase (1 in den Fasenschnitt, keine deckungsgleichen Flächen)
+          B(-WX + RW - 0.01, WX - RW + 0.01, WT - 0.01, YR, RIB_Z[0], RIB_Z[1]))
     for cx in (-QX, QX):
         w.add(Cy(cx, WT - 0.01, YR, QZ, 2 * QV_RING[1]))
     w.cut(*[Cy(cx, WT, YR + 1, QZ, 2 * QV_RING[0]) for cx in (-QX, QX)])     # Ringsteg innen frei
+    # Randsteg an der Fase erst nach dem Ringschnitt: die Fasenkante liegt 46,7 vom QV hi, knapp im Ring (47); ohne den
+    # Steg blieben fast tangentiale Keile (Onshape: BOOLEAN_NON_MANIFOLD_RESULT). Ragt 1 in den Fasenschnitt.
+    w.add(P(-WX, WZ1, WT - 0.01, YR, [(FASE - 1, 0), (FASE + RW * math.sqrt(2), 0), (0, -FASE - RW * math.sqrt(2)), (0, -FASE + 1)]))
     bx, bz = QV_CUT_BOX
     for cx in (-QX, QX):
         w.cut(Cy(cx, -1, YR + 1, QZ, 2 * QV_CUT_R), B(cx - bx, cx + bx, -1, YR + 1, QZ - bz, QZ + bz))
