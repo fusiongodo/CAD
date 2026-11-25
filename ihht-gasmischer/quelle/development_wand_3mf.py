@@ -4,7 +4,7 @@ Prüfung: jedes gedruckte Teil wasserdicht und ein Körper; keine Überschneidun
 Dummies des Moduls; dazu die echten QV-Teile an beiden Plätzen gegen Wand, Grundplatte, Knotenbleche, Träger und
 die übrigen Dummies:
   QV v3   teile/qv_*.py (dieses Repo), Rückwand-Rückseite auf Y = 0
-  QV v2   ihht-pi CAD/quetschventil gen_rahmen.py + gen_getriebe.py (Pfad IHHT_QV, sonst übersprungen), mit NEMA-Dummy
+  QV wie gebaut (Rahmen v2 + Getriebe v1 + Gegenlager 6200): echte Teile im Modul selbst (teile/wand_qv.py)
 Ausgabe ../druck/development_wand_1_wand.3mf, _2_grundplatte_traeger.3mf, _3_knotenbleche.3mf für Bambu P1S, PLA,
 texturierte PEI, 0,20 mm, Gyroid, Lüfter erst ab Schicht 4, erste Schicht 50 mm/s (DRUCK unten):
   1 Wand         3 Wände, 15 %, Deckel 5 / Boden 4, ohne Brim (Bett voll), Bett 65 °C
@@ -22,10 +22,9 @@ from ihht.wand import *
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DRUCK = os.path.join(HERE, '..', 'druck')
-IHHT_QV = os.environ.get('IHHT_QV', os.path.expanduser('~/Desktop/projects/ihht-retrofit/ihht-pi/CAD/quetschventil'))
 BED = 256.0
 
-mods = ['wand_platte', 'wand_grundplatte', 'wand_knotenblech', 'wand_traeger', 'wand_halter', 'wand_ocshalter', 'wand_dummies']
+mods = ['wand_platte', 'wand_grundplatte', 'wand_knotenblech', 'wand_traeger', 'wand_halter', 'wand_ocshalter', 'wand_qv', 'wand_dummies']
 P = {p.name: p for m in mods for p in build.teil(m).bauen()}
 M = {n: netz(p) for n, p in P.items()}
 ok = True
@@ -62,7 +61,10 @@ noetig += [xz for h in OH.values() for xz in h['schrauben']] + list(TS_HOLES)
 fehlt = [p for p in noetig if p not in G]
 print('Rasterbohrungen %d, Knotenblech/Träger/Halter auf dem Raster: %s' % (len(G), 'ja' if not fehlt else 'FEHLT %s' % fehlt))
 ok &= not fehlt
-ok &= pruefe([(a, b, M[a], M[b]) for a, b in itertools.combinations(M, 2)], 'Überschneidungen im Modul (> 0,2 mm3)')
+# Teile desselben Quetschventils untereinander nicht prüfen (Passungen und Quetschrippen überdecken sich mit Absicht;
+# das Ventil für sich prüft pruefe_qv2 unten). Jedes Ventil-Teil gegen Wand, Halter, Dummies und das andere Ventil schon.
+selbes_qv = lambda a, b: any(a.startswith(q) and b.startswith(q) for q in (('dwQVL', 'dwNemaL'), ('dwQVR', 'dwNemaR')))
+ok &= pruefe([(a, b, M[a], M[b]) for a, b in itertools.combinations(M, 2) if not selbes_qv(a, b)], 'Überschneidungen im Modul (> 0,2 mm3)')
 # Schraubenköpfe hinten: Ø 5,5 + 0,5 Luft muss an jeder QV-Schraube frei sein (Stege, Fase)
 kopf = []
 for cx in (-QX, QX):
@@ -98,24 +100,6 @@ for p in (p for m in v3mods for p in build.teil(m).bauen()):
     m.apply_translation([0, -8.0, 0])                                   # Rückwand z -8 .. 0 -> Rückseite auf Y = 0
     V3[p.name] = m
 ok &= pruefe(plaetze(V3, 'v3'), 'QV v3 (echte Teile) gegen Wand und Module')
-
-if os.path.isdir(IHHT_QV):
-    sys.path.insert(0, IHHT_QV)
-    import gen_getriebe, gen_rahmen
-    import netz as qvnetz
-    R = trimesh.transformations.rotation_matrix(math.pi / 2, [1, 0, 0])   # (x, y, z) -> (x, -z, y)
-    V2 = {}
-    for p in gen_rahmen.PARTS + gen_getriebe.PARTS:
-        m = qvnetz.build(p)
-        m.apply_transform(R)
-        m.apply_translation([0, -6.0, 0])                               # Rahmenplatte z -6 .. 0 -> Rückseite auf Y = 0
-        V2['v2' + p.name] = m
-    nema = M['dwNemaR'].copy()
-    nema.apply_translation([-QX, 0, -QZ])
-    V2['dwNema'] = nema
-    ok &= pruefe(plaetze(V2, 'v2'), 'QV v2 (echte Teile gen_rahmen + gen_getriebe) gegen Wand und Module')
-else:
-    print('--- QV v2: %s fehlt, übersprungen ---' % IHHT_QV)
 
 # ---------- Fluss: Tüllenhöhen, Schlauchlängen (Mittellinie ohne Aufstecklänge) und Biegeradien ----------
 print('--- Fluss (Schlauchebene Y %.0f, X quer, Z Höhe) ---' % YS)

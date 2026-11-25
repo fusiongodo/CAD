@@ -23,7 +23,9 @@ MODULE = [
          teile=['qv_welle', 'qv_klemmhuelse', 'qv_hohlrad', 'qv_ritzel', 'qv_getriebeplatte', 'qv_rueckwand', 'qv_steg',
                 'qv_amboss', 'qv_distanzscheibe', 'qv_dummies']),
     dict(datei='development_wand.fs', titel='Development-Wand (Lochraster, 2 QV)', var='developmentWand', prefix='dw_',
-         teile=['wand_platte', 'wand_grundplatte', 'wand_knotenblech', 'wand_traeger', 'wand_halter', 'wand_ocshalter', 'wand_dummies']),
+         teile=['wand_platte', 'wand_grundplatte', 'wand_knotenblech', 'wand_traeger', 'wand_halter', 'wand_ocshalter', 'wand_qv', 'wand_dummies']),
+    dict(datei='gegenlager_6200.fs', titel='Quetschventil Gegenlager 6200 (Rahmen v2)', var='quetschventilGegenlager6200', prefix='q2_',
+         teile=['qv2_teile']),
     dict(datei='cpap_reservoir.fs', titel='CPAP-Inline-Reservoir-Adapter (Einwegventil)', var='cpapReservoir', prefix='cr_',
          teile=['cpap_reservoir']),
 ]

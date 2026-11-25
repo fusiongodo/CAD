@@ -72,6 +72,16 @@ Stand 25.11.2026, Anordnung v3.2.
     Unter dem Rohr sind 12 frei, die Schraubenköpfe passen. Schrauben und Flansche unverändert. Das T-Stück von v3.1 bleibt (alle Anschlüsse Y −22).
   - Druck: `druck/development_wand_hi_mix.3mf` (nur Halter Hi und Mix).
 
+- **Quetschventil als echte Teile in der Wand (25.11., Alex: Architekturfehler):** Die Wand zeigte die Ventile nur als Platzhalter,
+  und das gebaute Ventil lag als eigene Generatoren im ihht-pi-Ordner mit von Hand kopiertem FeatureScript.
+  - Die Quelle des gebauten Ventils (Rahmen v2, Getriebe v1, Gegenlager 6200, Welle mit Zapfen, Distanzring) steht jetzt im Builder: `quelle/qv2/gen_*.py`.
+    `ihht/qv2.py` rechnet sie in Builder-Teile um, `teile()` liefert das ganze Ventil an einer beliebigen Stelle.
+  - Zwei Abnehmer derselben Quelle: Modul „Quetschventil Gegenlager 6200 (Rahmen v2)“ (`teile/qv2_teile.py`) und die Development-Wand (`teile/wand_qv.py`, links und rechts).
+    Eine Änderung in `qv2/` wirkt nach `build.py` in beiden. Die Dummies `dwQVL` / `dwQVR` sind entfallen.
+  - Die Prüfung der Wand läuft jetzt mit den echten Ventil-Teilen (je 14, mit Lagern und Motor) gegen Wand, Halter, OCS und Schläuche. Der Umweg über den ihht-pi-Pfad ist raus.
+  - Die Dateien `gen_*.py` im ihht-pi-Ordner laden nur noch die Quelle aus dem CAD-Repo, damit die Druck-Skripte dort weiter laufen.
+  - Eingebaute Exzentrizität im Modell: 3,5 (`E_BAU` in `ihht/qv2.py`). Das QV v3 (M8-Kern) bleibt ein eigenes Modul und ist nicht gebaut.
+
 - **Quetschventile am Aufbau (25.11., Beobachtung Alex):**
   - Aufbau: Ein QV läuft mit Getriebeplatte und Hohlrad der Vorversion (vom 24.11.), das andere ist komplett der Nachtdruck vom 24./25.11.
     Beide sind Rahmen v2 mit Steg 6200 und Gegenlagerscheibe (ihht-pi `CAD/quetschventil`, VERSUCHE.md V8), nicht QV v3. Welle (e) und Hülse nicht notiert.
