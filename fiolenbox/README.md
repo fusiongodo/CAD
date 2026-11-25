@@ -9,12 +9,21 @@ Box für 12 Fiolen (Ø 16 × 38 mm), 4 × 3, mit Stülpdeckel zum Aufrasten. Sti
 | `quelle/fiolenbox_v3.py` | **Aktuell (Deckel).** Deckel v3 = Maße von Deckelring 6; Unterteil bleibt v2 |
 | `quelle/fiolenbox_v2.py` | **Aktuell (Unterteil).** CadQuery-Modell v2, alle Maße oben als Parameter |
 | `quelle/fiolenbox_v1.py` | v1 (Röhrchen, Einsteck-Deckel) |
+| `quelle/fiolenbox_raster_v1.py` | **Beliebiges Raster, auch groß:** `fiolenbox_raster_v1.py <16|11> <SPALTENxREIHEN>` → STL/STEP + `info_<fiole>_<raster>.json`; Seiten ≥ 100 mm: 2 Rastnasen je Seite auf allen 4 Seiten, Deckelplatte 2,0 |
 | `quelle/fiolenbox_11_v1.py` | **Fiolenbox 11** für Ø 11,6 × 32: `~/.cache/cq312/bin/python fiolenbox_11_v1.py 4x3` (oder `5x4`) → STL/STEP + `info_11_<raster>.json` |
 | `quelle/ansicht_bauen.py`, `ansicht_template.html` | baut `ansicht/index.html` (3D-Ansicht, offline) |
 | `druck/fiolenbox_v2.3mf`, `quelle/fiolenbox_v2_3mf.py` | Druckdatei P1S: Unterteil stehend + Deckel kopfüber, 0,2 mm, 3 Wände, 15 % Infill, kein Support. `fiolenbox_v2_3mf.py <NAME> masse` → Deckel 3 Wände, Unterteil 2 Wände, 6/5 Schichten, Cubic 35 % (Masse + Isolation) |
 | `quelle/deckelringe_3mf.py`, `druck/deckelringe_2026-11-18.3mf` | Testdruck: 7 Deckelringe (Spiel × Versatz der Rastnase) für das gedruckte Unterteil v2 |
 | `passungen.html` | **Messungs-Timeline** Deckelpassung, neue Einträge oben |
 | `druck/fiolenbox_v*_*.stl/.step` | Unterteil und Deckel (Deckel in geschlossener Lage, zum Drucken umdrehen) |
+
+## 10 × 10 v1 (25.11.2026) – 100 Plätze, beide Fiolengrößen
+- 16 mm (Ø 16 × 38): außen 196,4 × 196,4 × 42,5 mm · 11 mm (Ø 11,6 × 32): 152,4 × 152,4 × 36,5 mm
+- Unterteil wie v2 / Fiolenbox 11, Deckel-Rastung Ring 6
+- 8 Rastnasen (2 je Seite bei ±¼ Seitenlänge, alle 4 Seiten) statt 2 – mehr Last (100 Fiolen), lange Seiten federn stark
+- Deckelplatte 2,0 mm (Spannweite ~190 bzw. ~150 mm)
+- Geprüft im Modell: sitzend 12,7 mm³ Vorspannung (= 8 × Ring-6-Wert), Rastung über ~1,5 mm Hub, frei ab 5 mm
+- Ansicht: `ansicht/fiolenbox_16_10x10.html`, `fiolenbox_11_10x10.html`; noch keine 3MF
 
 ## Fiolenbox 11 v1 (23.11.2026) – Fiolen Ø 11,6 × 32
 - Unterteil wie v2 (Spiel 0,5, Steg 2 mm → Loch Ø 12,6, Raster 14,6), H_BASE 20 → Fiolen ragen 13,5 mm heraus; Hals 7 mm, Rille wie v2

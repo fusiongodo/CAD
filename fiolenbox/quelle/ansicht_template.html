@@ -21,11 +21,12 @@ const STL_BASE = "__STL_BASE__", STL_LID = "__STL_LID__";
 const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0)).buffer;
 const scene = new THREE.Scene();
 const cam = new THREE.PerspectiveCamera(35, innerWidth/innerHeight, 1, 2000);
-cam.up.set(0,0,1); cam.position.set(150,-170,130);
+const K = Math.max(1, Math.max(INFO.L, INFO.W)/82);
+cam.up.set(0,0,1); cam.position.set(150*K,-170*K,130*K);
 const ren = new THREE.WebGLRenderer({antialias:true, alpha:true});
 ren.setPixelRatio(devicePixelRatio); ren.setSize(innerWidth, innerHeight); ren.localClippingEnabled = true;
 document.body.appendChild(ren.domElement);
-const ctl = new OrbitControls(cam, ren.domElement); ctl.target.set(0,0,22); ctl.enableDamping = true; ctl.update();
+const ctl = new OrbitControls(cam, ren.domElement); ctl.target.set(0,0,INFO.H/2); ctl.enableDamping = true; ctl.update();
 scene.add(new THREE.HemisphereLight(0xffffff, 0x8890a0, 1.6));
 const dl = new THREE.DirectionalLight(0xffffff, 1.6); dl.position.set(80,-120,200); scene.add(dl);
 const dl2 = new THREE.DirectionalLight(0xffffff, .6); dl2.position.set(-100,80,50); scene.add(dl2);
@@ -56,13 +57,13 @@ const bLid = document.getElementById('bLid');
 bLid.onclick = () => { target = lift > 5 ? 0 : 30; };
 const bCut = document.getElementById('bCut');
 bCut.onclick = () => { if (clips.length) clips.pop(); else clips.push(clip); bCut.classList.toggle('on', !!clips.length);
-  if (clips.length) { cam.position.set(140, 0, 30); ctl.target.set(INFO.cut_x||0,0,21); } };
+  if (clips.length) { cam.position.set((INFO.cut_x||0)+140*K, 0, 30*K); ctl.target.set(INFO.cut_x||0,0,INFO.H/2); } };
 const bVial = document.getElementById('bVial');
 bVial.onclick = () => { vials.visible = !vials.visible; bVial.classList.toggle('on', vials.visible); };
 const bPrint = document.getElementById('bPrint');
 bPrint.onclick = () => { printMode = !printMode; bPrint.classList.toggle('on', printMode);
   if (printMode){ vials.visible = false; bVial.classList.remove('on'); target = lift = 0;
-    lid.rotation.x = Math.PI; lid.position.set(0, -(INFO.W+15), INFO.H); cam.position.set(170,-230,150); ctl.target.set(0,-(INFO.W+15)/2,12); }
+    lid.rotation.x = Math.PI; lid.position.set(0, -(INFO.W+15), INFO.H); cam.position.set(170*K,-230*K,150*K); ctl.target.set(0,-(INFO.W+15)/2,12); }
   else { lid.rotation.x = 0; lid.position.set(0,0,0); } };
 // Deckel direkt ziehen
 const ray = new THREE.Raycaster(), mp = new THREE.Vector2(); let drag = null;
