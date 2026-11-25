@@ -946,11 +946,12 @@ function dw_dwQVLWelle(context is Context, id is Id, prog is box)
     fCuboid(context, C1 + "o1", { "corner1" : vector(-87, 0.6, 184) * millimeter, "corner2" : vector(-81.5, 13.5, 212) * millimeter });
     prismOp(context, C1 + "o2", vector(-73, -9.01, 198) * millimeter, [[6.786, 10.498], [5.623, 11.164], [4.396, 11.701], [3.119, 12.105], [1.805, 12.369], [0.471, 12.491], [-0.869, 12.47], [-2.198, 12.305], [-3.503, 11.999], [-4.767, 11.555], [-5.976, 10.979], [-7.117, 10.276], [-8.176, 9.456], [-9.141, 8.526], [-10.001, 7.499], [-10.746, 6.386], [-11.368, 5.199], [-11.859, 3.952], [-12.214, 2.66], [-12.428, 1.338], [-12.5, 0], [-12.428, -1.338], [-12.214, -2.66], [-11.859, -3.952], [-11.368, -5.199], [-10.746, -6.386], [-10.001, -7.499], [-9.141, -8.526], [-8.176, -9.456], [-7.117, -10.276], [-5.976, -10.979], [-4.767, -11.555], [-3.503, -11.999], [-2.198, -12.305], [-0.869, -12.47], [0.471, -12.491], [1.805, -12.369], [3.119, -12.105], [4.396, -11.701], [5.623, -11.164], [6.786, -10.498], [5.789, -10.759], [4.772, -10.926], [3.744, -10.997], [2.714, -10.972], [1.691, -10.85], [0.684, -10.633], [-0.299, -10.323], [-1.248, -9.922], [-2.156, -9.435], [-3.014, -8.864], [-3.814, -8.216], [-4.551, -7.495], [-5.217, -6.709], [-5.807, -5.864], [-6.315, -4.967], [-6.736, -4.027], [-7.068, -3.052], [-7.307, -2.05], [-7.452, -1.029], [-7.5, 0], [-7.452, 1.029], [-7.307, 2.05], [-7.068, 3.052], [-6.736, 4.027], [-6.315, 4.967], [-5.807, 5.864], [-5.217, 6.709], [-4.551, 7.495], [-3.814, 8.216], [-3.014, 8.864], [-2.156, 9.435], [-1.248, 9.922], [-0.299, 10.323], [0.684, 10.633], [1.691, 10.85], [2.714, 10.972], [3.744, 10.997], [4.772, 10.926], [5.789, 10.759]], 0.61);
     fCylinder(context, C1 + "o3", { "bottomCenter" : vector(-73, 17, 201.8) * millimeter, "topCenter" : vector(-73, 17, 206) * millimeter, "radius" : 1.6 * millimeter });
-    fCylinder(context, C1 + "o4", { "bottomCenter" : vector(-73, -26.9, 198) * millimeter, "topCenter" : vector(-73, -47.9, 198) * millimeter, "radius" : 1.3 * millimeter });
+    fCylinder(context, C1 + "o4", { "bottomCenter" : vector(-73, 12, 198) * millimeter, "topCenter" : vector(-73, -47.9, 198) * millimeter, "radius" : 4.15 * millimeter });
+    fCylinder(context, C1 + "o5", { "bottomCenter" : vector(-73, 24.25, 198) * millimeter, "topCenter" : vector(-73, 11.99, 198) * millimeter, "radius" : 3.6 * millimeter });
     prog[] = "Abziehen Stufe 1";
     cutAll(context, id + "dwQVLWelle_x1", qUnion([qCreatedBy(A0, EntityType.BODY)]), qCreatedBy(C1, EntityType.BODY));
     prog[] = "Name/Farbe";
-    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "QV-Getriebe Welle mit Zapfen fuer 6200 (ein Teil, Exzenter e 3,5)", color(0.93, 0.55, 0.2));
+    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "QV-Getriebe Welle mit Zapfen fuer 6200 (ein Teil, Exzenter e 3,5, M8-Kern)", color(0.93, 0.55, 0.2));
 }
 
 function dw_dwQVLRing(context is Context, id is Id, prog is box)
@@ -1121,6 +1122,19 @@ function dw_dwQVLL6200(context is Context, id is Id, prog is box)
     cutAll(context, id + "dwQVLL6200_x1", qUnion([qCreatedBy(A0, EntityType.BODY)]), qCreatedBy(C1, EntityType.BODY));
     prog[] = "Name/Farbe";
     finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "Lager 6200 (Dummy)", color(0.65, 0.67, 0.7));
+}
+
+function dw_dwQVLM8(context is Context, id is Id, prog is box)
+{
+    prog[] = "Körper Stufe 0";
+    const A0 = id + "dwQVLM8_a0";
+    fCylinder(context, A0 + "s0", { "bottomCenter" : vector(-73, 12, 198) * millimeter, "topCenter" : vector(-73, -47.26, 198) * millimeter, "radius" : 4 * millimeter });
+    fCylinder(context, A0 + "s1", { "bottomCenter" : vector(-73, 22.75, 198) * millimeter, "topCenter" : vector(-73, 11.99, 198) * millimeter, "radius" : 3.5 * millimeter });
+    prismOp(context, A0 + "s2", vector(-73, -52.55, 198) * millimeter, [[7.5, 0], [3.75, 6.495], [-3.75, 6.495], [-7.5, 0], [-3.75, -6.495], [3.75, -6.495]], 5.3);
+    prog[] = "Vereinigen Stufe 0";
+    unionAll(context, id + "dwQVLM8_u0", qUnion([qCreatedBy(A0, EntityType.BODY)]));
+    prog[] = "Name/Farbe";
+    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "M8 x 70 DIN 933 (Stahlkern, Dummy)", color(0.65, 0.67, 0.7));
 }
 
 function dw_dwNemaL(context is Context, id is Id, prog is box)
@@ -1302,11 +1316,12 @@ function dw_dwQVRWelle(context is Context, id is Id, prog is box)
     fCuboid(context, C1 + "o1", { "corner1" : vector(59, 0.6, 184) * millimeter, "corner2" : vector(64.5, 13.5, 212) * millimeter });
     prismOp(context, C1 + "o2", vector(73, -9.01, 198) * millimeter, [[6.786, 10.498], [5.623, 11.164], [4.396, 11.701], [3.119, 12.105], [1.805, 12.369], [0.471, 12.491], [-0.869, 12.47], [-2.198, 12.305], [-3.503, 11.999], [-4.767, 11.555], [-5.976, 10.979], [-7.117, 10.276], [-8.176, 9.456], [-9.141, 8.526], [-10.001, 7.499], [-10.746, 6.386], [-11.368, 5.199], [-11.859, 3.952], [-12.214, 2.66], [-12.428, 1.338], [-12.5, 0], [-12.428, -1.338], [-12.214, -2.66], [-11.859, -3.952], [-11.368, -5.199], [-10.746, -6.386], [-10.001, -7.499], [-9.141, -8.526], [-8.176, -9.456], [-7.117, -10.276], [-5.976, -10.979], [-4.767, -11.555], [-3.503, -11.999], [-2.198, -12.305], [-0.869, -12.47], [0.471, -12.491], [1.805, -12.369], [3.119, -12.105], [4.396, -11.701], [5.623, -11.164], [6.786, -10.498], [5.789, -10.759], [4.772, -10.926], [3.744, -10.997], [2.714, -10.972], [1.691, -10.85], [0.684, -10.633], [-0.299, -10.323], [-1.248, -9.922], [-2.156, -9.435], [-3.014, -8.864], [-3.814, -8.216], [-4.551, -7.495], [-5.217, -6.709], [-5.807, -5.864], [-6.315, -4.967], [-6.736, -4.027], [-7.068, -3.052], [-7.307, -2.05], [-7.452, -1.029], [-7.5, 0], [-7.452, 1.029], [-7.307, 2.05], [-7.068, 3.052], [-6.736, 4.027], [-6.315, 4.967], [-5.807, 5.864], [-5.217, 6.709], [-4.551, 7.495], [-3.814, 8.216], [-3.014, 8.864], [-2.156, 9.435], [-1.248, 9.922], [-0.299, 10.323], [0.684, 10.633], [1.691, 10.85], [2.714, 10.972], [3.744, 10.997], [4.772, 10.926], [5.789, 10.759]], 0.61);
     fCylinder(context, C1 + "o3", { "bottomCenter" : vector(73, 17, 201.8) * millimeter, "topCenter" : vector(73, 17, 206) * millimeter, "radius" : 1.6 * millimeter });
-    fCylinder(context, C1 + "o4", { "bottomCenter" : vector(73, -26.9, 198) * millimeter, "topCenter" : vector(73, -47.9, 198) * millimeter, "radius" : 1.3 * millimeter });
+    fCylinder(context, C1 + "o4", { "bottomCenter" : vector(73, 12, 198) * millimeter, "topCenter" : vector(73, -47.9, 198) * millimeter, "radius" : 4.15 * millimeter });
+    fCylinder(context, C1 + "o5", { "bottomCenter" : vector(73, 24.25, 198) * millimeter, "topCenter" : vector(73, 11.99, 198) * millimeter, "radius" : 3.6 * millimeter });
     prog[] = "Abziehen Stufe 1";
     cutAll(context, id + "dwQVRWelle_x1", qUnion([qCreatedBy(A0, EntityType.BODY)]), qCreatedBy(C1, EntityType.BODY));
     prog[] = "Name/Farbe";
-    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "QV-Getriebe Welle mit Zapfen fuer 6200 (ein Teil, Exzenter e 3,5)", color(0.93, 0.55, 0.2));
+    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "QV-Getriebe Welle mit Zapfen fuer 6200 (ein Teil, Exzenter e 3,5, M8-Kern)", color(0.93, 0.55, 0.2));
 }
 
 function dw_dwQVRRing(context is Context, id is Id, prog is box)
@@ -1477,6 +1492,19 @@ function dw_dwQVRL6200(context is Context, id is Id, prog is box)
     cutAll(context, id + "dwQVRL6200_x1", qUnion([qCreatedBy(A0, EntityType.BODY)]), qCreatedBy(C1, EntityType.BODY));
     prog[] = "Name/Farbe";
     finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "Lager 6200 (Dummy)", color(0.65, 0.67, 0.7));
+}
+
+function dw_dwQVRM8(context is Context, id is Id, prog is box)
+{
+    prog[] = "Körper Stufe 0";
+    const A0 = id + "dwQVRM8_a0";
+    fCylinder(context, A0 + "s0", { "bottomCenter" : vector(73, 12, 198) * millimeter, "topCenter" : vector(73, -47.26, 198) * millimeter, "radius" : 4 * millimeter });
+    fCylinder(context, A0 + "s1", { "bottomCenter" : vector(73, 22.75, 198) * millimeter, "topCenter" : vector(73, 11.99, 198) * millimeter, "radius" : 3.5 * millimeter });
+    prismOp(context, A0 + "s2", vector(73, -52.55, 198) * millimeter, [[7.5, 0], [3.75, 6.495], [-3.75, 6.495], [-7.5, 0], [-3.75, -6.495], [3.75, -6.495]], 5.3);
+    prog[] = "Vereinigen Stufe 0";
+    unionAll(context, id + "dwQVRM8_u0", qUnion([qCreatedBy(A0, EntityType.BODY)]));
+    prog[] = "Name/Farbe";
+    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "M8 x 70 DIN 933 (Stahlkern, Dummy)", color(0.65, 0.67, 0.7));
 }
 
 function dw_dwNemaR(context is Context, id is Id, prog is box)
@@ -1983,6 +2011,15 @@ export const developmentWand = defineFeature(function(context is Context, id is 
         }
         try
         {
+            dw_dwQVLM8(context, id, prog);
+            okCount += 1;
+        }
+        catch (error)
+        {
+            failed = append(failed, "dwQVLM8 @ " ~ prog[] ~ " -> " ~ toString(error));
+        }
+        try
+        {
             dw_dwNemaL(context, id, prog);
             okCount += 1;
         }
@@ -2106,6 +2143,15 @@ export const developmentWand = defineFeature(function(context is Context, id is 
         catch (error)
         {
             failed = append(failed, "dwQVRL6200 @ " ~ prog[] ~ " -> " ~ toString(error));
+        }
+        try
+        {
+            dw_dwQVRM8(context, id, prog);
+            okCount += 1;
+        }
+        catch (error)
+        {
+            failed = append(failed, "dwQVRM8 @ " ~ prog[] ~ " -> " ~ toString(error));
         }
         try
         {
@@ -2235,7 +2281,7 @@ export const developmentWand = defineFeature(function(context is Context, id is 
         }
         if (size(failed) > 0)
         {
-            var msg = "OK: " ~ toString(okCount) ~ " von 53 Teilen. Fehler: ";
+            var msg = "OK: " ~ toString(okCount) ~ " von 55 Teilen. Fehler: ";
             for (var s in failed)
                 msg = msg ~ s ~ " || ";
             reportFeatureWarning(context, id, msg);

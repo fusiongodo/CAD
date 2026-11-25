@@ -211,6 +211,23 @@ ZJ1 = 40.9                  # Zapfenende (Steg 6200: Lager z 32,2 .. 41,2), wie 
 JZ_D, JZ_RIB, JZ_PASS = 9.95, 0.12, 16.8
 
 
+# M8-Kern (26.11.2026, Alex): M8 x 70 DIN 933 als Stahlkern auf der Hauptachse, von vorn durch das 6200 gesteckt. Der Kopf
+# liegt auf dem Innenring des 6200 und spannt 6200, Distanzring und beide 6203 gegen die Wellenschulter. Geht nur bis
+# e 3,7: der Exzenterzapfen Ø 16,9 laesst bei e 3,5 noch 0,8 Wand neben der Bohrung, darueber bricht sie seitlich aus.
+M8_FREI, M8_SELF, M8_L, M8_KOPF = 8.3, 7.2, 70.0, 5.3
+M8_KERN = os.environ.get('QV_M8', '1') != '0' and E <= 3.7
+M8_Z_KOPF = 41.25                           # Kopfauflage = Vorderseite 6200 (z 41,2)
+M8_Z_GEW = -18.0                            # ab hier nach hinten Kernloch
+M8_Z_END = M8_Z_KOPF - M8_L - 1.5           # Bohrungsgrund -30,25 (Zapfen hinten endet bei -33,8)
+
+
+def schraube_m8():
+    s = Part('m8', 'M8 x 70 DIN 933 (Stahlkern, Dummy)')
+    s.add(Cz(0, 0, M8_Z_GEW, M8_Z_KOPF + 0.01, 8.0), Cz(0, 0, M8_Z_KOPF - M8_L, M8_Z_GEW + 0.01, M8_SELF - 0.2),
+          P(0, 0, M8_Z_KOPF, M8_Z_KOPF + M8_KOPF, [(round(7.5 * math.cos(math.radians(60 * k)), 4), round(7.5 * math.sin(math.radians(60 * k)), 4)) for k in range(6)]))
+    return s
+
+
 def linse(r, rp, e, n=24):
     """Kreis r um (0,0) geschnitten mit Kreis rp um (e,0)."""
     x = (r * r - rp * rp + e * e) / (2 * e)
@@ -229,7 +246,7 @@ def _rippe(r0, r1, w, ang):
 
 
 if os.environ.get('QV_ZAPFEN', '1') != '0':      # Standard seit 25.11.2026; QV_ZAPFEN=0 baut die alte Welle mit Stiften
-    welle = Part('welle_zapfen', 'QV-Getriebe Welle mit Zapfen fuer 6200 (ein Teil, Exzenter e %s)' % ('%g' % E).replace('.', ','))
+    welle = Part('welle_zapfen', 'QV-Getriebe Welle mit Zapfen fuer 6200 (ein Teil, Exzenter e %s%s)' % (('%g' % E).replace('.', ','), ', M8-Kern' if M8_KERN else ''))
     welle.add(
         K(0, 0, Z_C1 + 0.2, Z_C1 + 0.6, sr - 0.4, sr),
         Cz(0, 0, Z_C1 + 0.59, Z_CONE1 + 0.1, STUB_D),
@@ -245,7 +262,10 @@ if os.environ.get('QV_ZAPFEN', '1') != '0':      # Standard seit 25.11.2026; QV_
         B(-14, -KEY_AF / 2, -14, 14, Z_CONE1 - 0.6, Z_DISK0),
         P(0, 0, ZB0 - 0.6, ZB0 + 0.01, crescent(12.5, 11.0, E)),
         C((0, sr - 3.2, Z_SCREW), (0, sr + 1, Z_SCREW), 3.2))
-    if E <= 4.6:
+    if M8_KERN:
+        welle.cut(Cz(0, 0, M8_Z_GEW, ZJ1 + 1, M8_FREI),                     # M8 x 70 von vorn: frei durch Zapfen und Exzenter
+                  Cz(0, 0, M8_Z_END, M8_Z_GEW + 0.01, M8_SELF))             # hinten schneidet sie sich ihr Gewinde (12 lang)
+    elif E <= 4.6:
         welle.cut(Cz(0, 0, ZJ1 - 20, ZJ1 + 1, M3_SELF))
     for k in range(DOTS):                                   # Kennpunkte auf der Zapfenstirn neben dem Lagerzapfen
         welle.cut(Cz(E + 6.0, -2.5 + 5 * k if DOTS > 1 else 0, ZB1 - 0.8, ZB1 + 1, 1.2))

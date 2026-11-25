@@ -82,6 +82,13 @@ Stand 25.11.2026, Anordnung v3.2.
   - Die Dateien `gen_*.py` im ihht-pi-Ordner laden nur noch die Quelle aus dem CAD-Repo, damit die Druck-Skripte dort weiter laufen.
   - Eingebaute Exzentrizität im Modell: 3,5 (`E_BAU` in `ihht/qv2.py`). Das QV v3 (M8-Kern) bleibt ein eigenes Modul und ist nicht gebaut.
 
+- **Welle mit M8-Kern (26.11., Wunsch Alex):** Die Welle mit angedrucktem Zapfen bekommt auf der Hauptachse eine M8 × 70 (DIN 933) als Stahlkern.
+  - Lager bleiben: 2 × 6203 auf dem Exzenter, 6200 vorn im Steg. Kein 608, kein 6905 (das wäre QV v3, die Lager sind nicht da).
+  - Die Schraube wird von vorn durch das 6200 gesteckt. Bohrung 8,3 frei durch Zapfen und Exzenter, hinten 12 lang Kernloch 7,2 (schneidet sich selbst ein).
+  - Der Kopf liegt auf dem Innenring des 6200 und spannt 6200, Distanzring und beide 6203 gegen die Wellenschulter. Nur handfest anziehen, das Gewinde ist Kunststoff.
+  - Grenze: geht nur bis e 3,7. Bei e 3,5 bleiben 0,8 Wand neben der Bohrung im Exzenter und im Zapfen. Wellen mit e 4,5 / 5,0 behalten das M3-Kernloch.
+  - Nur die Welle ist neu (`QV_M8` in `qv2/gen_getriebe.py`, Standard an). Im Modell steht die Schraube als Dummy. Ungetestet.
+
 - **Quetschventile am Aufbau (25.11., Beobachtung Alex):**
   - Aufbau: Ein QV läuft mit Getriebeplatte und Hohlrad der Vorversion (vom 24.11.), das andere ist komplett der Nachtdruck vom 24./25.11.
     Beide sind Rahmen v2 mit Steg 6200 und Gegenlagerscheibe (ihht-pi `CAD/quetschventil`, VERSUCHE.md V8), nicht QV v3. Welle (e) und Hülse nicht notiert.

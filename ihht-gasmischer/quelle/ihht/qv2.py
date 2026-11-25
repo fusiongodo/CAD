@@ -60,5 +60,7 @@ def teile(prefix, dx=0.0, dz=0.0, printed=True, nema=None):
     out = [_teil(p, prefix + n, ORANGE, printed, dx, dz) for n, p in gedruckt]
     out += [_teil(p, prefix + n, STAHL, False, dx, dz) for n, p in (('L6203H', GL.lager6203(e, 0)), ('L6203V', GL.lager6203(e, 1)),
                                                                     ('L6200', GL.lager6200()))]
+    if G.M8_KERN:
+        out.append(_teil(G.schraube_m8(), prefix + 'M8', STAHL, False, dx, dz))
     out.append(_teil(_nema(), nema or prefix + 'Nema', GRAU, False, dx, dz))
     return out
