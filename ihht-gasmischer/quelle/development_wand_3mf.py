@@ -157,6 +157,10 @@ PLATTEN = {
                                                    ('Traeger Pico', VORN('dwTraegerPico'), 160.0, 46.0)],
     'development_wand_mix_t.3mf': [('OCS-Halter Mix', SEITE('dwOCSHalterMix'), 128.0, 90.0),
                                    ('T-Stueck', HINTEN('dwTStueck'), 128.0, 180.0)],
+    'development_wand_ocs_alle.3mf': [('OCS-Halter Hi', SEITE('dwOCSHalterHi'), 128.0, 50.0),          # alle 4 in einem Druck (Alex 25.11.)
+                                      ('OCS-Halter Mix', SEITE('dwOCSHalterMix'), 128.0, 95.0),
+                                      ('OCS-Halter Lo', HINTEN('dwOCSHalterLo'), 75.0, 175.0),
+                                      ('T-Stueck', HINTEN('dwTStueck'), 175.0, 175.0)],
     'development_wand_ocshalter.3mf': [('OCS-Halter Hi', SEITE('dwOCSHalterHi'), 128.0, 90.0),
                                        ('OCS-Halter Lo', HINTEN('dwOCSHalterLo'), 128.0, 180.0)],
     'development_wand_3_knotenbleche.3mf': [('Knotenblech VL', lay(M['dwKnotenVL'], Y, -math.pi / 2), 64.0, 64.0),
@@ -178,6 +182,8 @@ DRUCK_PROC = {'development_wand_1_wand.3mf': proc(3, 15, 5, 4, 0, 65),
               'development_wand_3_knotenbleche.3mf': proc(5, 40, 6, 5, 3, 55),
               'development_wand_ocshalter.3mf': dict(proc(5, 50, 5, 4, 5, 55, schicht=0.28), enable_support='1',
                                                      support_type='tree(auto)', support_on_build_plate_only='1'),
+              'development_wand_ocs_alle.3mf': dict(proc(5, 50, 5, 4, 5, 55), enable_support='1',
+                                                    support_type='tree(auto)', support_on_build_plate_only='0'),
               'development_wand_mix_t.3mf': dict(proc(5, 50, 5, 4, 5, 55), enable_support='1',
                                                  support_type='tree(auto)', support_on_build_plate_only='0')}
 for datei, PRINT in PLATTEN.items():

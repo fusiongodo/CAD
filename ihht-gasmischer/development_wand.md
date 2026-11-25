@@ -68,6 +68,7 @@ Stand 25.11.2026, Anordnung v3.0.
     Der Patientenschlauch geht vom Mix-Auslass mit einem Bogen nach vorn weg.
   - T-Halter und T-Dummy sind entfallen. Der gedruckte T-Halter (Z 44 … 68, Mitte) muss ab, dort läuft jetzt der hi-Schlauch.
   - Druck: `druck/development_wand_mix_t.3mf` (Halter Mix auf der Seite, T-Stück mit dem Flansch unten, 0,20 mm, 5 Wände, 50 %, Baumstützen überall, 58 min).
+    Alle vier Teile (Halter Hi, Lo, Mix und T-Stück) in einem Druck: `druck/development_wand_ocs_alle.3mf`, gleiche Einstellungen, 1 h 45, 53 g. Hi und Mix sind beide ungetestet (Wunsch Alex, Risiko bekannt).
   - **Kabel (nur geplant, nichts im CAD):** J2 = +12 V, RXD, TXD, GND, UART 9600 Baud (Datenblatt). Anschluss am SKR Pico, dort gibt es 12 V.
     Die 15-cm-Kabel gehen durch ein freies Rasterloch neben J2 (Kontakte dafür einzeln aus dem Gehäuse ziehen).
     Geschätzte Wege bis Pico-Mitte: Mix etwa 14 cm, lo etwa 16 cm, hi etwa 20 cm. Für hi und lo reicht das Kabel also nicht sicher.
