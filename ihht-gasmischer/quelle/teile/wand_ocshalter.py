@@ -3,9 +3,11 @@
 #   Platinen-Rückseite (Bauteilseite zur Wand, Steckergehäuse 6 frei), oben Zapfen durch die Platinenlöcher mit Fase.
 #   hi sitzt umgekehrt (Rohr zur Wand, Bauteilseite vorn): Stützen neben dem Rohr bis an die Platine, 1 Luft zum Flansch.
 #   hi zusätzlich 2 Randleisten mit Rastwulst: Platine einfach von vorn eindrücken.
-#   lo ohne Zapfen: 4 x M2 von vorn durch Platine und Stütze, Mutter seitlich in den Schlitz unter der Platine.
+#   lo ohne Zapfen: 4 x M2 von vorn durch Platine und Stütze. Mutter entweder seitlich in den Schlitz unter der Platine
+#   (M2 x 6 .. 10) oder hinten in die Sechskanttasche im Flansch (M2 x 14), vor dem Anschrauben an die Wand.
 # Druck: lo Flansch-Rückseite unten; hi auf der Seite (linke Leiste unten), damit die Schichten längs durch die Leisten laufen.
-from ihht.geo import Part, B, Cy, Cz, K
+from ihht.geo import Part, B, Cy, Cz, K, P
+from ihht.qv import hex_profile
 from ihht.wand import *
 
 
@@ -34,6 +36,7 @@ def halter(name, h):
         y0 = yb + M2_MUTTER_AB
         p.cut(Cy(x, 1, yb - 1, z, M2_CLR),
               B(min(x, x + sx * 6), max(x, x + sx * 6), y0, y0 + M2_MUTTER_H, z - M2_MUTTER_SW / 2, z + M2_MUTTER_SW / 2))
+        p.cut(P(x, z, -M2_FLANSCH_T, 1, hex_profile(M2_MUTTER_SW)))           # oder Mutter hinten im Flansch versenkt (M2 x 14)
     for x, z in h['schrauben']:
         p.cut(Cy(x, -H_FT - 1, 1, z, M3_CLR))
     return p

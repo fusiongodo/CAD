@@ -155,6 +155,7 @@ OH = {'Hi': dict(ocs=OCS_HI, flansch=(-26.4, 0.4, 88.0, 173.0), schrauben=[(-15.
 # v2.7 lo: Zapfen brachen beim Abnehmen ab -> M2 von vorn durch Platine und Stütze, Mutter seitlich in einen Schlitz 1,2 unter
 # der Platine eingeschoben (M2 x 6 reicht, bis M2 x 14 geht). Stützen Ø 7 für die Mutter (SW 4).
 M2_CLR, M2_MUTTER_SW, M2_MUTTER_H, M2_MUTTER_AB = 2.4, 4.2, 1.9, 1.2
+M2_FLANSCH_T = 3.0              # v2.9: Sechskanttasche hinten im lo-Flansch, M2 x 14 greift voll, Spitze bleibt in der Tasche
 LEISTE_T, LEISTE_LUFT, WULST_D = 2.2, 0.2, 2.4   # v2.4: 2,2 statt 1,6 (Leisten brachen ab), Druck auf der Seite
 # T-Halter: Flansch 40 x 24, 2 waagerechte Finnen (4 dick, 30 tief) über und unter dem T-Körper, unten Gabel für den Abgang.
 TH_X, TH_Z, TH_FIN_X, TH_FIN_T, TH_D = (-20.0, 20.0), (44.0, 68.0), (-9.0, 9.0), 4.0, 30.0

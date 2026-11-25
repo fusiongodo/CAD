@@ -1,6 +1,6 @@
 # Development-Wand (Variante A „Senkrechte Wand“)
 
-Stand 25.11.2026, Anordnung v2.8.
+Stand 25.11.2026, Anordnung v2.9.
 
 - **Quelle:** `quelle/teile/wand_*.py` und `quelle/ihht/wand.py`
 - **Onshape-Modul:** `development_wand.fs`
@@ -46,10 +46,14 @@ Stand 25.11.2026, Anordnung v2.8.
   - Lo: Die Zapfen Ø 3,4 brachen beim Abnehmen alle ab. Jetzt 4 × M2 von vorn durch Platine und Stütze (Ø 7). Die Mutter wird seitlich in einen Schlitz 1,2 unter der Platine geschoben. M2 × 6 reicht, bis M2 × 14 geht. Der Flansch ist jetzt X 0,6 … 26.
   - Beide in `druck/development_wand_ocshalter.3mf` (0,28 mm, ca. 44 min, Baumstützen nur fürs Hi). Die alte `development_wand_ocshalter_hi.3mf` ist gelöscht.
 
-- **v2.8 (25.11., aktuell):** Das OCS hi sitzt real umgekehrt: Rohr zur Wand, Platine (Bauteilseite) vorn. Deshalb waren die Stützen zu kurz, das Rohr stieß an den Flansch.
+- **v2.8 (25.11.):** Das OCS hi sitzt real umgekehrt: Rohr zur Wand, Platine (Bauteilseite) vorn. Deshalb waren die Stützen zu kurz, das Rohr stieß an den Flansch.
   - Lochbild von vorn laut Alex: oben das Einzelloch, darunter zwei auf einer Höhe, weit unten links höher, rechts tiefer. Das sind die Fotodaten ohne Drehung. Die Drehungen aus v2.4/v2.5 und `vor` aus v2.7 sind raus.
   - Modell: `_ocs(..., rohr_wand=-17,5)`. Die Platine sitzt mit der Rohrseite bei Y −17,5, das Rohr hat 1 Luft zum Flansch (Y −4). Die Tüllenachse liegt bei Y −11,5, die Schlauch-Dummies bleiben auf Y −22, real versetzt der Schlauch.
   - Rohrbreite 10 statt 12,5 angenommen, weil die Stützen Ø 5 real daneben passten. Stützen 13,5 lang, Clip entsprechend länger.
+
+- **v2.9 (25.11., aktuell):** Lo-Halter: Sechskanttaschen (SW 4,2, 3 tief) hinten im Flansch für versenkte M2-Muttern, Wunsch Alex.
+  - Mit Mutter in der Tasche: M2 × 14. Die Spitze bleibt in der Tasche, nicht an der Wand.
+  - Der seitliche Mutterschlitz unter der Platine bleibt für kurze Schrauben (M2 × 6 … 10).
 
 ## Fluss (X quer, Z Höhe über Tisch)
 
