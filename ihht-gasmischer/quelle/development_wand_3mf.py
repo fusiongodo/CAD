@@ -63,6 +63,18 @@ fehlt = [p for p in noetig if p not in G]
 print('Rasterbohrungen %d, Knotenblech/Träger/Halter auf dem Raster: %s' % (len(G), 'ja' if not fehlt else 'FEHLT %s' % fehlt))
 ok &= not fehlt
 ok &= pruefe([(a, b, M[a], M[b]) for a, b in itertools.combinations(M, 2)], 'Überschneidungen im Modul (> 0,2 mm3)')
+# Schraubenköpfe hinten: Ø 5,5 + 0,5 Luft muss an jeder QV-Schraube frei sein (Stege, Fase)
+kopf = []
+for cx in (-QX, QX):
+    for x, z in QV_SCREWS:
+        c = trimesh.creation.cylinder(radius=3.0, height=YR - WT - 0.1, sections=32)
+        c.apply_transform(trimesh.transformations.rotation_matrix(math.pi / 2, [1, 0, 0]))
+        c.apply_translation([cx + x, (WT + YR) / 2 + 0.05, QZ + z])
+        v = inter(c, M['dwWand'])
+        if v > 0.2:
+            kopf.append('(%+.1f, %.1f) %.1f mm3' % (cx + x, QZ + z, v))
+print('QV-Schraubenköpfe hinten frei:', 'ja' if not kopf else 'NEIN %s' % kopf)
+ok &= not kopf
 
 # ---------- echte QV-Teile an beiden Plätzen ----------
 FREMD = [n for n in M if not n.startswith(('dwQV', 'dwNema'))]          # alles außer den v2-Dummies

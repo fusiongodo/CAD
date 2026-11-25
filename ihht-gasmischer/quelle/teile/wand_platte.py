@@ -24,7 +24,8 @@ def bauen():
               B(cx - bx + r, cx + bx - r, -1, YR + 1, QZ - bz, QZ + bz), B(cx - bx, cx + bx, -1, YR + 1, QZ - bz + r, QZ + bz - r),
               *[Cy(cx + sx * (bx - r), -1, YR + 1, QZ + sz * (bz - r), 2 * r) for sx in (-1, 1) for sz in (-1, 1)])
         for x, z in QV_SCREWS:
-            w.cut(Cy(cx + x, -1, WT + 1, QZ + z, M3_CLR))
+            w.cut(Cy(cx + x, -1, WT + 1, QZ + z, M3_CLR),
+                  Cy(cx + x, WT, YR + 1, QZ + z, QV_KOPF_D))                    # Kopffreiheit (Fasen-Steg oben links)
     for x, z in ABLASS:
         w.cut(Cy(x, -1, WT + 1, z, ABLASS_D))                                    # Ablass-Schläuche nach hinten
     for x in FUSS_X:

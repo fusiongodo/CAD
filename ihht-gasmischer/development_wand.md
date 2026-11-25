@@ -1,6 +1,6 @@
 # Development-Wand (Variante A „Senkrechte Wand“)
 
-Stand 24.11.2026, Anordnung v2.2.
+Stand 25.11.2026, Anordnung v2.3.
 
 - **Quelle:** `quelle/teile/wand_*.py` und `quelle/ihht/wand.py`
 - **Onshape-Modul:** `development_wand.fs`
@@ -17,11 +17,17 @@ Stand 24.11.2026, Anordnung v2.2.
   - Die Ausgänge gehen mit je einem U-Bogen zu einem T-Stück in der Mitte, das T-Stück gerade nach unten auf OCS Mix.
   - OCS Mix steht quer zur Wand auf der Grundplatte. Dadurch geht der Patientenschlauch vor allen anderen Schläuchen nach vorn weg.
   - Alle Schläuche liegen in einer Ebene (Y −22) und kreuzen sich nicht. Jeder Bogen hat R ≥ 25 (etwa 2 × Außendurchmesser des Schlauchs 6/12).
-- **v2.2 (24.11., aktuell):** Alex hat beide OCS ausgemessen.
+- **v2.2 (24.11.):** Alex hat beide OCS ausgemessen.
   - OCS hi ist der 3F 3.0 (125 × 22, Tüllen 85 auseinander), OCS lo der 3FRL 2.0 (79 × 24, Tüllen 38,5).
   - Beide sitzen jetzt mit der Bauteilseite (Stecker) zur Wand und dem Rohr nach vorn auf Steckhaltern. Die Platine wird auf Zapfen gesteckt.
   - Die untere hi-Tülle liegt 17 tiefer als vorher. Ein gerader U-Bogen zum T hätte nur R 18. Deshalb lädt der Bogen links weit aus (bis X −84)
     und läuft mit einer flachen S-Kurve von unten in den T-Arm, überall R 25.
+
+- **v2.3 (25.11., aktuell):** Beim Aufbau gefunden: Die QV-Schraube oben außen am QV hi (X −99, Z 231,5) liegt 4,6 von der Fasenkante.
+  Der 4 breite Fasen-Steg hinten deckte den Schraubenkopf etwa 2 mm ab, die M3 × 20 ging nicht hinein.
+  - Gedruckte Wand v2.2: Steg dort wegknipsen oder die Schraube weglassen. 3 von 4 Schrauben halten das QV.
+  - Neu: Freiraum Ø 7 hinten um jede QV-Schraube (`QV_KOPF_D`, klinkt den Fasen-Steg aus).
+  - Die Prüfung testet jetzt auch die Schraubenköpfe hinten (Ø 6 über die Stegtiefe), nicht nur die Löcher.
 
 ## Fluss (X quer, Z Höhe über Tisch)
 
