@@ -1,0 +1,33 @@
+# Drucklog IHHT-Gasmischer
+
+Ein Eintrag je Druck: was gedruckt wurde, aus welcher Datei, und wo es eingebaut ist. Neueste oben.
+Claude trägt jeden Druck ein, sobald Alex ihn meldet oder ein Foto ihn zeigt, und fragt nach, wenn Variante oder Einbauort fehlen.
+„?“ heißt: nicht notiert, nicht raten.
+
+Dateien: `druck/…` liegt in diesem Repo, `ihht-pi/…` in `~/Desktop/projects/ihht-retrofit/ihht-pi/CAD/quetschventil/druck/`.
+
+## Was gerade eingebaut ist (Stand 25.11.2026 abends)
+
+| Platz | Teil | Version / Variante | Quelle |
+|---|---|---|---|
+| Wand, Grundplatte, 4 Knotenbleche | Development-Wand | v2.2 / v2.3 (orange) | Fotos 25.11. |
+| QV links (hi) | Rahmen v2, Steg 6200, Gegenlagerscheibe, Getriebe v1 | Welle e ?, Hülse ?; Getriebeplatte + Hohlrad vom 24.11. oder Nachtdruck: ? | Alex 25.11. |
+| QV rechts (lo) | wie links | Welle e ?, Hülse ?; welches der beiden das ältere Getriebe hat: ? | Alex 25.11. |
+| OCS lo (klein), rechts der Mitte | Steckhalter Lo | Version ? (Schraube sitzt in einem selbst gebohrten Loch), M2-Löcher 2,4 | Foto 25.11. |
+| OCS hi (groß), links der Mitte | Steckhalter Hi | v3.1 (dunkles Filament), OCS mit Rohr zur Wand eingeclipst, sitzt zu tief | Foto von oben 25.11. |
+| OCS Mix, rechts unten | Steckhalter Mix | v3.1 gedruckt, passt aufs Raster; montiert: ? | Alex 25.11. |
+| T-Stück | Druckteil | v3.1 gedruckt: ?; montiert: ? | – |
+
+## Drucke
+
+| Datum | Datei | Teile / Variante | gedruckt | eingebaut | Ergebnis |
+|---|---|---|---|---|---|
+| 25.11. | ihht-pi `welle_zapfen_6200_e3_5.3mf` | Welle mit Zapfen e 3,5 + Distanzring (V9) | übergeben, noch nicht gedruckt | – | – |
+| 25.11. | `druck/development_wand_hi_mix.3mf` | Steckhalter Hi + Mix v3.2 (Rohr zur Wand, Tülle Y −22) | übergeben, noch nicht gedruckt | – | – |
+| 25.11. | `druck/development_wand_hi_mix_t.3mf` | Steckhalter Hi + Mix v3.1, T-Stück v3.1 | ja (Halter sicher, T-Stück ?) | Hi ja | Mix passt aufs Raster. Hi: OCS mit Rohr zur Wand eingesetzt, dafür zu niedrig → v3.2 |
+| 25.11. | `druck/development_wand_ocs_alle.3mf` | Steckhalter Hi, Mix, Lo, T-Stück v3.0 | ja | nein | Clip hält die Platine perfekt. Für Rohr vorn zu hoch, Löcher passten in dieser Lage nicht → v3.1 |
+| 24./25.11. nachts | ihht-pi, Datei ? | ein komplettes QV (Rahmen v2, Steg 6200, Getriebe, Welle e ?) | ja | ja, Seite ? | dichtet gerade so, geschätzt 97 % |
+| 24.11. | ihht-pi `getriebe_v1.3mf` oder `getriebe_v1_ohne_welle.3mf`: ? | Getriebeplatte, Hohlrad, Ritzel (Welle e 3,5 nur in der ersten Datei) | ja | ja, im anderen QV | dieses QV dichtet nicht, es fehlen 1 bis 2 mm |
+| vor 25.11. | `druck/development_wand_1_wand.3mf`, `_2_…`, `_3_…` | Wand, Grundplatte, Träger, Knotenbleche | ja | ja | steht, Raster stimmt mit dem Modell |
+
+Ältere Drucke (vor dem 24.11.) stehen in `development_wand.md` und in ihht-pi `VERSUCHE.md`, dort ohne Einbau-Status.
