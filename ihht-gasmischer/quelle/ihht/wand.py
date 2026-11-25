@@ -101,34 +101,36 @@ TUELLE_D = 5.5                  # Tüllenhals
 STECKER_H = 6.0
 
 
-def _ocs(x0, x1, z1, L, d, mitte, vorn, ueber, tu, seite, stecker, loecher, rohr_b, rohr_t, clip_u, dreh=False, vor=0.0):
-    """seite -1: Tüllen nach links (Tüllenkante x0), +1: nach rechts (x1). stecker / loecher in (v, u).
-    Rohrseite: Rohr rohr_b breit mittig, rohr_t vor der Platine; Clip mit Muttern über die volle Breite bei clip_u (u0, u1),
-    vorn bis zur dicksten Stelle. dreh: Platine (Löcher, Stecker) 180° um ihre Mitte gedreht, Tüllen bleiben.
-    vor: Platine sitzt so viel weiter vorn als mitte sagt (Stützen und Clip entsprechend länger)."""
-    if dreh:
-        W = x1 - x0
-        stecker = [(W - v1, W - v0, L - u1, L - u0) for v0, v1, u0, u1 in stecker]
-        loecher = {k: (W - v, L - u) for k, (v, u) in loecher.items()}
-    ob = YS + mitte - vor                                                 # Platinen-Vorderseite (Rohrseite)
+def _ocs(x0, x1, z1, L, d, mitte, vorn, ueber, tu, seite, stecker, loecher, rohr_b, rohr_t, clip_u, rohr_wand=None):
+    """seite -1: Tüllen nach links (Tüllenkante x0), +1: nach rechts (x1). stecker / loecher in (v, u), Blick von vorn.
+    Rohrseite: Rohr rohr_b breit mittig, rohr_t tief; Clip mit Muttern über die volle Breite bei clip_u (u0, u1), vorn tief
+    (dickste Stelle). Ohne rohr_wand: Bauteilseite zur Wand, Rohr vorn, Tüllenachse auf YS. rohr_wand = Y der Platinen-
+    Rohrseite: Rohr zur Wand, Bauteilseite vorn, Tüllenachse mitte davor. y = (Platinenfläche zur Wand, Fläche vorn)."""
+    if rohr_wand is None:
+        yo = YS + mitte
+        yb, ry, cy, sy, ty = yo + d, (yo - rohr_t, yo), (yo - vorn, yo), (yo + d, yo + d + STECKER_H), YS
+    else:
+        yb = rohr_wand
+        yo = yb - d
+        ry, cy, sy, ty = (yb, yb + rohr_t), (yb, yb + vorn), (yo - STECKER_H, yo), yb + mitte
     vx = (lambda v: x0 + v) if seite < 0 else (lambda v: x1 - v)
     kante = x0 if seite < 0 else x1
     xm = (x0 + x1) / 2
-    return dict(x=(x0, x1), z=(z1 - L, z1), y=(ob + d, ob), vorn=ob - vorn, hinten=ob + d + STECKER_H,
-                rohr=(xm - rohr_b / 2, xm + rohr_b / 2, ob - rohr_t), clip=(z1 - clip_u[1], z1 - clip_u[0]),
-                tz=tuple(z1 - u for u in tu), tx=(kante, kante + seite * ueber),
+    return dict(x=(x0, x1), z=(z1 - L, z1), y=(yb, yo), rohr=(xm - rohr_b / 2, xm + rohr_b / 2) + ry, clip_y=cy, stecker_y=sy,
+                ty=ty, clip=(z1 - clip_u[1], z1 - clip_u[0]), tz=tuple(z1 - u for u in tu), tx=(kante, kante + seite * ueber),
                 stecker=[(min(vx(v0), vx(v1)), max(vx(v0), vx(v1)), z1 - u1, z1 - u0) for v0, v1, u0, u1 in stecker],
                 loch={k: (vx(v), z1 - u) for k, (v, u) in loecher.items()})
 
 
 # hi 3F 3.0: 125 x 22 x 1,5, Rohr bis 12,5 vor der Platine (Mitte 6), Tüllen 20 von beiden Enden, 7 über die Kante.
 # Löcher (Foto): Ecke u 2,8; Paar A u 25,4 (v 3,2 / v 20,3); Paar B versetzt u 96,8 (v 3,2) / u 100,9 (v 20,3).
-# Alex 24.11.: so stünde das Lochbild spiegelverkehrt -> Platine 180° um die Mitte gedreht (dreh=True), Tüllen bleiben links.
-# 25.11. kurz nur oben/unten gespiegelt (v2.5): dann läge der Auslass oben -> falsch, 180° (v2.4) passt.
+# v2.8 (Alex 25.11. am Aufbau): hi sitzt mit dem Rohr zur Wand, Platine vorn. Von vorn: oben das Einzelloch E, darunter
+# Paar A auf einer Höhe, weit unten Paar B links höher -> Fotodaten ohne Drehung. Rohrrückseite 1 vor dem Flansch (Y -4).
+# Rohr 10 statt 12,5 breit angenommen: Stützen Ø 5 an A / B passten real daneben.
 OCS_HI = _ocs(-24.0, -2.0, Z_ZUFUHR + 20.0, 125.0, 1.5, 6.0, 12.5, 7.0, (20.0, 105.0), -1,
               [(0, 5.7, 6, 17.6), (0, 5.7, 108, 117), (17.2, 22, 73, 84)],                     # J2, J5, J3
               {'E': (3.2, 2.8), 'A1': (3.2, 25.2), 'A2': (20.3, 25.6), 'B1': (3.2, 96.7), 'B2': (20.3, 100.9)},
-              12.5, 12.0, (55.0, 70.0), dreh=True, vor=2.0)                                  # v2.7: Stützen/Clip hielten nicht -> 2 höher
+              10.0, 12.0, (55.0, 70.0), rohr_wand=-(4.0 + 12.5 + 1.0))
 # lo 3FRL 2.0: 79 x 24 x 1,6, 25 hoch (Stecker bis Clip), Rohrmitte 6,7 vor der Platine, Tüllen 21,5 (J2-Ende) / 60,
 # 5,5 über die Kante. Löcher Ø 3,5 quer 18,5: Ende ohne J2 rund (u 75,6), J2-Ende Langloch 4,5 (u 3,6) + rund (u 10,1).
 OCS_LO = _ocs(1.0, 25.0, Z_ZUFUHR + 21.5, 79.0, 1.6, 6.7, 17.4, 5.5, (21.5, 60.0), 1,
@@ -210,7 +212,7 @@ def schlaeuche():
     hi_t = ([(hx, YS, hz1)] + _bogen((xs, hz1 - R_MIN), R_MIN, 90, 270, 12) + _bogen((xs, zb + R_MIN), R_MIN, -90, -90 + w, 4)[1:]
             + _bogen((-T_ARM - 3.0, T_Z - R_MIN), R_MIN, 90 + w, 90, 4)[1:] + [(-T_ARM, YS, T_Z)])
     out = {
-        'ZuHi': ([(-TUBE_X + 0.5, YS, Z_ZUFUHR), (hx, YS, Z_ZUFUHR)], None),
+        'ZuHi': ([(-TUBE_X + 0.5, YS, Z_ZUFUHR), (hx, YS, Z_ZUFUHR)], None),   # hi-Tülle liegt 10,5 weiter hinten, Schlauch versetzt real
         'ZuLo': ([(lx, YS, Z_ZUFUHR), (TUBE_X - 0.5, YS, Z_ZUFUHR)], None),
         'HiT': (hi_t, R_MIN),
         'LoT': ([(lx, YS, lz1)] + _bogen((lx + 2, lz1 - R_MIN), R_MIN, 90, 0) + _bogen((lx + 2, T_Z + R_MIN), R_MIN, 0, -90)

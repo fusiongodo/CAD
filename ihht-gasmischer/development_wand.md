@@ -1,6 +1,6 @@
 # Development-Wand (Variante A „Senkrechte Wand“)
 
-Stand 25.11.2026, Anordnung v2.7.
+Stand 25.11.2026, Anordnung v2.8.
 
 - **Quelle:** `quelle/teile/wand_*.py` und `quelle/ihht/wand.py`
 - **Onshape-Modul:** `development_wand.fs`
@@ -41,10 +41,15 @@ Stand 25.11.2026, Anordnung v2.7.
 - **v2.6 (25.11.):** v2.5 zurückgenommen. Mit dem nur oben/unten gespiegelten Lochbild läge der Auslass des OCS hi oben statt unten, die Platine müsste verkehrt herum drauf.
   - Die 180°-Drehung aus v2.4 ist richtig. Der gedruckte v2.4-Halter passt, Nachdruck nicht nötig.
 
-- **v2.7 (25.11., aktuell):** Beide OCS sitzen, aber halten nicht richtig.
+- **v2.7 (25.11.):** Beide OCS sitzen, aber halten nicht richtig.
   - Hi: Stützen und Clip waren zu niedrig, die Platine sitzt real weiter vorn (Steckergehäuse höher als 6). Jetzt 2 mm höher (`vor=2.0`), der Wulst wandert mit.
   - Lo: Die Zapfen Ø 3,4 brachen beim Abnehmen alle ab. Jetzt 4 × M2 von vorn durch Platine und Stütze (Ø 7). Die Mutter wird seitlich in einen Schlitz 1,2 unter der Platine geschoben. M2 × 6 reicht, bis M2 × 14 geht. Der Flansch ist jetzt X 0,6 … 26.
   - Beide in `druck/development_wand_ocshalter.3mf` (0,28 mm, ca. 44 min, Baumstützen nur fürs Hi). Die alte `development_wand_ocshalter_hi.3mf` ist gelöscht.
+
+- **v2.8 (25.11., aktuell):** Das OCS hi sitzt real umgekehrt: Rohr zur Wand, Platine (Bauteilseite) vorn. Deshalb waren die Stützen zu kurz, das Rohr stieß an den Flansch.
+  - Lochbild von vorn laut Alex: oben das Einzelloch, darunter zwei auf einer Höhe, weit unten links höher, rechts tiefer. Das sind die Fotodaten ohne Drehung. Die Drehungen aus v2.4/v2.5 und `vor` aus v2.7 sind raus.
+  - Modell: `_ocs(..., rohr_wand=-17,5)`. Die Platine sitzt mit der Rohrseite bei Y −17,5, das Rohr hat 1 Luft zum Flansch (Y −4). Die Tüllenachse liegt bei Y −11,5, die Schlauch-Dummies bleiben auf Y −22, real versetzt der Schlauch.
+  - Rohrbreite 10 statt 12,5 angenommen, weil die Stützen Ø 5 real daneben passten. Stützen 13,5 lang, Clip entsprechend länger.
 
 ## Fluss (X quer, Z Höhe über Tisch)
 

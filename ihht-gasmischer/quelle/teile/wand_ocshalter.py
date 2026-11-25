@@ -1,6 +1,7 @@
 # Development-Wand: Steckhalter OCS hi (3F 3.0) und OCS lo (3FRL 2.0), Maße und Lage in ihht/wand.py (OH).
 #   Flansch 4 an der Wand, 2 x M3 x 16 + Mutter auf dem Raster (vor dem Aufstecken einschrauben). Stützen Ø 5 bis an die
 #   Platinen-Rückseite (Bauteilseite zur Wand, Steckergehäuse 6 frei), oben Zapfen durch die Platinenlöcher mit Fase.
+#   hi sitzt umgekehrt (Rohr zur Wand, Bauteilseite vorn): Stützen neben dem Rohr bis an die Platine, 1 Luft zum Flansch.
 #   hi zusätzlich 2 Randleisten mit Rastwulst: Platine einfach von vorn eindrücken.
 #   lo ohne Zapfen: 4 x M2 von vorn durch Platine und Stütze, Mutter seitlich in den Schlitz unter der Platine.
 # Druck: lo Flansch-Rückseite unten; hi auf der Seite (linke Leiste unten), damit die Schichten längs durch die Leisten laufen.

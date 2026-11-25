@@ -38,11 +38,11 @@ def bauen():
     for name, o, sx, typ in (('Hi', OCS_HI, -1, '3F 3.0'), ('Lo', OCS_LO, 1, '3FRL 2.0')):   # Platine, Rohrseite, Stecker, Tüllen
         q = Part('dwOCS' + name, 'OCS %s %s (Dummy, Tüllen zum QV)' % (name.lower(), typ), BLAU, printed=False)
         (x0, x1), (z0, z1), (yb, yo) = o['x'], o['z'], o['y']
-        r0, r1, yr = o['rohr']
-        q.add(B(x0, x1, yo, yb, z0, z1), B(r0, r1, yr, yo + 0.01, z0, z1), B(x0, x1, o['vorn'], yo + 0.01, *o['clip']))
+        r0, r1, ya, yz = o['rohr']
+        q.add(B(x0, x1, yo, yb, z0, z1), B(r0, r1, ya - 0.01, yz + 0.01, z0, z1), B(x0, x1, o['clip_y'][0] - 0.01, o['clip_y'][1] + 0.01, *o['clip']))
         q.cut(*[Cy(x, yb + 1, yo - 1, z, 3.5) for x, z in o['loch'].values()])      # Löcher für die Zapfen
-        q.add(*[B(a, b, yb - 0.01, o['hinten'], c, d) for a, b, c, d in o['stecker']])
-        q.add(*[Cx((x0 + x1) / 2, o['tx'][1], YS, z, TUELLE_D) for z in o['tz']])
+        q.add(*[B(a, b, o['stecker_y'][0] - 0.01, o['stecker_y'][1] + 0.01, c, d) for a, b, c, d in o['stecker']])
+        q.add(*[Cx((x0 + x1) / 2, o['tx'][1], o['ty'], z, TUELLE_D) for z in o['tz']])
         t.append(q)
     m = Part('dwOCSMix', 'OCS Mix (Dummy, quer zur Wand, Tüllen oben)', BLAU, printed=False)
     m.add(B(MIX['x'][0], MIX['x'][1], MIX['y'][0], MIX['y'][1], MIX['z'][0], MIX['z'][1]))
