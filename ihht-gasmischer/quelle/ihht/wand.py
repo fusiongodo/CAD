@@ -127,14 +127,17 @@ def _ocs(x0, x1, z1, L, d, mitte, vorn, ueber, tu, seite, stecker, loecher, rohr
 # v2.8 (Alex 25.11. am Aufbau): hi sitzt mit dem Rohr zur Wand, Platine vorn. Von vorn: oben das Einzelloch E, darunter
 # Paar A auf einer Höhe, weit unten Paar B links höher -> Fotodaten ohne Drehung. Rohrrückseite 1 vor dem Flansch (Y -4).
 # Rohr 10 statt 12,5 breit angenommen: Stützen Ø 5 an A / B passten real daneben.
+# v3.1 (Alex 25.11., Foto am Aufbau): doch Rohr nach vorn, Bauteilseite (Stecker) zur Wand, Tüllen links, J5 oben, J2 unten.
+# Gegenüber v2.8 um die Tüllenachse gekippt: u -> 125 - u, v bleibt. Tüllenachse wieder auf YS (Y -22, wie QV-Schlauch und lo),
+# Platine Y -14,5 .. -16 (3 näher an der Wand als die Stützen von v2.8).
 _HI_ARGS = (125.0, 1.5, 6.0, 12.5, 7.0, (20.0, 105.0), -1,
-            [(0, 5.7, 6, 17.6), (0, 5.7, 108, 117), (17.2, 22, 73, 84)],                     # J2, J5, J3
-            {'E': (3.2, 2.8), 'A1': (3.2, 25.2), 'A2': (20.3, 25.6), 'B1': (3.2, 96.7), 'B2': (20.3, 100.9)},
+            [(0, 5.7, 107.4, 119), (0, 5.7, 8, 17), (17.2, 22, 41, 52)],                     # J2, J5, J3
+            {'E': (3.2, 122.2), 'A1': (3.2, 99.8), 'A2': (20.3, 99.4), 'B1': (3.2, 28.3), 'B2': (20.3, 24.1)},
             10.0, 12.0, (55.0, 70.0))
-OCS_HI = _ocs(-24.0, -2.0, Z_ZUFUHR + 20.0, *_HI_ARGS, rohr_wand=-(4.0 + 12.5 + 1.0))
+OCS_HI = _ocs(-24.0, -2.0, Z_ZUFUHR + 20.0, *_HI_ARGS)
 # v3.0 (Alex 25.11.): OCS Mix ist ein zweiter 3F 3.0. Hochkant rechts unter dem QV lo, gleiche Lage wie hi (Rohr zur Wand,
 # Tüllen nach links, Einlass oben Z 132, Auslass unten Z 47). 4,35 unter der QV-Platte, 1 neben dem Knotenblech-Flansch.
-OCS_MIX = _ocs(73.0, 95.0, 152.0, *_HI_ARGS, rohr_wand=-(4.0 + 12.5 + 1.0))
+OCS_MIX = _ocs(73.0, 95.0, 152.0, *_HI_ARGS)
 # lo 3FRL 2.0: 79 x 24 x 1,6, 25 hoch (Stecker bis Clip), Rohrmitte 6,7 vor der Platine, Tüllen 21,5 (J2-Ende) / 60,
 # 5,5 über die Kante. Löcher Ø 3,5 quer 18,5: Ende ohne J2 rund (u 75,6), J2-Ende Langloch 4,5 (u 3,6) + rund (u 10,1).
 OCS_LO = _ocs(1.0, 25.0, Z_ZUFUHR + 21.5, 79.0, 1.6, 6.7, 17.4, 5.5, (21.5, 60.0), 1,
@@ -144,6 +147,7 @@ OCS_LO = _ocs(1.0, 25.0, Z_ZUFUHR + 21.5, 79.0, 1.6, 6.7, 17.4, 5.5, (21.5, 60.0
 # v3.0: T-Stück als Druckteil zwischen lo-Auslass (X 30,5 / Y -22 / Z 135) und Mix-Einlass (X 66 / Y -11,5 / Z 132),
 # hi kommt von unten (Y -11,5). Block mit Bohrungen Ø 4, 3 Tüllen (Hals 6,6 / Wulst 7,5 / Spitze 6,2) für Schlauch 6 innen,
 # Flansch mit 2 x M3 x 16 auf dem Raster (unter dem Block, neben dem hi-Schlauch).
+# v3.1: hi und Mix mit Rohr vorn -> alle drei Anschlüsse auf Y -22, nur noch 3 Höhenversatz lo / Mix im Block.
 TS_X = 48.25                                   # Abgang nach unten (hi)
 TS_BLOCK = (42.5, 54.0, -27.5, 127.5, 140.5)   # x0, x1, y vorn, z0, z1 (hinten bis an den Flansch)
 TS_FL = (31.0, 69.0, 111.0, 140.5)             # Flansch x0, x1, z0, z1

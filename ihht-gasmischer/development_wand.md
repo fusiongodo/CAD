@@ -1,6 +1,6 @@
 # Development-Wand (Variante A „Senkrechte Wand“)
 
-Stand 25.11.2026, Anordnung v3.0.
+Stand 25.11.2026, Anordnung v3.1.
 
 - **Quelle:** `quelle/teile/wand_*.py` und `quelle/ihht/wand.py`
 - **Onshape-Modul:** `development_wand.fs`
@@ -55,7 +55,16 @@ Stand 25.11.2026, Anordnung v3.0.
   - Mit Mutter in der Tasche: M2 × 14. Die Spitze bleibt in der Tasche, nicht an der Wand.
   - Der seitliche Mutterschlitz unter der Platine bleibt für kurze Schrauben (M2 × 6 … 10).
 
-- **v3.0 (25.11., aktuell):** OCS Mix ist ein zweiter großer 3F 3.0, nicht der kleine 3FRL. Das T-Stück wird gedruckt statt gekauft (Alex).
+- **v3.1 (25.11., aktuell):** Die großen OCS (hi und Mix) sitzen mit dem Rohr nach vorn, Bauteilseite (Stecker) zur Wand. Foto von Alex am Aufbau: Tüllen links, J5 oben, J2 unten.
+  - Beobachtung am v3.0-Druck: Der Clip hält die Platine perfekt. Der Halter war aber für „Rohr zur Wand“ gebaut (v2.8). Mit dem Rohr vorn stand das OCS zu weit vor der Wand,
+    der Schlauch musste seitlich biegen, und der Halter passte nur verdreht, dann lagen die Schraublöcher neben dem Raster.
+  - Modell: `_ocs(...)` ohne `rohr_wand`, Lochbild und Stecker um die Tüllenachse gekippt (u → 125 − u). Platine Y −14,5 … −16, Tüllenachse Y −22 wie QV-Schlauch und lo.
+    Die Stützen sind 3 kürzer (10,5 statt 13,5), der Halter baut 18,4 statt 21,4 hoch. Schrauben unverändert auf dem Raster: Hi (−15, 116) / (−15, 156), Mix (75, 96) / (95, 66).
+  - T-Stück: Alle drei Anschlüsse liegen jetzt auf Y −22. Das v3.0-T-Stück (Mix und hi auf Y −11,5) passt nicht mehr, neu drucken.
+  - Durchfluss: Mit dieser Lage liegt der Pfeil-Einlass des OCS unten, das Gas kommt aber oben an. Die O2-Messung geht in beide Richtungen, ein Flusswert hätte das falsche Vorzeichen. Nicht getestet.
+  - Druck: `druck/development_wand_hi_mix_t.3mf` (Halter Hi, Halter Mix, T-Stück; 0,20 mm, 5 Wände, 50 %, Baumstützen, 1 h 17). Der Lo-Halter bleibt.
+
+- **v3.0 (25.11.):** OCS Mix ist ein zweiter großer 3F 3.0, nicht der kleine 3FRL. Das T-Stück wird gedruckt statt gekauft (Alex).
   - **OCS Mix** steht hochkant an der Wand rechts unter dem QV lo: X 73 … 95, Z 27 … 152, gleiche Lage wie hi (Rohr zur Wand, Tüllen nach links).
     Einlass oben Z 132, Auslass unten Z 47. Der Platz auf der Grundplatte ist frei, die Kabelbinder-Schlitze bleiben.
   - **Steckhalter Mix:** wie Hi (1 Zapfen, 3 Stützen, 2 Rastleisten). Unterschiede: Die 2 Schrauben sitzen neben dem Rohr auf (75, 96) und (95, 66),
@@ -113,9 +122,9 @@ Die Spalte „frei“ ist die Länge der Mittellinie zwischen den Tüllenspitzen
     die anderen 3 Stützen sind flach. Zwei Randleisten mit Rastwulst (Z 143,5 … 153,5) halten die Platine. Einfach von vorn eindrücken.
 - **T-Stück (Druckteil):** siehe v3.0. Ersetzt T-Halter und Kaufteil.
 - **Lage der OCS:** Tüllen- und Rohrachse auf Y −22. J2-Ende: hi unten, lo oben.
-  - OCS hi: X −24 … −2, Z 68,5 … 193,5, Platine Y −14,5 … −16
+  - OCS hi: X −24 … −2, Z 68,5 … 193,5, Platine Y −14,5 … −16 (seit v3.1 wieder Rohr vorn)
   - OCS lo: X 1 … 25, Z 116 … 195, Platine Y −13,7 … −15,3
-  - OCS Mix: X 73 … 95, Z 27 … 152, Platine Y −17,5 … −19 (wie hi seit v2.8)
+  - OCS Mix: X 73 … 95, Z 27 … 152, Platine Y −14,5 … −16 (wie hi)
   - Maße von Alex: hi Rohr 12 + Platine 1,5 = 13,5, dickste Stelle mit Stecker 20, Tüllen 7 über der Kante; lo dickste Stelle mit Stecker 25, Tüllen 5,5 über der Kante.
 
 Prüfung (`development_wand_3mf.py`):
