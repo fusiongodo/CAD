@@ -1,6 +1,6 @@
 # Development-Wand (Variante A „Senkrechte Wand“)
 
-Stand 25.11.2026, Anordnung v2.4.
+Stand 25.11.2026, Anordnung v2.5.
 
 - **Quelle:** `quelle/teile/wand_*.py` und `quelle/ihht/wand.py`
 - **Onshape-Modul:** `development_wand.fs`
@@ -29,10 +29,14 @@ Stand 25.11.2026, Anordnung v2.4.
   - Neu: Freiraum Ø 7 hinten um jede QV-Schraube (`QV_KOPF_D`, klinkt den Fasen-Steg aus).
   - Die Prüfung testet jetzt auch die Schraubenköpfe hinten (Ø 6 über die Stegtiefe), nicht nur die Löcher.
 
-- **v2.4 (25.11., aktuell):** Die Rastleisten am OCS-Steckhalter Hi brachen beim Aufstecken ab (1,6 dick, quer zu den Schichten gedruckt).
+- **v2.4 (25.11.):** Die Rastleisten am OCS-Steckhalter Hi brachen beim Aufstecken ab (1,6 dick, quer zu den Schichten gedruckt).
   - Leisten jetzt 2,2 dick, Wulst bleibt 0,6 über der Platinenkante, Flansch X −26,4 … 0,4.
   - Druck auf der Seite (linke Leiste aufs Bett): Die Schichten laufen längs durch die Leisten. Die obere Leiste braucht Baumstützen (nur vom Bett).
   - Eigene Datei `druck/development_wand_ocshalter_hi.3mf`, 0,28 mm, 5 Wände, 50 %, etwa 25 min. Aus Platte 3 herausgenommen.
+
+- **v2.5 (25.11., aktuell):** Der v2.4-Druck passt nicht auf die Platine. Das Lochbild war links/rechts vertauscht: Oben stand links der höhere Pfosten, und der Zapfen saß unten rechts.
+  - Ursache: Die Korrektur vom 24.11. hatte das Foto-Lochbild um 180° gedreht. Richtig ist nur die Spiegelung oben/unten (u → L − u, v bleibt).
+  - Jetzt steht oben links der tiefere Pfosten (Z 165,2) und rechts der höhere (Z 169,4). Der Zapfen sitzt unten links (A1, X −20,8). Steckerzonen gehen mit.
 
 ## Fluss (X quer, Z Höhe über Tisch)
 
