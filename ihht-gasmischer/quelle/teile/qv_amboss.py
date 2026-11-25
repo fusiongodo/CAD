@@ -11,10 +11,11 @@ def amboss(s, name, label):
         for sz in (-1, 1):
             za = ZC + sz * GH
             p.add(QB(sx * X_RIB, sx * XA, s * (YA + 0.01), s * (YA - 4), za if sz > 0 else za - 2, za + 2 if sz > 0 else za))
-    for x in (-SX, 0, SX):
-        p.cut(QCz(x, s * SY, -1, 12, M3_SELF))                           # von der Rückwand
+    p.cut(QCz(0, s * SY, -1, 12, M3_SELF))                               # Mitte: nur von der Rückwand
     for sx in (-1, 1):
-        p.cut(QCz(sx * SX, s * SY, LA - 12, LA + 1, M3_SELF))            # vom Steg
+        # v3.1 (Alex 25.11.): Eckbohrungen gehen durch. M3 x 20 vom Steg (8 dick, Kopf 2 versenkt) braucht 14 im Amboss,
+        # die alten 12 reichten nicht; von hinten durch Wand + Rückwand bleibt es bei 6.
+        p.cut(QCz(sx * SX, s * SY, -1, LA + 1, M3_SELF))
         for sz in (-1, 1):                                               # Kabelbinder 4 x 1,8
             zk = ZC + sz * (GH + 2 + 1.4)
             p.cut(QB(sx * (XA - 3.5) - 2, sx * (XA - 3.5) + 2, s * (YA - 1), s * (YO + 1), zk - 0.9, zk + 0.9))
