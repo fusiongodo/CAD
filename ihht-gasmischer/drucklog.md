@@ -17,12 +17,13 @@ Dateien: `druck/…` liegt in diesem Repo, `ihht-pi/…` in `~/Desktop/projects/
 | OCS hi (groß), links der Mitte | Steckhalter Hi | v3.1 (dunkles Filament), OCS mit Rohr zur Wand eingeclipst, sitzt zu tief | Foto von oben 25.11. |
 | OCS Mix, rechts unten | Steckhalter Mix | v3.1 gedruckt, passt aufs Raster; montiert: ? | Alex 25.11. |
 | T-Stück | Druckteil | v3.1 gedruckt: ?; montiert: ? | – |
+| SKR Pico | direkt auf dem Lochraster verschraubt (Rückseite der Wand, ohne den Pico-Träger aus dem Modell), USB-C und 2 Adern Versorgung angeschlossen | – | Foto 25.11. abends |
 
 ## Drucke
 
 | Datum | Datei | Teile / Variante | gedruckt | eingebaut | Ergebnis |
 |---|---|---|---|---|---|
-| 25.11. | ihht-pi `welle_zapfen_6200_e3_5.3mf` | Welle mit Zapfen e 3,5 + Distanzring (V9) | übergeben, noch nicht gedruckt | – | – |
+| 25.11. abends | ihht-pi `welle_zapfen_6200_e3_5.3mf` | Welle mit Zapfen e 3,5 + Distanzring (V9), 1 Stück | ja | noch nicht (Alex fragte nach dem Ring) | – |
 | 25.11. | `druck/development_wand_hi_mix.3mf` | Steckhalter Hi + Mix v3.2 (Rohr zur Wand, Tülle Y −22) | übergeben, noch nicht gedruckt | – | – |
 | 25.11. | `druck/development_wand_hi_mix_t.3mf` | Steckhalter Hi + Mix v3.1, T-Stück v3.1 | ja (Halter sicher, T-Stück ?) | Hi ja | Mix passt aufs Raster. Hi: OCS mit Rohr zur Wand eingesetzt, dafür zu niedrig → v3.2 |
 | 25.11. | `druck/development_wand_ocs_alle.3mf` | Steckhalter Hi, Mix, Lo, T-Stück v3.0 | ja | nein | Clip hält die Platine perfekt. Für Rohr vorn zu hoch, Löcher passten in dieser Lage nicht → v3.1 |
