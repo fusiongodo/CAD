@@ -65,11 +65,13 @@ Stand 25.11.2026, Anordnung v3.1.
   - Druck: `druck/development_wand_hi_mix_t.3mf` (Halter Hi, Halter Mix, T-Stück; 0,20 mm, 5 Wände, 50 %, Baumstützen, 1 h 17). Der Lo-Halter bleibt.
 
 - **Quetschventile am Aufbau (25.11., Beobachtung Alex):**
-  - Aufbau: Ein QV läuft mit Getriebeplatte und Hohlrad der Vorversion (vom 24.11.), das andere ist komplett der Nachtdruck vom 24./25.11. Beide e 4,5, Spalt zu 3,0.
+  - Aufbau: Ein QV läuft mit Getriebeplatte und Hohlrad der Vorversion (vom 24.11.), das andere ist komplett der Nachtdruck vom 24./25.11.
+    Beide sind Rahmen v2 mit Steg 6200 und Gegenlagerscheibe (ihht-pi `CAD/quetschventil`, VERSUCHE.md V8), nicht QV v3. Welle (e) und Hülse nicht notiert.
   - Beobachtung: Das QV mit dem alten Getriebe dichtet nicht ganz. Das neue dichtet gerade so, geschätzt 97 %. Vermutung Alex: Druckstreuung, Exzentrizität etwas zu klein.
   - Der Steg war mit zu kurzen Schrauben befestigt. M3 × 20 passt im Durchmesser, die Bohrung im Amboss (12 tief) ist aber zu kurz. Alex bohrt nach.
   - Geändert: Die 4 Eckbohrungen der Ambosse gehen jetzt durch (`qv_amboss.py` und ihht-pi `gen_rahmen.py`). Noch nicht gedruckt.
-  - Offen: Spalt verkleinern (Vorschlag: Amboss 0,5 dicker statt größerer Exzentrizität, dann bleibt das Getriebe gleich).
+  - Nachtrag: Auf einer Seite fehlen 1 bis 2 mm. Die Gegenlagerscheibe sitzt schräg auf ihren 2 Stiften, das Lager weicht in Kraftrichtung aus (Alex).
+    Folge: Welle und Lagerzapfen als ein Teil, siehe ihht-pi VERSUCHE.md V9 (`druck/welle_zapfen_6200.3mf`). Noch nicht gedruckt.
 
 - **v3.0 (25.11.):** OCS Mix ist ein zweiter großer 3F 3.0, nicht der kleine 3FRL. Das T-Stück wird gedruckt statt gekauft (Alex).
   - **OCS Mix** steht hochkant an der Wand rechts unter dem QV lo: X 73 … 95, Z 27 … 152, gleiche Lage wie hi (Rohr zur Wand, Tüllen nach links).
