@@ -18,6 +18,13 @@ def halter(name, h):
     p = Part('dwOCSHalter' + name, 'Dev-Wand Steckhalter OCS %s' % name.lower(), HELL)
     p.add(B(fx0, fx1, -H_FT, 0, fz0, fz1))
     p.add(*[Cy(o['loch'][k][0], -H_FT + 0.01, yb, o['loch'][k][1], h.get('post_d', OH_POST_D)) for k in h['stuetzen']])
+    if h.get('fuss'):                                                           # lange Stützen: Steg in Z zur Platinenmitte (weg von den Tüllen)
+        zm = (o['z'][0] + o['z'][1]) / 2
+        r = h.get('post_d', OH_POST_D) / 2
+        for k in h['stuetzen']:
+            x, z = o['loch'][k]
+            z2 = z + (h['fuss'] if z < zm else -h['fuss'])
+            p.add(B(x - r, x + r, -H_FT + 0.01, yb, min(z, z2), max(z, z2)))
     for k, d in h['zapfen'].items():
         x, z = o['loch'][k]
         y1 = yo - 1.2

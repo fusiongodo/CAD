@@ -130,14 +130,18 @@ def _ocs(x0, x1, z1, L, d, mitte, vorn, ueber, tu, seite, stecker, loecher, rohr
 # v3.1 (Alex 25.11., Foto am Aufbau): doch Rohr nach vorn, Bauteilseite (Stecker) zur Wand, Tüllen links, J5 oben, J2 unten.
 # Gegenüber v2.8 um die Tüllenachse gekippt: u -> 125 - u, v bleibt. Tüllenachse wieder auf YS (Y -22, wie QV-Schlauch und lo),
 # Platine Y -14,5 .. -16 (3 näher an der Wand als die Stützen von v2.8).
+# v3.2 (Alex 25.11., Foto von oben am Aufbau): montiert ist es mit dem Rohr zur Wand, Stecker vorn (wie v2.8, Lochbild ohne
+# Drehung, J2 oben). Im v3.1-Halter lag das Rohr fast am Flansch, die Tülle 13 tiefer als beim lo. Jetzt Rohr zur Wand UND
+# Tüllenachse auf YS: Platinen-Rohrseite Y -28, Rohr 12 vor dem Flansch frei (Schraubenköpfe passen darunter).
 _HI_ARGS = (125.0, 1.5, 6.0, 12.5, 7.0, (20.0, 105.0), -1,
-            [(0, 5.7, 107.4, 119), (0, 5.7, 8, 17), (17.2, 22, 41, 52)],                     # J2, J5, J3
-            {'E': (3.2, 122.2), 'A1': (3.2, 99.8), 'A2': (20.3, 99.4), 'B1': (3.2, 28.3), 'B2': (20.3, 24.1)},
+            [(0, 5.7, 6, 17.6), (0, 5.7, 108, 117), (17.2, 22, 73, 84)],                     # J2, J5, J3
+            {'E': (3.2, 2.8), 'A1': (3.2, 25.2), 'A2': (20.3, 25.6), 'B1': (3.2, 96.7), 'B2': (20.3, 100.9)},
             10.0, 12.0, (55.0, 70.0))
-OCS_HI = _ocs(-24.0, -2.0, Z_ZUFUHR + 20.0, *_HI_ARGS)
+HI_ROHR_WAND = YS - 6.0         # Tüllenachse (6 vor der Platine, Rohrseite) auf YS
+OCS_HI = _ocs(-24.0, -2.0, Z_ZUFUHR + 20.0, *_HI_ARGS, rohr_wand=HI_ROHR_WAND)
 # v3.0 (Alex 25.11.): OCS Mix ist ein zweiter 3F 3.0. Hochkant rechts unter dem QV lo, gleiche Lage wie hi (Rohr zur Wand,
 # Tüllen nach links, Einlass oben Z 132, Auslass unten Z 47). 4,35 unter der QV-Platte, 1 neben dem Knotenblech-Flansch.
-OCS_MIX = _ocs(73.0, 95.0, 152.0, *_HI_ARGS)
+OCS_MIX = _ocs(73.0, 95.0, 152.0, *_HI_ARGS, rohr_wand=HI_ROHR_WAND)
 # lo 3FRL 2.0: 79 x 24 x 1,6, 25 hoch (Stecker bis Clip), Rohrmitte 6,7 vor der Platine, Tüllen 21,5 (J2-Ende) / 60,
 # 5,5 über die Kante. Löcher Ø 3,5 quer 18,5: Ende ohne J2 rund (u 75,6), J2-Ende Langloch 4,5 (u 3,6) + rund (u 10,1).
 OCS_LO = _ocs(1.0, 25.0, Z_ZUFUHR + 21.5, 79.0, 1.6, 6.7, 17.4, 5.5, (21.5, 60.0), 1,
@@ -167,14 +171,14 @@ H_FT = 4.0                      # Flanschdicke aller Halter (Y -4 .. 0)
 # A2 / B1 / B2, 2 Randleisten mit Rastwulst (u 40 .. 50, frei von Rohr, Clip und Tüllen) halten die Platine.
 OH_POST_D = 5.0
 OH = {'Hi': dict(ocs=OCS_HI, flansch=(-26.4, 0.4, 88.0, 173.0), schrauben=[(-15.0, 116.0), (-15.0, 156.0)],
-                 zapfen={'A1': 2.6}, stuetzen=('A1', 'A2', 'B1', 'B2'), leisten=(OCS_HI['z'][1] - 50.0, OCS_HI['z'][1] - 40.0)),
+                 zapfen={'A1': 2.6}, stuetzen=('A1', 'A2', 'B1', 'B2'), leisten=(OCS_HI['z'][1] - 50.0, OCS_HI['z'][1] - 40.0), fuss=8.0),
       'Lo': dict(ocs=OCS_LO, flansch=(0.6, 26.0, 116.0, 195.0), schrauben=[(15.0, 126.0), (15.0, 156.0)],
                  zapfen={}, stuetzen=('L1', 'L2', 'R1', 'R2'), leisten=None, post_d=7.0, m2=('L1', 'L2', 'R1', 'R2'))}
 # v3.0 Mix: wie Hi, aber Schrauben neben dem Rohr (Kopf 3 hoch passt nicht unter das Rohr, 1,5 Luft) und Ausschnitt um die
 # Träger-Mutter (75, 76). Flansch rechts bis 99,5 (Knotenblech ab 100,5).
 OH['Mix'] = dict(ocs=OCS_MIX, flansch=(70.6, 99.5, 46.5, 131.5), schrauben=[(75.0, 96.0), (95.0, 66.0)],
                  zapfen={'A1': 2.6}, stuetzen=('A1', 'A2', 'B1', 'B2'), leisten=(OCS_MIX['z'][1] - 50.0, OCS_MIX['z'][1] - 40.0),
-                 frei=[(75.0, 76.0)])
+                 frei=[(75.0, 76.0)], fuss=8.0)   # fuss (v3.2): Stützen 24 lang -> je ein Steg 8 lang zur Platinenmitte hin
 # v2.7 lo: Zapfen brachen beim Abnehmen ab -> M2 von vorn durch Platine und Stütze, Mutter seitlich in einen Schlitz 1,2 unter
 # der Platine eingeschoben (M2 x 6 reicht, bis M2 x 14 geht). Stützen Ø 7 für die Mutter (SW 4).
 M2_CLR, M2_MUTTER_SW, M2_MUTTER_H, M2_MUTTER_AB = 2.4, 4.2, 1.9, 1.2

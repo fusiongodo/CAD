@@ -1,6 +1,6 @@
 # Development-Wand (Variante A „Senkrechte Wand“)
 
-Stand 25.11.2026, Anordnung v3.1.
+Stand 25.11.2026, Anordnung v3.2.
 
 - **Quelle:** `quelle/teile/wand_*.py` und `quelle/ihht/wand.py`
 - **Onshape-Modul:** `development_wand.fs`
@@ -55,7 +55,7 @@ Stand 25.11.2026, Anordnung v3.1.
   - Mit Mutter in der Tasche: M2 × 14. Die Spitze bleibt in der Tasche, nicht an der Wand.
   - Der seitliche Mutterschlitz unter der Platine bleibt für kurze Schrauben (M2 × 6 … 10).
 
-- **v3.1 (25.11., aktuell):** Die großen OCS (hi und Mix) sitzen mit dem Rohr nach vorn, Bauteilseite (Stecker) zur Wand. Foto von Alex am Aufbau: Tüllen links, J5 oben, J2 unten.
+- **v3.1 (25.11.):** Die großen OCS (hi und Mix) sitzen mit dem Rohr nach vorn, Bauteilseite (Stecker) zur Wand. Foto von Alex am Aufbau: Tüllen links, J5 oben, J2 unten.
   - Beobachtung am v3.0-Druck: Der Clip hält die Platine perfekt. Der Halter war aber für „Rohr zur Wand“ gebaut (v2.8). Mit dem Rohr vorn stand das OCS zu weit vor der Wand,
     der Schlauch musste seitlich biegen, und der Halter passte nur verdreht, dann lagen die Schraublöcher neben dem Raster.
   - Modell: `_ocs(...)` ohne `rohr_wand`, Lochbild und Stecker um die Tüllenachse gekippt (u → 125 − u). Platine Y −14,5 … −16, Tüllenachse Y −22 wie QV-Schlauch und lo.
@@ -63,6 +63,14 @@ Stand 25.11.2026, Anordnung v3.1.
   - T-Stück: Alle drei Anschlüsse liegen jetzt auf Y −22. Das v3.0-T-Stück (Mix und hi auf Y −11,5) passt nicht mehr, neu drucken.
   - Durchfluss: Mit dieser Lage liegt der Pfeil-Einlass des OCS unten, das Gas kommt aber oben an. Die O2-Messung geht in beide Richtungen, ein Flusswert hätte das falsche Vorzeichen. Nicht getestet.
   - Druck: `druck/development_wand_hi_mix_t.3mf` (Halter Hi, Halter Mix, T-Stück; 0,20 mm, 5 Wände, 50 %, Baumstützen, 1 h 17). Der Lo-Halter bleibt.
+
+- **v3.2 (25.11., aktuell):** Zurück auf „Rohr zur Wand, Stecker vorn“ für hi und Mix, aber mit der Tülle auf Y −22.
+  - Beobachtung am v3.1-Druck (Foto von oben): Der Mix-Halter (U-Ausschnitt, Löcher diagonal) passt aufs Raster. Alex hat das große OCS mit dem Rohr zur Wand eingeclipst,
+    nicht wie auf dem Foto zu v3.1 mit dem Rohr vorn. Im v3.1-Halter (Stützen 10,5) liegt das Rohr dann fast am Flansch, die Tülle sitzt deutlich tiefer als beim lo.
+  - Der Clip nimmt die Platine in beiden Lagen auf. Deshalb ging es seit v2.8 dreimal hin und her. Festgelegt: Rohr zur Wand, Stecker vorn (Kabel steckbar), J2 oben, Pfeil-Einlass oben.
+  - Modell: `rohr_wand = YS − 6 = −28`, Lochbild wie v2.8. Platine Y −28 … −29,5, Stützen 24 lang mit je einem 8 langen Steg zur Platinenmitte (`fuss`), Halter baut 31,9 hoch.
+    Unter dem Rohr sind 12 frei, die Schraubenköpfe passen. Schrauben und Flansche unverändert. Das T-Stück von v3.1 bleibt (alle Anschlüsse Y −22).
+  - Druck: `druck/development_wand_hi_mix.3mf` (nur Halter Hi und Mix).
 
 - **Quetschventile am Aufbau (25.11., Beobachtung Alex):**
   - Aufbau: Ein QV läuft mit Getriebeplatte und Hohlrad der Vorversion (vom 24.11.), das andere ist komplett der Nachtdruck vom 24./25.11.
