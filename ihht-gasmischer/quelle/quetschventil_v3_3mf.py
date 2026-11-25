@@ -89,7 +89,7 @@ def lay(m, unten):                                    # unten: 'vorn' (-Y aufs B
     return m
 
 
-PRINT = [('Rueckwand', lay(M['qvRueckwand'], 'hinten'), 60.0, 58.0),
+PRINT = [('Rueckwand', lay(M['qvRueckwand'], 'hinten'), 60.0, 78.0),
          ('Steg', lay(M['qvSteg'], 'vorn'), 160.0, 58.0),
          ('Getriebeplatte', lay(M['qvGetriebeplatte'], 'hinten'), 60.0, 170.0),
          ('Hohlrad', lay(M['qvHohlrad'], 'vorn'), 160.0, 170.0),
@@ -97,7 +97,7 @@ PRINT = [('Rueckwand', lay(M['qvRueckwand'], 'hinten'), 60.0, 58.0),
          ('Klemmhuelse', lay(M['qvKlemmhuelse'], 'hinten'), 228.0, 85.0),
          ('Ritzel', lay(M['qvRitzel'], 'hinten'), 228.0, 125.0),
          ('Distanz hinten', lay(M['qvDistanzH'], 'vorn'), 222.0, 160.0),
-         ('Distanz vorn', lay(M['qvDistanzV'], 'vorn'), 238.0, 160.0)]
+         ('Distanz vorn', lay(M['qvDistanzV'], 'vorn'), 222.0, 185.0)]
 for name, m, x, y in PRINT:
     e = m.extents
     print('%-15s Drucklage %5.1f x %5.1f x %5.1f  Bett x %5.1f..%5.1f  y %5.1f..%5.1f' % (name, e[0], e[1], e[2], x - e[0] / 2, x + e[0] / 2, y - e[1] / 2, y + e[1] / 2))
