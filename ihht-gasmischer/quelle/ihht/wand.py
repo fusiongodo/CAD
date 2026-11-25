@@ -104,10 +104,11 @@ STECKER_H = 6.0
 def _ocs(x0, x1, z1, L, d, mitte, vorn, ueber, tu, seite, stecker, loecher, rohr_b, rohr_t, clip_u, dreh=False):
     """seite -1: Tüllen nach links (Tüllenkante x0), +1: nach rechts (x1). stecker / loecher in (v, u).
     Rohrseite: Rohr rohr_b breit mittig, rohr_t vor der Platine; Clip mit Muttern über die volle Breite bei clip_u (u0, u1),
-    vorn bis zur dicksten Stelle. dreh: Löcher und Stecker oben/unten gespiegelt (u -> L - u, v bleibt), Tüllen bleiben."""
+    vorn bis zur dicksten Stelle. dreh: Platine (Löcher, Stecker) 180° um ihre Mitte gedreht, Tüllen bleiben."""
     if dreh:
-        stecker = [(v0, v1, L - u1, L - u0) for v0, v1, u0, u1 in stecker]
-        loecher = {k: (v, L - u) for k, (v, u) in loecher.items()}
+        W = x1 - x0
+        stecker = [(W - v1, W - v0, L - u1, L - u0) for v0, v1, u0, u1 in stecker]
+        loecher = {k: (W - v, L - u) for k, (v, u) in loecher.items()}
     ob = YS + mitte                                                       # Platinen-Vorderseite (Rohrseite)
     vx = (lambda v: x0 + v) if seite < 0 else (lambda v: x1 - v)
     kante = x0 if seite < 0 else x1
@@ -121,8 +122,8 @@ def _ocs(x0, x1, z1, L, d, mitte, vorn, ueber, tu, seite, stecker, loecher, rohr
 
 # hi 3F 3.0: 125 x 22 x 1,5, Rohr bis 12,5 vor der Platine (Mitte 6), Tüllen 20 von beiden Enden, 7 über die Kante.
 # Löcher (Foto): Ecke u 2,8; Paar A u 25,4 (v 3,2 / v 20,3); Paar B versetzt u 96,8 (v 3,2) / u 100,9 (v 20,3).
-# Alex 24.11.: so stünde das Lochbild spiegelverkehrt -> 180° gedreht. Alex 25.11. am Druck: links/rechts damit falsch
-# (oben muss links der tiefere Pfosten stehen, Zapfen unten links) -> nur oben/unten gespiegelt (dreh=True), Tüllen links.
+# Alex 24.11.: so stünde das Lochbild spiegelverkehrt -> Platine 180° um die Mitte gedreht (dreh=True), Tüllen bleiben links.
+# 25.11. kurz nur oben/unten gespiegelt (v2.5): dann läge der Auslass oben -> falsch, 180° (v2.4) passt.
 OCS_HI = _ocs(-24.0, -2.0, Z_ZUFUHR + 20.0, 125.0, 1.5, 6.0, 12.5, 7.0, (20.0, 105.0), -1,
               [(0, 5.7, 6, 17.6), (0, 5.7, 108, 117), (17.2, 22, 73, 84)],                     # J2, J5, J3
               {'E': (3.2, 2.8), 'A1': (3.2, 25.2), 'A2': (20.3, 25.6), 'B1': (3.2, 96.7), 'B2': (20.3, 100.9)},

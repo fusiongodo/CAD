@@ -1,6 +1,6 @@
 # Development-Wand (Variante A „Senkrechte Wand“)
 
-Stand 25.11.2026, Anordnung v2.5.
+Stand 25.11.2026, Anordnung v2.6.
 
 - **Quelle:** `quelle/teile/wand_*.py` und `quelle/ihht/wand.py`
 - **Onshape-Modul:** `development_wand.fs`
@@ -34,9 +34,12 @@ Stand 25.11.2026, Anordnung v2.5.
   - Druck auf der Seite (linke Leiste aufs Bett): Die Schichten laufen längs durch die Leisten. Die obere Leiste braucht Baumstützen (nur vom Bett).
   - Eigene Datei `druck/development_wand_ocshalter_hi.3mf`, 0,28 mm, 5 Wände, 50 %, etwa 25 min. Aus Platte 3 herausgenommen.
 
-- **v2.5 (25.11., aktuell):** Der v2.4-Druck passt nicht auf die Platine. Das Lochbild war links/rechts vertauscht: Oben stand links der höhere Pfosten, und der Zapfen saß unten rechts.
+- **v2.5 (25.11., verworfen):** Der v2.4-Druck passt nicht auf die Platine. Das Lochbild war links/rechts vertauscht: Oben stand links der höhere Pfosten, und der Zapfen saß unten rechts.
   - Ursache: Die Korrektur vom 24.11. hatte das Foto-Lochbild um 180° gedreht. Richtig ist nur die Spiegelung oben/unten (u → L − u, v bleibt).
   - Jetzt steht oben links der tiefere Pfosten (Z 165,2) und rechts der höhere (Z 169,4). Der Zapfen sitzt unten links (A1, X −20,8). Steckerzonen gehen mit.
+
+- **v2.6 (25.11., aktuell):** v2.5 zurückgenommen. Mit dem nur oben/unten gespiegelten Lochbild läge der Auslass des OCS hi oben statt unten, die Platine müsste verkehrt herum drauf.
+  - Die 180°-Drehung aus v2.4 ist richtig. Der gedruckte v2.4-Halter passt, Nachdruck nicht nötig.
 
 ## Fluss (X quer, Z Höhe über Tisch)
 
