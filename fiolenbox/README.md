@@ -23,7 +23,8 @@ Box für 12 Fiolen (Ø 16 × 38 mm), 4 × 3, mit Stülpdeckel zum Aufrasten. Sti
 - 8 Rastnasen (2 je Seite bei ±¼ Seitenlänge, alle 4 Seiten) statt 2 – mehr Last (100 Fiolen), lange Seiten federn stark
 - Deckelplatte 2,0 mm (Spannweite ~190 bzw. ~150 mm)
 - Geprüft im Modell: sitzend 12,7 mm³ Vorspannung (= 8 × Ring-6-Wert), Rastung über ~1,5 mm Hub, frei ab 5 mm
-- Ansicht: `ansicht/fiolenbox_16_10x10.html`, `fiolenbox_11_10x10.html`; noch keine 3MF
+- Ansicht: `ansicht/fiolenbox_16_10x10.html`, `fiolenbox_11_10x10.html`
+- Druck (Masse-Profil): passt nicht zusammen auf eine Platte → je Teil eine 3MF, `druck/fiolenbox_<16|11>_10x10_v1_unterteil.3mf` / `_deckel.3mf`
 
 ## Fiolenbox 11 v1 (23.11.2026) – Fiolen Ø 11,6 × 32
 - Unterteil wie v2 (Spiel 0,5, Steg 2 mm → Loch Ø 12,6, Raster 14,6), H_BASE 20 → Fiolen ragen 13,5 mm heraus; Hals 7 mm, Rille wie v2
