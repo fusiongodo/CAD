@@ -127,18 +127,32 @@ def _ocs(x0, x1, z1, L, d, mitte, vorn, ueber, tu, seite, stecker, loecher, rohr
 # v2.8 (Alex 25.11. am Aufbau): hi sitzt mit dem Rohr zur Wand, Platine vorn. Von vorn: oben das Einzelloch E, darunter
 # Paar A auf einer Höhe, weit unten Paar B links höher -> Fotodaten ohne Drehung. Rohrrückseite 1 vor dem Flansch (Y -4).
 # Rohr 10 statt 12,5 breit angenommen: Stützen Ø 5 an A / B passten real daneben.
-OCS_HI = _ocs(-24.0, -2.0, Z_ZUFUHR + 20.0, 125.0, 1.5, 6.0, 12.5, 7.0, (20.0, 105.0), -1,
-              [(0, 5.7, 6, 17.6), (0, 5.7, 108, 117), (17.2, 22, 73, 84)],                     # J2, J5, J3
-              {'E': (3.2, 2.8), 'A1': (3.2, 25.2), 'A2': (20.3, 25.6), 'B1': (3.2, 96.7), 'B2': (20.3, 100.9)},
-              10.0, 12.0, (55.0, 70.0), rohr_wand=-(4.0 + 12.5 + 1.0))
+_HI_ARGS = (125.0, 1.5, 6.0, 12.5, 7.0, (20.0, 105.0), -1,
+            [(0, 5.7, 6, 17.6), (0, 5.7, 108, 117), (17.2, 22, 73, 84)],                     # J2, J5, J3
+            {'E': (3.2, 2.8), 'A1': (3.2, 25.2), 'A2': (20.3, 25.6), 'B1': (3.2, 96.7), 'B2': (20.3, 100.9)},
+            10.0, 12.0, (55.0, 70.0))
+OCS_HI = _ocs(-24.0, -2.0, Z_ZUFUHR + 20.0, *_HI_ARGS, rohr_wand=-(4.0 + 12.5 + 1.0))
+# v3.0 (Alex 25.11.): OCS Mix ist ein zweiter 3F 3.0. Hochkant rechts unter dem QV lo, gleiche Lage wie hi (Rohr zur Wand,
+# Tüllen nach links, Einlass oben Z 132, Auslass unten Z 47). 4,35 unter der QV-Platte, 1 neben dem Knotenblech-Flansch.
+OCS_MIX = _ocs(73.0, 95.0, 152.0, *_HI_ARGS, rohr_wand=-(4.0 + 12.5 + 1.0))
 # lo 3FRL 2.0: 79 x 24 x 1,6, 25 hoch (Stecker bis Clip), Rohrmitte 6,7 vor der Platine, Tüllen 21,5 (J2-Ende) / 60,
 # 5,5 über die Kante. Löcher Ø 3,5 quer 18,5: Ende ohne J2 rund (u 75,6), J2-Ende Langloch 4,5 (u 3,6) + rund (u 10,1).
 OCS_LO = _ocs(1.0, 25.0, Z_ZUFUHR + 21.5, 79.0, 1.6, 6.7, 17.4, 5.5, (21.5, 60.0), 1,
               [(18.0, 24.0, 20.0, 30.0)],                                                        # J2 (Gegenkante)
               {'L1': (2.75, 3.6), 'L2': (21.25, 3.6), 'R1': (2.75, 75.6), 'R2': (21.25, 75.6)},
               13.4, 13.4, (34.0, 46.0))
-T_Z = 53.0                      # T-Stück 6 mm: Arme ±18 (Ø 8), Körper Ø 10, Abgang 15 nach unten
-T_ARM, T_STEM = 18.0, 15.0
+# v3.0: T-Stück als Druckteil zwischen lo-Auslass (X 30,5 / Y -22 / Z 135) und Mix-Einlass (X 66 / Y -11,5 / Z 132),
+# hi kommt von unten (Y -11,5). Block mit Bohrungen Ø 4, 3 Tüllen (Hals 6,6 / Wulst 7,5 / Spitze 6,2) für Schlauch 6 innen,
+# Flansch mit 2 x M3 x 16 auf dem Raster (unter dem Block, neben dem hi-Schlauch).
+TS_X = 48.25                                   # Abgang nach unten (hi)
+TS_BLOCK = (42.5, 54.0, -27.5, 127.5, 140.5)   # x0, x1, y vorn, z0, z1 (hinten bis an den Flansch)
+TS_FL = (31.0, 69.0, 111.0, 140.5)             # Flansch x0, x1, z0, z1
+TS_HOLES = [(35.0, 116.0), (65.0, 116.0)]
+TS_BARB, TS_BORE = 10.0, 4.0
+TS_BARB_D = ((0.0, 5.0, 6.6), (5.0, 8.0, 7.5), (8.0, 10.0, 6.2))   # (ab Block, bis, Ø)
+TS_LO = (OCS_LO['ty'], OCS_LO['tz'][1])        # Y, Z des lo-Anschlusses
+TS_MIX = (OCS_MIX['ty'], OCS_MIX['tz'][0])     # Y, Z des Mix-Anschlusses
+# MIX: alter Platz des kleinen OCS Mix auf der Grundplatte. Seit v3.0 unbenutzt, die Kabelbinder-Schlitze bleiben (gedruckt).
 MIX = dict(x=(-11.5, 11.5), y=(-79.5, -0.5), z=(BT, BT + 24.0), ty=(YS, YS - 38.5), tip=BT + 29.0)   # quer zur Wand, Tüllen oben
 
 # ---------------- Halter ----------------
@@ -152,15 +166,16 @@ OH = {'Hi': dict(ocs=OCS_HI, flansch=(-26.4, 0.4, 88.0, 173.0), schrauben=[(-15.
                  zapfen={'A1': 2.6}, stuetzen=('A1', 'A2', 'B1', 'B2'), leisten=(OCS_HI['z'][1] - 50.0, OCS_HI['z'][1] - 40.0)),
       'Lo': dict(ocs=OCS_LO, flansch=(0.6, 26.0, 116.0, 195.0), schrauben=[(15.0, 126.0), (15.0, 156.0)],
                  zapfen={}, stuetzen=('L1', 'L2', 'R1', 'R2'), leisten=None, post_d=7.0, m2=('L1', 'L2', 'R1', 'R2'))}
+# v3.0 Mix: wie Hi, aber Schrauben neben dem Rohr (Kopf 3 hoch passt nicht unter das Rohr, 1,5 Luft) und Ausschnitt um die
+# Träger-Mutter (75, 76). Flansch rechts bis 99,5 (Knotenblech ab 100,5).
+OH['Mix'] = dict(ocs=OCS_MIX, flansch=(70.6, 99.5, 46.5, 131.5), schrauben=[(75.0, 96.0), (95.0, 66.0)],
+                 zapfen={'A1': 2.6}, stuetzen=('A1', 'A2', 'B1', 'B2'), leisten=(OCS_MIX['z'][1] - 50.0, OCS_MIX['z'][1] - 40.0),
+                 frei=[(75.0, 76.0)])
 # v2.7 lo: Zapfen brachen beim Abnehmen ab -> M2 von vorn durch Platine und Stütze, Mutter seitlich in einen Schlitz 1,2 unter
 # der Platine eingeschoben (M2 x 6 reicht, bis M2 x 14 geht). Stützen Ø 7 für die Mutter (SW 4).
 M2_CLR, M2_MUTTER_SW, M2_MUTTER_H, M2_MUTTER_AB = 2.4, 4.2, 1.9, 1.2
 M2_FLANSCH_T = 3.0              # v2.9: Sechskanttasche hinten im lo-Flansch, M2 x 14 greift voll, Spitze bleibt in der Tasche
 LEISTE_T, LEISTE_LUFT, WULST_D = 2.2, 0.2, 2.4   # v2.4: 2,2 statt 1,6 (Leisten brachen ab), Druck auf der Seite
-# T-Halter: Flansch 40 x 24, 2 waagerechte Finnen (4 dick, 30 tief) über und unter dem T-Körper, unten Gabel für den Abgang.
-TH_X, TH_Z, TH_FIN_X, TH_FIN_T, TH_D = (-20.0, 20.0), (44.0, 68.0), (-9.0, 9.0), 4.0, 30.0
-TH_HOLES = [(-15.0, 56.0), (15.0, 56.0)]
-TH_SLOT_X, TH_SLOT_W = (-6.5, 6.5), (9.0, 11.0)
 # OCS Mix: Kabelbinder durch Schlitze in der Grundplatte, Nut auf der Unterseite.
 MIX_BAND_Y = (-40.0, -72.0)
 
@@ -193,32 +208,38 @@ def grid_points():
     return out
 
 
-def _bogen(c, r, a0, a1, n=8):
-    """Kreisbogen in der XZ-Ebene (Y = YS): Mittelpunkt c = (x, z), Winkel a0 -> a1 in Grad."""
-    return [(c[0] + r * math.cos(math.radians(a0 + (a1 - a0) * k / n)), YS,
+def _bogen(c, r, a0, a1, n=8, y=YS):
+    """Kreisbogen in der XZ-Ebene (Y = y): Mittelpunkt c = (x, z), Winkel a0 -> a1 in Grad."""
+    return [(c[0] + r * math.cos(math.radians(a0 + (a1 - a0) * k / n)), y,
              c[1] + r * math.sin(math.radians(a0 + (a1 - a0) * k / n))) for k in range(n + 1)]
+
+
+HIT_X = 36.0                    # hi-Schlauch steigt bei X 36 (links am Patientenschlauch vorbei), S-Kurve auf den T-Abgang
 
 
 def schlaeuche():
     """Schlauch-Mittellinien als Punktlisten (X, Y, Z) und kleinster Biegeradius je Strecke."""
-    hz0, hz1 = OCS_HI['tz']
-    lz0, lz1 = OCS_LO['tz']
-    hx, lx = OCS_HI['tx'][1], OCS_LO['tx'][1]
-    # hi: U-Bogen R 25 nach unten (links ausladend), dann flache S-Kurve R 25 hoch in den linken T-Arm
-    zb = hz1 - 2 * R_MIN
-    th = math.acos(1 - (T_Z - zb) / (2 * R_MIN))
-    xs = -T_ARM - 3.0 - 2 * R_MIN * math.sin(th)                       # 3 gerade vor dem T-Arm
-    assert T_Z > zb and xs < hx - 2, 'hi-Schlauch passt nicht'
+    hz1, hx, hy = OCS_HI['tz'][1], OCS_HI['tx'][1], OCS_HI['ty']
+    lx, mx, my = OCS_LO['tx'][1], OCS_MIX['tx'][1], OCS_MIX['ty']
+    R = R_MIN
+    # hi: U-Bogen nach links unten, waagerecht unter hi / lo durch, Bogen hoch bei HIT_X, S-Kurve auf den T-Abgang
+    zu = hz1 - 2 * R                                                    # 38,5 waagerecht
+    ze = TS_BLOCK[3] - TS_BARB - 2.0                                    # 2 gerade vor der Tülle
+    th = math.acos(1 - (TS_X - HIT_X) / (2 * R))
+    zs = ze - 2 * R * math.sin(th)
+    assert zs >= zu + R and HIT_X - R > hx - 3.0, 'hi-Schlauch passt nicht'
     w = math.degrees(th)
-    hi_t = ([(hx, YS, hz1)] + _bogen((xs, hz1 - R_MIN), R_MIN, 90, 270, 12) + _bogen((xs, zb + R_MIN), R_MIN, -90, -90 + w, 4)[1:]
-            + _bogen((-T_ARM - 3.0, T_Z - R_MIN), R_MIN, 90 + w, 90, 4)[1:] + [(-T_ARM, YS, T_Z)])
+    hi_t = ([(hx, hy, hz1)] + _bogen((hx - 3.0, hz1 - R), R, 90, 270, 12, hy)   # 3 gerade auf der Tülle
+            + _bogen((HIT_X - R, zu + R), R, -90, 0, 8, hy)
+            + _bogen((HIT_X + R, zs), R, 180, 180 - w, 4, hy) + _bogen((TS_X - R, ze), R, -w, 0, 4, hy)[1:]
+            + [(TS_X, hy, ze + 2.0)])
+    hi_t = [q for k, q in enumerate(hi_t) if k == 0 or math.dist(q, hi_t[k - 1]) > 1e-6]
     out = {
         'ZuHi': ([(-TUBE_X + 0.5, YS, Z_ZUFUHR), (hx, YS, Z_ZUFUHR)], None),   # hi-Tülle liegt 10,5 weiter hinten, Schlauch versetzt real
         'ZuLo': ([(lx, YS, Z_ZUFUHR), (TUBE_X - 0.5, YS, Z_ZUFUHR)], None),
-        'HiT': (hi_t, R_MIN),
-        'LoT': ([(lx, YS, lz1)] + _bogen((lx + 2, lz1 - R_MIN), R_MIN, 90, 0) + _bogen((lx + 2, T_Z + R_MIN), R_MIN, 0, -90)
-                + [(T_ARM, YS, T_Z)], R_MIN),
-        'TMix': ([(0.0, YS, T_Z - T_STEM), (0.0, YS, MIX['tip'])], None),
+        'HiT': (hi_t, R),
+        'LoT': ([(lx, TS_LO[0], TS_LO[1]), (TS_BLOCK[0] - TS_BARB, TS_LO[0], TS_LO[1])], None),
+        'TMix': ([(TS_BLOCK[1] + TS_BARB, TS_MIX[0], TS_MIX[1]), (mx, TS_MIX[0], TS_MIX[1])], None),
     }
     for sx, n in ((-1, 'AbHi'), (1, 'AbLo')):                             # Ablass: Bogen in XY bis an die Wand
         cx, cy, r = sx * (TUBE_X - 0.5), YS + R_MIN, R_MIN
@@ -228,10 +249,10 @@ def schlaeuche():
             f = f1 * k / 8
             pts.append((cx - sx * r * math.sin(f), cy - r * math.cos(f), Z_ABLASS))
         out[n] = (pts, r)
-    y0, z0 = MIX['ty'][1], MIX['tip']                                     # Patient: hoch, dann nach vorn
-    out['Patient'] = ([(0.0, y0, z0), (0.0, y0, z0 + 10)] +
-                      [(0.0, y0 - R_MIN + R_MIN * math.cos(math.radians(90 * k / 8)), z0 + 10 + R_MIN * math.sin(math.radians(90 * k / 8)))
-                       for k in range(1, 9)] + [(0.0, y0 - R_MIN - 15, z0 + 10 + R_MIN)], R_MIN)
+    pz = OCS_MIX['tz'][1]                                                 # Patient: Mix-Auslass unten, Bogen in XY nach vorn
+    px = mx - 3.0                                                         # 3 gerade auf der Tülle
+    out['Patient'] = ([(mx, my, pz)] + [(px - R * math.sin(math.radians(90 * k / 8)), my - R + R * math.cos(math.radians(90 * k / 8)), pz) for k in range(9)]
+                      + [(px - R, my - R - 15, pz)], R)
     return out
 
 

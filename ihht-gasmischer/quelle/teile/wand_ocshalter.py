@@ -1,4 +1,4 @@
-# Development-Wand: Steckhalter OCS hi (3F 3.0) und OCS lo (3FRL 2.0), Maße und Lage in ihht/wand.py (OH).
+# Development-Wand: Steckhalter OCS hi und Mix (beide 3F 3.0) und OCS lo (3FRL 2.0), Maße und Lage in ihht/wand.py (OH).
 #   Flansch 4 an der Wand, 2 x M3 x 16 + Mutter auf dem Raster (vor dem Aufstecken einschrauben). Stützen Ø 5 bis an die
 #   Platinen-Rückseite (Bauteilseite zur Wand, Steckergehäuse 6 frei), oben Zapfen durch die Platinenlöcher mit Fase.
 #   hi sitzt umgekehrt (Rohr zur Wand, Bauteilseite vorn): Stützen neben dem Rohr bis an die Platine, 1 Luft zum Flansch.
@@ -37,6 +37,8 @@ def halter(name, h):
         p.cut(Cy(x, 1, yb - 1, z, M2_CLR),
               B(min(x, x + sx * 6), max(x, x + sx * 6), y0, y0 + M2_MUTTER_H, z - M2_MUTTER_SW / 2, z + M2_MUTTER_SW / 2))
         p.cut(P(x, z, -M2_FLANSCH_T, 1, hex_profile(M2_MUTTER_SW)))           # oder Mutter hinten im Flansch versenkt (M2 x 14)
+    for x, z in h.get('frei', ()):                                              # Mutter eines Trägers vorn an der Wand: U-Ausschnitt zur Kante
+        p.cut(Cy(x, -H_FT - 1, 1, z, 7.5), B(fx0 - 1, x, -H_FT - 1, 1, z - 3.75, z + 3.75))
     for x, z in h['schrauben']:
         p.cut(Cy(x, -H_FT - 1, 1, z, M3_CLR))
     return p

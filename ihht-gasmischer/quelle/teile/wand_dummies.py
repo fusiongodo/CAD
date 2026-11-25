@@ -1,5 +1,5 @@
 # Development-Wand, nicht gedruckt: QV (Rahmen v2 + Getriebe v1 + Gegenlager 6200) vereinfacht, NEMA 17,
-# OCS hi / lo / Mix, T-Stück, Schläuche, Raspberry Pi, BTT SKR Pico. Für Ansicht und Kollisionsprüfung.
+# OCS hi / lo / Mix, Schläuche, Raspberry Pi, BTT SKR Pico. Für Ansicht und Kollisionsprüfung.
 # QV in Ventil-Koordinaten wie ihht-pi CAD/quetschventil (z = Achse, Rahmenplatte z -6 .. 0) -> Rückseite auf Y = 0.
 import math
 from ihht.geo import Part, B, C, Cx, Cy, Cz
@@ -35,8 +35,8 @@ def qv(cx, s):
 
 def bauen():
     t = qv(-QX, 'L') + qv(QX, 'R')
-    for name, o, sx, typ in (('Hi', OCS_HI, -1, '3F 3.0'), ('Lo', OCS_LO, 1, '3FRL 2.0')):   # Platine, Rohrseite, Stecker, Tüllen
-        q = Part('dwOCS' + name, 'OCS %s %s (Dummy, Tüllen zum QV)' % (name.lower(), typ), BLAU, printed=False)
+    for name, o, sx, typ in (('Hi', OCS_HI, -1, '3F 3.0'), ('Lo', OCS_LO, 1, '3FRL 2.0'), ('Mix', OCS_MIX, -1, '3F 3.0')):   # Platine, Rohrseite, Stecker, Tüllen
+        q = Part('dwOCS' + name, 'OCS %s %s (Dummy)' % (name.lower(), typ), BLAU, printed=False)
         (x0, x1), (z0, z1), (yb, yo) = o['x'], o['z'], o['y']
         r0, r1, ya, yz = o['rohr']
         q.add(B(x0, x1, yo, yb, z0, z1), B(r0, r1, ya - 0.01, yz + 0.01, z0, z1), B(x0, x1, o['clip_y'][0] - 0.01, o['clip_y'][1] + 0.01, *o['clip']))
@@ -44,14 +44,6 @@ def bauen():
         q.add(*[B(a, b, o['stecker_y'][0] - 0.01, o['stecker_y'][1] + 0.01, c, d) for a, b, c, d in o['stecker']])
         q.add(*[Cx((x0 + x1) / 2, o['tx'][1], o['ty'], z, TUELLE_D) for z in o['tz']])
         t.append(q)
-    m = Part('dwOCSMix', 'OCS Mix (Dummy, quer zur Wand, Tüllen oben)', BLAU, printed=False)
-    m.add(B(MIX['x'][0], MIX['x'][1], MIX['y'][0], MIX['y'][1], MIX['z'][0], MIX['z'][1]))
-    for y in MIX['ty']:
-        m.add(Cz(0, y, MIX['z'][1] - 0.01, MIX['tip'], TUELLE_D))
-    t.append(m)
-    tt = Part('dwTStueck', 'T-Stück 6 mm (Dummy)', HELL, printed=False)
-    tt.add(Cx(-T_ARM, T_ARM, YS, T_Z, 8.0), Cx(-6.0, 6.0, YS, T_Z, 10.0), Cz(0, YS, T_Z - T_STEM, T_Z, 8.0))
-    t.append(tt)
     for name, (pts, r) in schlaeuche().items():                            # Schläuche 6/12 als Kette aus Zylindern
         h = Part('dwSchlauch' + name, 'Schlauch 6/12 %s%s (Dummy)' % (name, ', R %.0f' % r if r else ''), (0.95, 0.95, 0.85, 1.0), printed=False)
         n = len(pts) - 1

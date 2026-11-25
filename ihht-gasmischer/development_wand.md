@@ -1,6 +1,6 @@
 # Development-Wand (Variante A „Senkrechte Wand“)
 
-Stand 25.11.2026, Anordnung v2.9.
+Stand 25.11.2026, Anordnung v3.0.
 
 - **Quelle:** `quelle/teile/wand_*.py` und `quelle/ihht/wand.py`
 - **Onshape-Modul:** `development_wand.fs`
@@ -51,9 +51,27 @@ Stand 25.11.2026, Anordnung v2.9.
   - Modell: `_ocs(..., rohr_wand=-17,5)`. Die Platine sitzt mit der Rohrseite bei Y −17,5, das Rohr hat 1 Luft zum Flansch (Y −4). Die Tüllenachse liegt bei Y −11,5, die Schlauch-Dummies bleiben auf Y −22, real versetzt der Schlauch.
   - Rohrbreite 10 statt 12,5 angenommen, weil die Stützen Ø 5 real daneben passten. Stützen 13,5 lang, Clip entsprechend länger.
 
-- **v2.9 (25.11., aktuell):** Lo-Halter: Sechskanttaschen (SW 4,2, 3 tief) hinten im Flansch für versenkte M2-Muttern, Wunsch Alex.
+- **v2.9 (25.11.):** Lo-Halter: Sechskanttaschen (SW 4,2, 3 tief) hinten im Flansch für versenkte M2-Muttern, Wunsch Alex.
   - Mit Mutter in der Tasche: M2 × 14. Die Spitze bleibt in der Tasche, nicht an der Wand.
   - Der seitliche Mutterschlitz unter der Platine bleibt für kurze Schrauben (M2 × 6 … 10).
+
+- **v3.0 (25.11., aktuell):** OCS Mix ist ein zweiter großer 3F 3.0, nicht der kleine 3FRL. Das T-Stück wird gedruckt statt gekauft (Alex).
+  - **OCS Mix** steht hochkant an der Wand rechts unter dem QV lo: X 73 … 95, Z 27 … 152, gleiche Lage wie hi (Rohr zur Wand, Tüllen nach links).
+    Einlass oben Z 132, Auslass unten Z 47. Der Platz auf der Grundplatte ist frei, die Kabelbinder-Schlitze bleiben.
+  - **Steckhalter Mix:** wie Hi (1 Zapfen, 3 Stützen, 2 Rastleisten). Unterschiede: Die 2 Schrauben sitzen neben dem Rohr auf (75, 96) und (95, 66),
+    weil ein Zylinderkopf (3 hoch) unter dem Rohr nur 1,5 Luft hätte. Der Flansch hat einen U-Ausschnitt um die Träger-Mutter (75, 76).
+  - **T-Stück als Druckteil** (`wand_halter.py`): Block mit Bohrungen Ø 4 zwischen lo-Auslass und Mix-Einlass, Flansch mit 2 × M3 auf (35, 116) und (65, 116).
+    lo kommt von links (Y −22, Z 135), Mix geht nach rechts (Y −11,5, Z 132), hi kommt von unten (X 48,25, Y −11,5). Der Block gleicht den Versatz in Y und Z aus.
+    3 Tüllen, 10 lang: Hals Ø 6,6, Wulst Ø 7,5, Spitze Ø 6,2. Der Schlauch 6 innen sitzt stramm, Kabelbinder hinter den Wulst.
+  - **Schläuche:** lo → T und T → Mix sind gerade Muffen (je 2 mm Luft zwischen Tüllenspitzen). hi → T läuft mit U-Bogen nach links unten,
+    waagerecht auf Z 38,5 unter hi und lo durch, steigt bei X 36 und geht mit einer S-Kurve von unten in den T-Abgang (216 mm frei, R 25).
+    Der Patientenschlauch geht vom Mix-Auslass mit einem Bogen nach vorn weg.
+  - T-Halter und T-Dummy sind entfallen. Der gedruckte T-Halter (Z 44 … 68, Mitte) muss ab, dort läuft jetzt der hi-Schlauch.
+  - Druck: `druck/development_wand_mix_t.3mf` (Halter Mix auf der Seite, T-Stück mit dem Flansch unten, 0,20 mm, 5 Wände, 50 %, Baumstützen überall, 58 min).
+  - **Kabel (nur geplant, nichts im CAD):** J2 = +12 V, RXD, TXD, GND, UART 9600 Baud (Datenblatt). Anschluss am SKR Pico, dort gibt es 12 V.
+    Die 15-cm-Kabel gehen durch ein freies Rasterloch neben J2 (Kontakte dafür einzeln aus dem Gehäuse ziehen).
+    Geschätzte Wege bis Pico-Mitte: Mix etwa 14 cm, lo etwa 16 cm, hi etwa 20 cm. Für hi und lo reicht das Kabel also nicht sicher.
+    Vor dem Anschließen den TXD-Pegel messen (bei 5 V Spannungsteiler).
 
 ## Fluss (X quer, Z Höhe über Tisch)
 
@@ -62,10 +80,10 @@ Stand 25.11.2026, Anordnung v2.9.
 | Zufuhr außen → QV | hi links, lo rechts, waagerecht durch das QV | – | – | – |
 | QV oben (Ablass) → Durchlass | Z 222,5 → Durchlass Ø 18 bei X ±13,5 | 36 | R 25 | 60 + hinten nach Bedarf |
 | QV unten → OCS-Eingang | Z 173,5, gerade, Tülle hi X −31, lo X +30,5 | 6 | gerade | QV-Schlauch 15 länger lassen |
-| OCS hi Ausgang → T | Z 88,5 → U-Bogen links bis X −84 und Z 38,5, S-Kurve hoch in den T-Arm links Z 53 | 146 | R 25 | 160 |
-| OCS lo Ausgang → T | Z 135 → T-Arm rechts Z 53 (Bogen außen herum) | 126 | R 25 | 140 |
-| T-Abgang → OCS Mix Eingang | Z 38 → Z 35, gerade | 3 | gerade | 20 (Muffe) |
-| OCS Mix Ausgang → Patient | Z 35, 38,5 vor dem Eingang, hoch und nach vorn | – | R 25 | nach Bedarf |
+| OCS hi Ausgang → T | Z 88,5 → U-Bogen links bis X −59, waagerecht Z 38,5, hoch bei X 36, S-Kurve in den T-Abgang X 48,25 / Z 117,5 | 216 | R 25 | 235 |
+| OCS lo Ausgang → T | Z 135, gerade, Tülle X 30,5 → T-Tülle X 32,5 | 2 | gerade | 18 (Muffe) |
+| T → OCS Mix Eingang | Z 132, gerade, T-Tülle X 64 → Tülle X 66 | 2 | gerade | 19 (Muffe) |
+| OCS Mix Ausgang → Patient | Z 47, Tülle X 66, Bogen nach vorn | – | R 25 | nach Bedarf |
 
 Die Spalte „frei“ ist die Länge der Mittellinie zwischen den Tüllenspitzen. Für den Zuschnitt kommen je Ende etwa 8 mm Aufstecklänge dazu.
 
@@ -85,18 +103,18 @@ Die Spalte „frei“ ist die Länge der Mittellinie zwischen den Tüllenspitzen
   Vorn hat sie 2 Kabelbinder-Schlitzpaare für OCS Mix (Y −40 und −72) mit Nut auf der Unterseite.
 - **4 Knotenbleche**, 81 hoch und 70 tief, an jedem Ende eins vorn und eins hinten.
 - **2 Träger** für Pi und Pico (Pi-Lochbild 58 × 49, Dome M2,5), hinten unten.
-- **2 OCS-Steckhalter** (`wand_ocshalter.py`): Flansch 4 an der Wand mit 2 × M3 × 16 auf dem Raster.
+- **3 OCS-Steckhalter** (`wand_ocshalter.py`, Mix siehe v3.0): Flansch 4 an der Wand mit 2 × M3 × 16 auf dem Raster.
   Darauf stehen Stützen Ø 5 bis an die Platinen-Rückseite, die Steckergehäuse (6 hoch) bleiben frei.
   - **Lo (3FRL 2.0):** 4 Zapfen Ø 3,4 stramm in die Löcher Ø 3,5 (quer 18,5, längs 72). Am J2-Ende sind es die Langlöcher, das Längenmaß ist also unkritisch.
     Die inneren runden Löcher (65,5) bleiben frei.
   - **Hi (3F 3.0):** Die Löcher habe ich nur vom Foto (Paar A 25 vom J2-Ende, Paar B versetzt bei 97 / 101). Die Platine ist gegenüber dem Foto um 180° gedreht (Alex):
     Die Tüllen zeigen links, das J2-Ende ist unten. Nur 1 Zapfen Ø 2,6 sitzt im Loch A an der Gegenkante,
     die anderen 3 Stützen sind flach. Zwei Randleisten mit Rastwulst (Z 143,5 … 153,5) halten die Platine. Einfach von vorn eindrücken.
-- **T-Halter:** Flansch 40 × 24 mit Finnen über und unter dem T-Stück. Unten sitzt eine Gabel für den Abgang, sie hält das T in X und Y.
-- **Kaufteil T-Stück 6 mm:** Arme etwa ±18, Abgang nach unten höchstens 15 lang, sonst stößt es auf OCS Mix.
+- **T-Stück (Druckteil):** siehe v3.0. Ersetzt T-Halter und Kaufteil.
 - **Lage der OCS:** Tüllen- und Rohrachse auf Y −22. J2-Ende: hi unten, lo oben.
   - OCS hi: X −24 … −2, Z 68,5 … 193,5, Platine Y −14,5 … −16
   - OCS lo: X 1 … 25, Z 116 … 195, Platine Y −13,7 … −15,3
+  - OCS Mix: X 73 … 95, Z 27 … 152, Platine Y −17,5 … −19 (wie hi seit v2.8)
   - Maße von Alex: hi Rohr 12 + Platine 1,5 = 13,5, dickste Stelle mit Stecker 20, Tüllen 7 über der Kante; lo dickste Stelle mit Stecker 25, Tüllen 5,5 über der Kante.
 
 Prüfung (`development_wand_3mf.py`):
@@ -126,12 +144,11 @@ Summe etwa 13,5 h und 540 g. Wand und Grundplatte passen nicht zusammen auf ein 
 | Knotenblech vorn ↔ Wand ↔ Knotenblech hinten | 4 | M3 × 20 + Mutter M3 |
 | QV ↔ Wand (von hinten in die Ambosse, ersetzen die 4 äußeren M3 × 12) | 8 | M3 × 20 |
 | Träger ↔ Wand (Mutter vorn) | 8 | M3 × 12 + Mutter M3 |
-| OCS-Steckhalter, T-Halter ↔ Wand (von vorn, Mutter hinten) | 6 | M3 × 16 + Mutter M3 |
+| OCS-Steckhalter (3), T-Stück ↔ Wand (von vorn, Mutter hinten) | 8 | M3 × 16 + Mutter M3 |
 | Pi / Pico ↔ Träger (selbstschneidend) | 8 | M2,5 × 6 |
-| T-Stück, OCS Mix (Mix durch die Grundplatte) | 4 | Kabelbinder 2,5 × 150 |
-| T-Stück für Schlauch 6 mm | 1 | Kaufteil, Abgang ≤ 15 |
+| Schläuche auf den Tüllen (OCS und T-Stück) | 9 | Kabelbinder 2,5 |
 
-Summe: 22 × M3 × 12, 6 × M3 × 16, 12 × M3 × 20, 26 × Mutter M3, 8 × M2,5 × 6, 4 Kabelbinder, 1 T-Stück.
+Summe: 22 × M3 × 12, 8 × M3 × 16, 12 × M3 × 20, 28 × Mutter M3, 8 × M2,5 × 6, 9 Kabelbinder.
 
 ## Montage
 
@@ -142,7 +159,8 @@ Summe: 22 × M3 × 12, 6 × M3 × 16, 12 × M3 × 20, 26 × Mutter M3, 8 × M2,5
 4. Die Halter vorn mit M3 × 16 anschrauben, Mutter hinten:
    - OCS-Steckhalter Hi: X −15, Z 116 und 156
    - OCS-Steckhalter Lo: X +15, Z 126 und 156
-   - T-Halter: X ±15, Z 56
+   - Steckhalter Mix: (75, 96) und (95, 66)
+   - T-Stück: X 35 und 65, Z 116. Erst anschrauben, wenn die Muffen sitzen (Schritt 7).
 5. Am QV die Getriebeplatte mit dem NEMA abnehmen und die 4 äußeren Amboss-Schrauben herausdrehen.
    Das QV von vorn mit dem Hohlrad durch den Ausschnitt an die Wand legen und 4 × M3 × 20 von hinten eindrehen. Danach das Getriebe von hinten wieder ansetzen.
    QV hi kommt links hin, QV lo rechts. Den unteren Schlauch etwa 15 mm über das Amboss-Ende hinaus stehen lassen.
@@ -152,15 +170,20 @@ Summe: 22 × M3 × 12, 6 × M3 × 16, 12 × M3 × 20, 26 × Mutter M3, 8 × M2,5
    - OCS lo mit den Tüllen nach rechts und dem J2-Ende (Langlöcher) oben auf die 4 Zapfen des Steckhalters Lo stecken.
    - Die Bauteilseite zeigt zur Wand, das Rohr nach vorn.
    - Den unteren QV-Schlauch direkt auf den oberen Eingang schieben.
-7. Das T-Stück mit dem Abgang nach unten in die Gabel des T-Halters setzen und festbinden.
-   OCS Mix quer zur Wand auf die Grundplatte stellen, mit den Tüllen nach oben und dem Eingang hinten. Mit 2 Kabelbindern durch die Grundplatte festbinden.
+7. OCS Mix wie hi auf den Steckhalter Mix drücken (Tüllen nach links, Einlass oben).
+   Auf beide waagerechten T-Tüllen je eine Muffe schieben. Das lose T-Stück erst auf die lo-Tülle, dann auf die Mix-Tülle stecken
+   (notfalls den Mix dafür noch einmal ausclipsen). Danach das T-Stück anschrauben.
 8. Die Schläuche verlegen und zuschneiden wie in der Tabelle „Fluss“:
-   - OCS hi Ausgang mit großem U-Bogen nach links unten und von unten in den linken T-Arm, OCS lo Ausgang außen herum zum rechten T-Arm.
-   - Vom T-Abgang zum OCS Mix ein Muffenstück von 20 mm.
+   - OCS hi Ausgang mit U-Bogen nach links unten, unter hi und lo durch nach rechts und von unten auf den T-Abgang.
+   - Patientenschlauch vom Mix-Auslass (unten) nach vorn.
    - Die Ablass-Schläuche durch die Durchlässe nach hinten führen.
+   - Jede Tülle mit einem Kabelbinder sichern (die OCS-Tüllen sind für den 6-mm-Schlauch etwas zu dünn).
 
 ## Offen
 
+- Hi-Halter: Die 2 Schraubenköpfe (X −15) liegen unter dem Rohr, dort ist nur 1,5 Luft. Beim Test prüfen. Falls es klemmt, Schrauben wie beim Mix neben das Rohr.
+- Muffen am T-Stück: nur 2 mm Luft zwischen den Tüllenspitzen. Ob sich das montieren lässt, zeigt der Aufbau.
+- Kabel hi und lo zum Pico sind mit 15 cm zu kurz (siehe v3.0).
 - Das Lochbild des BTT SKR Pico ist nicht geprüft. Laut Händler entspricht es dem Pi (58 × 49). Vor dem Druck der Träger am Board nachmessen.
 - Die Löcher des OCS hi (3F 3.0) stammen nur vom Foto (etwa ±0,7). Deshalb gibt es dort nur 1 Zapfen und die Rastleisten.
   Passt der Zapfen nicht, abknipsen. Die Leisten halten die Platine dann allein.

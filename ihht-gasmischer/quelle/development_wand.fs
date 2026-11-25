@@ -653,27 +653,35 @@ function dw_dwTraegerPico(context is Context, id is Id, prog is box)
     finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "Dev-Wand Träger Pico (58 x 49, M2,5)", color(0.78, 0.8, 0.82));
 }
 
-function dw_dwHalterT(context is Context, id is Id, prog is box)
+function dw_dwTStueck(context is Context, id is Id, prog is box)
 {
     prog[] = "Körper Stufe 0";
-    const A0 = id + "dwHalterT_a0";
-    fCuboid(context, A0 + "s0", { "corner1" : vector(-20, -4, 44) * millimeter, "corner2" : vector(20, 0, 68) * millimeter });
-    fCuboid(context, A0 + "s1", { "corner1" : vector(-9, -30, 44) * millimeter, "corner2" : vector(9, -3.99, 48) * millimeter });
-    fCuboid(context, A0 + "s2", { "corner1" : vector(-9, -30, 64) * millimeter, "corner2" : vector(9, -3.99, 68) * millimeter });
+    const A0 = id + "dwTStueck_a0";
+    fCuboid(context, A0 + "s0", { "corner1" : vector(31, -4, 111) * millimeter, "corner2" : vector(69, 0, 140.5) * millimeter });
+    fCuboid(context, A0 + "s1", { "corner1" : vector(42.5, -27.5, 127.5) * millimeter, "corner2" : vector(54, -3.99, 140.5) * millimeter });
+    fCylinder(context, A0 + "s2", { "bottomCenter" : vector(37.5, -22, 135) * millimeter, "topCenter" : vector(42.51, -22, 135) * millimeter, "radius" : 3.3 * millimeter });
+    fCylinder(context, A0 + "s3", { "bottomCenter" : vector(53.99, -11.5, 132) * millimeter, "topCenter" : vector(59, -11.5, 132) * millimeter, "radius" : 3.3 * millimeter });
+    fCylinder(context, A0 + "s4", { "bottomCenter" : vector(48.25, -11.5, 122.5) * millimeter, "topCenter" : vector(48.25, -11.5, 127.51) * millimeter, "radius" : 3.3 * millimeter });
+    fCylinder(context, A0 + "s5", { "bottomCenter" : vector(34.5, -22, 135) * millimeter, "topCenter" : vector(37.51, -22, 135) * millimeter, "radius" : 3.75 * millimeter });
+    fCylinder(context, A0 + "s6", { "bottomCenter" : vector(58.99, -11.5, 132) * millimeter, "topCenter" : vector(62, -11.5, 132) * millimeter, "radius" : 3.75 * millimeter });
+    fCylinder(context, A0 + "s7", { "bottomCenter" : vector(48.25, -11.5, 119.5) * millimeter, "topCenter" : vector(48.25, -11.5, 122.51) * millimeter, "radius" : 3.75 * millimeter });
+    fCylinder(context, A0 + "s8", { "bottomCenter" : vector(32.5, -22, 135) * millimeter, "topCenter" : vector(34.51, -22, 135) * millimeter, "radius" : 3.1 * millimeter });
+    fCylinder(context, A0 + "s9", { "bottomCenter" : vector(61.99, -11.5, 132) * millimeter, "topCenter" : vector(64, -11.5, 132) * millimeter, "radius" : 3.1 * millimeter });
+    fCylinder(context, A0 + "s10", { "bottomCenter" : vector(48.25, -11.5, 117.5) * millimeter, "topCenter" : vector(48.25, -11.5, 119.51) * millimeter, "radius" : 3.1 * millimeter });
     prog[] = "Vereinigen Stufe 0";
-    unionAll(context, id + "dwHalterT_u0", qUnion([qCreatedBy(A0, EntityType.BODY)]));
+    unionAll(context, id + "dwTStueck_u0", qUnion([qCreatedBy(A0, EntityType.BODY)]));
     prog[] = "Schnittkörper Stufe 1";
-    const C1 = id + "dwHalterT_c1";
-    fCylinder(context, C1 + "o0", { "bottomCenter" : vector(-15, -5, 56) * millimeter, "topCenter" : vector(-15, 1, 56) * millimeter, "radius" : 1.7 * millimeter });
-    fCylinder(context, C1 + "o1", { "bottomCenter" : vector(15, -5, 56) * millimeter, "topCenter" : vector(15, 1, 56) * millimeter, "radius" : 1.7 * millimeter });
-    fCylinder(context, C1 + "o2", { "bottomCenter" : vector(0, -22, 43) * millimeter, "topCenter" : vector(0, -22, 49) * millimeter, "radius" : 4.2 * millimeter });
-    fCuboid(context, C1 + "o3", { "corner1" : vector(-4.2, -31, 43) * millimeter, "corner2" : vector(4.2, -22, 49) * millimeter });
-    fCuboid(context, C1 + "o4", { "corner1" : vector(-8.1, -11, 43) * millimeter, "corner2" : vector(-4.9, -9, 69) * millimeter });
-    fCuboid(context, C1 + "o5", { "corner1" : vector(4.9, -11, 43) * millimeter, "corner2" : vector(8.1, -9, 69) * millimeter });
+    const C1 = id + "dwTStueck_c1";
+    fCylinder(context, C1 + "o0", { "bottomCenter" : vector(31.5, -22, 135) * millimeter, "topCenter" : vector(50.25, -22, 135) * millimeter, "radius" : 2 * millimeter });
+    fCylinder(context, C1 + "o1", { "bottomCenter" : vector(48.25, -24, 135) * millimeter, "topCenter" : vector(48.25, -9.5, 135) * millimeter, "radius" : 2 * millimeter });
+    fCylinder(context, C1 + "o2", { "bottomCenter" : vector(48.25, -11.5, 116.5) * millimeter, "topCenter" : vector(48.25, -11.5, 137) * millimeter, "radius" : 2 * millimeter });
+    fCylinder(context, C1 + "o3", { "bottomCenter" : vector(46.25, -11.5, 132) * millimeter, "topCenter" : vector(65, -11.5, 132) * millimeter, "radius" : 2 * millimeter });
+    fCylinder(context, C1 + "o4", { "bottomCenter" : vector(35, -5, 116) * millimeter, "topCenter" : vector(35, 1, 116) * millimeter, "radius" : 1.7 * millimeter });
+    fCylinder(context, C1 + "o5", { "bottomCenter" : vector(65, -5, 116) * millimeter, "topCenter" : vector(65, 1, 116) * millimeter, "radius" : 1.7 * millimeter });
     prog[] = "Abziehen Stufe 1";
-    cutAll(context, id + "dwHalterT_x1", qUnion([qCreatedBy(A0, EntityType.BODY)]), qCreatedBy(C1, EntityType.BODY));
+    cutAll(context, id + "dwTStueck_x1", qUnion([qCreatedBy(A0, EntityType.BODY)]), qCreatedBy(C1, EntityType.BODY));
     prog[] = "Name/Farbe";
-    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "Dev-Wand T-Halter (Gabel für den Abgang, Kabelbinder)", color(0.78, 0.8, 0.82));
+    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "Dev-Wand T-Stück (Druckteil, 3 Tüllen, Flansch)", color(0.78, 0.8, 0.82));
 }
 
 function dw_dwOCSHalterHi(context is Context, id is Id, prog is box)
@@ -734,6 +742,35 @@ function dw_dwOCSHalterLo(context is Context, id is Id, prog is box)
     cutAll(context, id + "dwOCSHalterLo_x1", qUnion([qCreatedBy(A0, EntityType.BODY)]), qCreatedBy(C1, EntityType.BODY));
     prog[] = "Name/Farbe";
     finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "Dev-Wand Steckhalter OCS lo", color(0.78, 0.8, 0.82));
+}
+
+function dw_dwOCSHalterMix(context is Context, id is Id, prog is box)
+{
+    prog[] = "Körper Stufe 0";
+    const A0 = id + "dwOCSHalterMix_a0";
+    fCuboid(context, A0 + "s0", { "corner1" : vector(70.6, -4, 46.5) * millimeter, "corner2" : vector(99.5, 0, 131.5) * millimeter });
+    fCylinder(context, A0 + "s1", { "bottomCenter" : vector(76.2, -3.99, 126.8) * millimeter, "topCenter" : vector(76.2, -17.5, 126.8) * millimeter, "radius" : 2.5 * millimeter });
+    fCylinder(context, A0 + "s2", { "bottomCenter" : vector(93.3, -3.99, 126.4) * millimeter, "topCenter" : vector(93.3, -17.5, 126.4) * millimeter, "radius" : 2.5 * millimeter });
+    fCylinder(context, A0 + "s3", { "bottomCenter" : vector(76.2, -3.99, 55.3) * millimeter, "topCenter" : vector(76.2, -17.5, 55.3) * millimeter, "radius" : 2.5 * millimeter });
+    fCylinder(context, A0 + "s4", { "bottomCenter" : vector(93.3, -3.99, 51.1) * millimeter, "topCenter" : vector(93.3, -17.5, 51.1) * millimeter, "radius" : 2.5 * millimeter });
+    fCylinder(context, A0 + "s5", { "bottomCenter" : vector(76.2, -17.49, 126.8) * millimeter, "topCenter" : vector(76.2, -20.2, 126.8) * millimeter, "radius" : 1.3 * millimeter });
+    coneOp(context, A0 + "s6", vector(76.2, -20.19, 126.8) * millimeter, vector(76.2, -21, 126.8) * millimeter, 1.3, 0.8);
+    fCuboid(context, A0 + "s7", { "corner1" : vector(70.6, -20.2, 102) * millimeter, "corner2" : vector(72.8, -3.99, 112) * millimeter });
+    fCylinder(context, A0 + "s8", { "bottomCenter" : vector(72.4, -20.2, 102) * millimeter, "topCenter" : vector(72.4, -20.2, 112) * millimeter, "radius" : 1.2 * millimeter });
+    fCuboid(context, A0 + "s9", { "corner1" : vector(95.2, -20.2, 102) * millimeter, "corner2" : vector(97.4, -3.99, 112) * millimeter });
+    fCylinder(context, A0 + "s10", { "bottomCenter" : vector(95.6, -20.2, 102) * millimeter, "topCenter" : vector(95.6, -20.2, 112) * millimeter, "radius" : 1.2 * millimeter });
+    prog[] = "Vereinigen Stufe 0";
+    unionAll(context, id + "dwOCSHalterMix_u0", qUnion([qCreatedBy(A0, EntityType.BODY)]));
+    prog[] = "Schnittkörper Stufe 1";
+    const C1 = id + "dwOCSHalterMix_c1";
+    fCylinder(context, C1 + "o0", { "bottomCenter" : vector(75, -5, 76) * millimeter, "topCenter" : vector(75, 1, 76) * millimeter, "radius" : 3.75 * millimeter });
+    fCuboid(context, C1 + "o1", { "corner1" : vector(69.6, -5, 72.25) * millimeter, "corner2" : vector(75, 1, 79.75) * millimeter });
+    fCylinder(context, C1 + "o2", { "bottomCenter" : vector(75, -5, 96) * millimeter, "topCenter" : vector(75, 1, 96) * millimeter, "radius" : 1.7 * millimeter });
+    fCylinder(context, C1 + "o3", { "bottomCenter" : vector(95, -5, 66) * millimeter, "topCenter" : vector(95, 1, 66) * millimeter, "radius" : 1.7 * millimeter });
+    prog[] = "Abziehen Stufe 1";
+    cutAll(context, id + "dwOCSHalterMix_x1", qUnion([qCreatedBy(A0, EntityType.BODY)]), qCreatedBy(C1, EntityType.BODY));
+    prog[] = "Name/Farbe";
+    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "Dev-Wand Steckhalter OCS mix", color(0.78, 0.8, 0.82));
 }
 
 function dw_dwQVL(context is Context, id is Id, prog is box)
@@ -834,7 +871,7 @@ function dw_dwOCSHi(context is Context, id is Id, prog is box)
     prog[] = "Vereinigen Stufe 2";
     unionAll(context, id + "dwOCSHi_u2", qUnion([qCreatedBy(A0, EntityType.BODY), qCreatedBy(A2, EntityType.BODY)]));
     prog[] = "Name/Farbe";
-    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY), qCreatedBy(A2, EntityType.BODY)]), "OCS hi 3F 3.0 (Dummy, Tüllen zum QV)", color(0.55, 0.75, 0.92));
+    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY), qCreatedBy(A2, EntityType.BODY)]), "OCS hi 3F 3.0 (Dummy)", color(0.55, 0.75, 0.92));
 }
 
 function dw_dwOCSLo(context is Context, id is Id, prog is box)
@@ -862,33 +899,38 @@ function dw_dwOCSLo(context is Context, id is Id, prog is box)
     prog[] = "Vereinigen Stufe 2";
     unionAll(context, id + "dwOCSLo_u2", qUnion([qCreatedBy(A0, EntityType.BODY), qCreatedBy(A2, EntityType.BODY)]));
     prog[] = "Name/Farbe";
-    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY), qCreatedBy(A2, EntityType.BODY)]), "OCS lo 3FRL 2.0 (Dummy, Tüllen zum QV)", color(0.55, 0.75, 0.92));
+    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY), qCreatedBy(A2, EntityType.BODY)]), "OCS lo 3FRL 2.0 (Dummy)", color(0.55, 0.75, 0.92));
 }
 
 function dw_dwOCSMix(context is Context, id is Id, prog is box)
 {
     prog[] = "Körper Stufe 0";
     const A0 = id + "dwOCSMix_a0";
-    fCuboid(context, A0 + "s0", { "corner1" : vector(-11.5, -79.5, 6) * millimeter, "corner2" : vector(11.5, -0.5, 30) * millimeter });
-    fCylinder(context, A0 + "s1", { "bottomCenter" : vector(0, -22, 29.99) * millimeter, "topCenter" : vector(0, -22, 35) * millimeter, "radius" : 2.75 * millimeter });
-    fCylinder(context, A0 + "s2", { "bottomCenter" : vector(0, -60.5, 29.99) * millimeter, "topCenter" : vector(0, -60.5, 35) * millimeter, "radius" : 2.75 * millimeter });
+    fCuboid(context, A0 + "s0", { "corner1" : vector(73, -19, 27) * millimeter, "corner2" : vector(95, -17.5, 152) * millimeter });
+    fCuboid(context, A0 + "s1", { "corner1" : vector(79, -17.51, 27) * millimeter, "corner2" : vector(89, -5.49, 152) * millimeter });
+    fCuboid(context, A0 + "s2", { "corner1" : vector(73, -17.51, 82) * millimeter, "corner2" : vector(95, -4.99, 97) * millimeter });
     prog[] = "Vereinigen Stufe 0";
     unionAll(context, id + "dwOCSMix_u0", qUnion([qCreatedBy(A0, EntityType.BODY)]));
+    prog[] = "Schnittkörper Stufe 1";
+    const C1 = id + "dwOCSMix_c1";
+    fCylinder(context, C1 + "o0", { "bottomCenter" : vector(76.2, -16.5, 149.2) * millimeter, "topCenter" : vector(76.2, -20, 149.2) * millimeter, "radius" : 1.75 * millimeter });
+    fCylinder(context, C1 + "o1", { "bottomCenter" : vector(76.2, -16.5, 126.8) * millimeter, "topCenter" : vector(76.2, -20, 126.8) * millimeter, "radius" : 1.75 * millimeter });
+    fCylinder(context, C1 + "o2", { "bottomCenter" : vector(93.3, -16.5, 126.4) * millimeter, "topCenter" : vector(93.3, -20, 126.4) * millimeter, "radius" : 1.75 * millimeter });
+    fCylinder(context, C1 + "o3", { "bottomCenter" : vector(76.2, -16.5, 55.3) * millimeter, "topCenter" : vector(76.2, -20, 55.3) * millimeter, "radius" : 1.75 * millimeter });
+    fCylinder(context, C1 + "o4", { "bottomCenter" : vector(93.3, -16.5, 51.1) * millimeter, "topCenter" : vector(93.3, -20, 51.1) * millimeter, "radius" : 1.75 * millimeter });
+    prog[] = "Abziehen Stufe 1";
+    cutAll(context, id + "dwOCSMix_x1", qUnion([qCreatedBy(A0, EntityType.BODY)]), qCreatedBy(C1, EntityType.BODY));
+    prog[] = "Körper Stufe 2";
+    const A2 = id + "dwOCSMix_a2";
+    fCuboid(context, A2 + "s0", { "corner1" : vector(73, -25.01, 134.4) * millimeter, "corner2" : vector(78.7, -18.99, 146) * millimeter });
+    fCuboid(context, A2 + "s1", { "corner1" : vector(73, -25.01, 35) * millimeter, "corner2" : vector(78.7, -18.99, 44) * millimeter });
+    fCuboid(context, A2 + "s2", { "corner1" : vector(90.2, -25.01, 68) * millimeter, "corner2" : vector(95, -18.99, 79) * millimeter });
+    fCylinder(context, A2 + "s3", { "bottomCenter" : vector(84, -11.5, 132) * millimeter, "topCenter" : vector(66, -11.5, 132) * millimeter, "radius" : 2.75 * millimeter });
+    fCylinder(context, A2 + "s4", { "bottomCenter" : vector(84, -11.5, 47) * millimeter, "topCenter" : vector(66, -11.5, 47) * millimeter, "radius" : 2.75 * millimeter });
+    prog[] = "Vereinigen Stufe 2";
+    unionAll(context, id + "dwOCSMix_u2", qUnion([qCreatedBy(A0, EntityType.BODY), qCreatedBy(A2, EntityType.BODY)]));
     prog[] = "Name/Farbe";
-    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "OCS Mix (Dummy, quer zur Wand, Tüllen oben)", color(0.55, 0.75, 0.92));
-}
-
-function dw_dwTStueck(context is Context, id is Id, prog is box)
-{
-    prog[] = "Körper Stufe 0";
-    const A0 = id + "dwTStueck_a0";
-    fCylinder(context, A0 + "s0", { "bottomCenter" : vector(-18, -22, 53) * millimeter, "topCenter" : vector(18, -22, 53) * millimeter, "radius" : 4 * millimeter });
-    fCylinder(context, A0 + "s1", { "bottomCenter" : vector(-6, -22, 53) * millimeter, "topCenter" : vector(6, -22, 53) * millimeter, "radius" : 5 * millimeter });
-    fCylinder(context, A0 + "s2", { "bottomCenter" : vector(0, -22, 38) * millimeter, "topCenter" : vector(0, -22, 53) * millimeter, "radius" : 4 * millimeter });
-    prog[] = "Vereinigen Stufe 0";
-    unionAll(context, id + "dwTStueck_u0", qUnion([qCreatedBy(A0, EntityType.BODY)]));
-    prog[] = "Name/Farbe";
-    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "T-Stück 6 mm (Dummy)", color(0.78, 0.8, 0.82));
+    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY), qCreatedBy(A2, EntityType.BODY)]), "OCS mix 3F 3.0 (Dummy)", color(0.55, 0.75, 0.92));
 }
 
 function dw_dwSchlauchZuHi(context is Context, id is Id, prog is box)
@@ -917,28 +959,38 @@ function dw_dwSchlauchHiT(context is Context, id is Id, prog is box)
 {
     prog[] = "Körper Stufe 0";
     const A0 = id + "dwSchlauchHiT_a0";
-    fCylinder(context, A0 + "s0", { "bottomCenter" : vector(-31, -22, 88.5) * millimeter, "topCenter" : vector(-56.81, -22, 88.5) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s1", { "bottomCenter" : vector(-55.615, -22, 88.578) * millimeter, "topCenter" : vector(-63.275, -22, 87.57) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s2", { "bottomCenter" : vector(-62.126, -22, 87.878) * millimeter, "topCenter" : vector(-69.264, -22, 84.921) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s3", { "bottomCenter" : vector(-68.234, -22, 85.516) * millimeter, "topCenter" : vector(-74.364, -22, 80.812) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s4", { "bottomCenter" : vector(-73.522, -22, 81.654) * millimeter, "topCenter" : vector(-78.226, -22, 75.524) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s5", { "bottomCenter" : vector(-77.631, -22, 76.554) * millimeter, "topCenter" : vector(-80.588, -22, 69.416) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s6", { "bottomCenter" : vector(-80.28, -22, 70.565) * millimeter, "topCenter" : vector(-81.288, -22, 62.905) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s7", { "bottomCenter" : vector(-81.288, -22, 64.095) * millimeter, "topCenter" : vector(-80.28, -22, 56.435) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s8", { "bottomCenter" : vector(-80.588, -22, 57.584) * millimeter, "topCenter" : vector(-77.631, -22, 50.446) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s9", { "bottomCenter" : vector(-78.226, -22, 51.476) * millimeter, "topCenter" : vector(-73.522, -22, 45.346) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s10", { "bottomCenter" : vector(-74.364, -22, 46.188) * millimeter, "topCenter" : vector(-68.234, -22, 41.484) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s11", { "bottomCenter" : vector(-69.264, -22, 42.079) * millimeter, "topCenter" : vector(-62.126, -22, 39.122) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s12", { "bottomCenter" : vector(-63.275, -22, 39.43) * millimeter, "topCenter" : vector(-55.615, -22, 38.422) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s13", { "bottomCenter" : vector(-56.807, -22, 38.441) * millimeter, "topCenter" : vector(-50.761, -22, 39.034) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s14", { "bottomCenter" : vector(-51.932, -22, 38.802) * millimeter, "topCenter" : vector(-46.116, -22, 40.557) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s15", { "bottomCenter" : vector(-47.22, -22, 40.102) * millimeter, "topCenter" : vector(-41.855, -22, 42.952) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s16", { "bottomCenter" : vector(-42.85, -22, 42.292) * millimeter, "topCenter" : vector(-38.14, -22, 46.129) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s17", { "bottomCenter" : vector(-39.07, -22, 45.371) * millimeter, "topCenter" : vector(-34.36, -22, 49.208) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s18", { "bottomCenter" : vector(-35.355, -22, 48.548) * millimeter, "topCenter" : vector(-29.99, -22, 51.398) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s19", { "bottomCenter" : vector(-31.094, -22, 50.943) * millimeter, "topCenter" : vector(-25.278, -22, 52.698) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s20", { "bottomCenter" : vector(-26.449, -22, 52.466) * millimeter, "topCenter" : vector(-20.403, -22, 53.059) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s21", { "bottomCenter" : vector(-21.6, -22, 53) * millimeter, "topCenter" : vector(-18, -22, 53) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s0", { "bottomCenter" : vector(-31, -11.5, 88.5) * millimeter, "topCenter" : vector(-34.6, -11.5, 88.5) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s1", { "bottomCenter" : vector(-33.405, -11.5, 88.578) * millimeter, "topCenter" : vector(-41.065, -11.5, 87.57) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s2", { "bottomCenter" : vector(-39.916, -11.5, 87.878) * millimeter, "topCenter" : vector(-47.054, -11.5, 84.921) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s3", { "bottomCenter" : vector(-46.024, -11.5, 85.516) * millimeter, "topCenter" : vector(-52.154, -11.5, 80.812) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s4", { "bottomCenter" : vector(-51.312, -11.5, 81.654) * millimeter, "topCenter" : vector(-56.016, -11.5, 75.524) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s5", { "bottomCenter" : vector(-55.421, -11.5, 76.554) * millimeter, "topCenter" : vector(-58.378, -11.5, 69.416) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s6", { "bottomCenter" : vector(-58.07, -11.5, 70.565) * millimeter, "topCenter" : vector(-59.078, -11.5, 62.905) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s7", { "bottomCenter" : vector(-59.078, -11.5, 64.095) * millimeter, "topCenter" : vector(-58.07, -11.5, 56.435) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s8", { "bottomCenter" : vector(-58.378, -11.5, 57.584) * millimeter, "topCenter" : vector(-55.421, -11.5, 50.446) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s9", { "bottomCenter" : vector(-56.016, -11.5, 51.476) * millimeter, "topCenter" : vector(-51.312, -11.5, 45.346) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s10", { "bottomCenter" : vector(-52.154, -11.5, 46.188) * millimeter, "topCenter" : vector(-46.024, -11.5, 41.484) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s11", { "bottomCenter" : vector(-47.054, -11.5, 42.079) * millimeter, "topCenter" : vector(-39.916, -11.5, 39.122) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s12", { "bottomCenter" : vector(-41.065, -11.5, 39.43) * millimeter, "topCenter" : vector(-33.405, -11.5, 38.422) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s13", { "bottomCenter" : vector(-34.6, -11.5, 38.5) * millimeter, "topCenter" : vector(11.6, -11.5, 38.5) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s14", { "bottomCenter" : vector(10.403, -11.5, 38.441) * millimeter, "topCenter" : vector(16.474, -11.5, 39.039) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s15", { "bottomCenter" : vector(15.303, -11.5, 38.806) * millimeter, "topCenter" : vector(21.141, -11.5, 40.577) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s16", { "bottomCenter" : vector(20.038, -11.5, 40.12) * millimeter, "topCenter" : vector(25.418, -11.5, 42.996) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s17", { "bottomCenter" : vector(24.425, -11.5, 42.333) * millimeter, "topCenter" : vector(29.141, -11.5, 46.203) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s18", { "bottomCenter" : vector(28.297, -11.5, 45.359) * millimeter, "topCenter" : vector(32.167, -11.5, 50.075) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s19", { "bottomCenter" : vector(31.504, -11.5, 49.082) * millimeter, "topCenter" : vector(34.38, -11.5, 54.462) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s20", { "bottomCenter" : vector(33.923, -11.5, 53.359) * millimeter, "topCenter" : vector(35.694, -11.5, 59.197) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s21", { "bottomCenter" : vector(35.461, -11.5, 58.026) * millimeter, "topCenter" : vector(36.059, -11.5, 64.097) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s22", { "bottomCenter" : vector(36, -11.5, 62.9) * millimeter, "topCenter" : vector(36, -11.5, 83.314) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s23", { "bottomCenter" : vector(35.946, -11.5, 82.116) * millimeter, "topCenter" : vector(36.452, -11.5, 87.757) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s24", { "bottomCenter" : vector(36.24, -11.5, 86.581) * millimeter, "topCenter" : vector(37.74, -11.5, 92.042) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s25", { "bottomCenter" : vector(37.322, -11.5, 90.923) * millimeter, "topCenter" : vector(39.77, -11.5, 96.03) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s26", { "bottomCenter" : vector(39.159, -11.5, 95.003) * millimeter, "topCenter" : vector(42.476, -11.5, 99.593) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s27", { "bottomCenter" : vector(41.774, -11.5, 98.621) * millimeter, "topCenter" : vector(45.091, -11.5, 103.211) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s28", { "bottomCenter" : vector(44.48, -11.5, 102.184) * millimeter, "topCenter" : vector(46.928, -11.5, 107.291) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s29", { "bottomCenter" : vector(46.51, -11.5, 106.171) * millimeter, "topCenter" : vector(48.01, -11.5, 111.633) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s30", { "bottomCenter" : vector(47.798, -11.5, 110.457) * millimeter, "topCenter" : vector(48.304, -11.5, 116.098) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s31", { "bottomCenter" : vector(48.25, -11.5, 114.9) * millimeter, "topCenter" : vector(48.25, -11.5, 117.5) * millimeter, "radius" : 6 * millimeter });
     prog[] = "Vereinigen Stufe 0";
     unionAll(context, id + "dwSchlauchHiT_u0", qUnion([qCreatedBy(A0, EntityType.BODY)]));
     prog[] = "Name/Farbe";
@@ -949,36 +1001,18 @@ function dw_dwSchlauchLoT(context is Context, id is Id, prog is box)
 {
     prog[] = "Körper Stufe 0";
     const A0 = id + "dwSchlauchLoT_a0";
-    fCylinder(context, A0 + "s0", { "bottomCenter" : vector(30.5, -22, 135) * millimeter, "topCenter" : vector(33.1, -22, 135) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s1", { "bottomCenter" : vector(31.903, -22, 135.059) * millimeter, "topCenter" : vector(37.974, -22, 134.461) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s2", { "bottomCenter" : vector(36.803, -22, 134.694) * millimeter, "topCenter" : vector(42.641, -22, 132.923) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s3", { "bottomCenter" : vector(41.538, -22, 133.38) * millimeter, "topCenter" : vector(46.918, -22, 130.504) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s4", { "bottomCenter" : vector(45.925, -22, 131.167) * millimeter, "topCenter" : vector(50.641, -22, 127.297) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s5", { "bottomCenter" : vector(49.797, -22, 128.141) * millimeter, "topCenter" : vector(53.667, -22, 123.425) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s6", { "bottomCenter" : vector(53.004, -22, 124.418) * millimeter, "topCenter" : vector(55.88, -22, 119.038) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s7", { "bottomCenter" : vector(55.423, -22, 120.141) * millimeter, "topCenter" : vector(57.194, -22, 114.303) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s8", { "bottomCenter" : vector(56.961, -22, 115.474) * millimeter, "topCenter" : vector(57.559, -22, 109.403) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s9", { "bottomCenter" : vector(57.5, -22, 110.6) * millimeter, "topCenter" : vector(57.5, -22, 77.4) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s10", { "bottomCenter" : vector(57.559, -22, 78.597) * millimeter, "topCenter" : vector(56.961, -22, 72.526) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s11", { "bottomCenter" : vector(57.194, -22, 73.697) * millimeter, "topCenter" : vector(55.423, -22, 67.859) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s12", { "bottomCenter" : vector(55.88, -22, 68.962) * millimeter, "topCenter" : vector(53.004, -22, 63.582) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s13", { "bottomCenter" : vector(53.667, -22, 64.575) * millimeter, "topCenter" : vector(49.797, -22, 59.859) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s14", { "bottomCenter" : vector(50.641, -22, 60.703) * millimeter, "topCenter" : vector(45.925, -22, 56.833) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s15", { "bottomCenter" : vector(46.918, -22, 57.496) * millimeter, "topCenter" : vector(41.538, -22, 54.62) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s16", { "bottomCenter" : vector(42.641, -22, 55.077) * millimeter, "topCenter" : vector(36.803, -22, 53.306) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s17", { "bottomCenter" : vector(37.974, -22, 53.539) * millimeter, "topCenter" : vector(31.903, -22, 52.941) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s18", { "bottomCenter" : vector(33.1, -22, 53) * millimeter, "topCenter" : vector(18, -22, 53) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s0", { "bottomCenter" : vector(30.5, -22, 135) * millimeter, "topCenter" : vector(32.5, -22, 135) * millimeter, "radius" : 6 * millimeter });
     prog[] = "Vereinigen Stufe 0";
     unionAll(context, id + "dwSchlauchLoT_u0", qUnion([qCreatedBy(A0, EntityType.BODY)]));
     prog[] = "Name/Farbe";
-    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "Schlauch 6/12 LoT, R 25 (Dummy)", color(0.95, 0.95, 0.85));
+    finishPart(context, qUnion([qCreatedBy(A0, EntityType.BODY)]), "Schlauch 6/12 LoT (Dummy)", color(0.95, 0.95, 0.85));
 }
 
 function dw_dwSchlauchTMix(context is Context, id is Id, prog is box)
 {
     prog[] = "Körper Stufe 0";
     const A0 = id + "dwSchlauchTMix_a0";
-    fCylinder(context, A0 + "s0", { "bottomCenter" : vector(0, -22, 38) * millimeter, "topCenter" : vector(0, -22, 35) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s0", { "bottomCenter" : vector(64, -11.5, 132) * millimeter, "topCenter" : vector(66, -11.5, 132) * millimeter, "radius" : 6 * millimeter });
     prog[] = "Vereinigen Stufe 0";
     unionAll(context, id + "dwSchlauchTMix_u0", qUnion([qCreatedBy(A0, EntityType.BODY)]));
     prog[] = "Name/Farbe";
@@ -1025,16 +1059,16 @@ function dw_dwSchlauchPatient(context is Context, id is Id, prog is box)
 {
     prog[] = "Körper Stufe 0";
     const A0 = id + "dwSchlauchPatient_a0";
-    fCylinder(context, A0 + "s0", { "bottomCenter" : vector(0, -60.5, 35) * millimeter, "topCenter" : vector(0, -60.5, 45.6) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s1", { "bottomCenter" : vector(0, -60.441, 44.403) * millimeter, "topCenter" : vector(0, -61.039, 50.474) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s2", { "bottomCenter" : vector(0, -60.806, 49.303) * millimeter, "topCenter" : vector(0, -62.577, 55.141) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s3", { "bottomCenter" : vector(0, -62.12, 54.038) * millimeter, "topCenter" : vector(0, -64.996, 59.418) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s4", { "bottomCenter" : vector(0, -64.333, 58.425) * millimeter, "topCenter" : vector(0, -68.203, 63.141) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s5", { "bottomCenter" : vector(0, -67.359, 62.297) * millimeter, "topCenter" : vector(0, -72.075, 66.167) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s6", { "bottomCenter" : vector(0, -71.082, 65.504) * millimeter, "topCenter" : vector(0, -76.462, 68.38) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s7", { "bottomCenter" : vector(0, -75.359, 67.923) * millimeter, "topCenter" : vector(0, -81.197, 69.694) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s8", { "bottomCenter" : vector(0, -80.026, 69.461) * millimeter, "topCenter" : vector(0, -86.097, 70.059) * millimeter, "radius" : 6 * millimeter });
-    fCylinder(context, A0 + "s9", { "bottomCenter" : vector(0, -84.9, 70) * millimeter, "topCenter" : vector(0, -100.5, 70) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s0", { "bottomCenter" : vector(66, -11.5, 47) * millimeter, "topCenter" : vector(62.4, -11.5, 47) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s1", { "bottomCenter" : vector(63.597, -11.441, 47) * millimeter, "topCenter" : vector(57.526, -12.039, 47) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s2", { "bottomCenter" : vector(58.697, -11.806, 47) * millimeter, "topCenter" : vector(52.859, -13.577, 47) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s3", { "bottomCenter" : vector(53.962, -13.12, 47) * millimeter, "topCenter" : vector(48.582, -15.996, 47) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s4", { "bottomCenter" : vector(49.575, -15.333, 47) * millimeter, "topCenter" : vector(44.859, -19.203, 47) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s5", { "bottomCenter" : vector(45.703, -18.359, 47) * millimeter, "topCenter" : vector(41.833, -23.075, 47) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s6", { "bottomCenter" : vector(42.496, -22.082, 47) * millimeter, "topCenter" : vector(39.62, -27.462, 47) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s7", { "bottomCenter" : vector(40.077, -26.359, 47) * millimeter, "topCenter" : vector(38.306, -32.197, 47) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s8", { "bottomCenter" : vector(38.539, -31.026, 47) * millimeter, "topCenter" : vector(37.941, -37.097, 47) * millimeter, "radius" : 6 * millimeter });
+    fCylinder(context, A0 + "s9", { "bottomCenter" : vector(38, -35.9, 47) * millimeter, "topCenter" : vector(38, -51.5, 47) * millimeter, "radius" : 6 * millimeter });
     prog[] = "Vereinigen Stufe 0";
     unionAll(context, id + "dwSchlauchPatient_u0", qUnion([qCreatedBy(A0, EntityType.BODY)]));
     prog[] = "Name/Farbe";
@@ -1146,12 +1180,12 @@ export const developmentWand = defineFeature(function(context is Context, id is 
         }
         try
         {
-            dw_dwHalterT(context, id, prog);
+            dw_dwTStueck(context, id, prog);
             okCount += 1;
         }
         catch (error)
         {
-            failed = append(failed, "dwHalterT @ " ~ prog[] ~ " -> " ~ toString(error));
+            failed = append(failed, "dwTStueck @ " ~ prog[] ~ " -> " ~ toString(error));
         }
         try
         {
@@ -1170,6 +1204,15 @@ export const developmentWand = defineFeature(function(context is Context, id is 
         catch (error)
         {
             failed = append(failed, "dwOCSHalterLo @ " ~ prog[] ~ " -> " ~ toString(error));
+        }
+        try
+        {
+            dw_dwOCSHalterMix(context, id, prog);
+            okCount += 1;
+        }
+        catch (error)
+        {
+            failed = append(failed, "dwOCSHalterMix @ " ~ prog[] ~ " -> " ~ toString(error));
         }
         try
         {
@@ -1233,15 +1276,6 @@ export const developmentWand = defineFeature(function(context is Context, id is 
         catch (error)
         {
             failed = append(failed, "dwOCSMix @ " ~ prog[] ~ " -> " ~ toString(error));
-        }
-        try
-        {
-            dw_dwTStueck(context, id, prog);
-            okCount += 1;
-        }
-        catch (error)
-        {
-            failed = append(failed, "dwTStueck @ " ~ prog[] ~ " -> " ~ toString(error));
         }
         try
         {

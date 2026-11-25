@@ -58,7 +58,7 @@ def pruefe(paare, titel):
 
 G = set(grid_points())
 noetig = [(sx * K_HOLE_X, z) for sx in (-1, 1) for z in K_HOLE_Z] + [(cx + x, cz + z) for cx, cz in TR_POS.values() for x, z in TR_MOUNT]
-noetig += [xz for h in OH.values() for xz in h['schrauben']] + list(TH_HOLES)
+noetig += [xz for h in OH.values() for xz in h['schrauben']] + list(TS_HOLES)
 fehlt = [p for p in noetig if p not in G]
 print('Rasterbohrungen %d, Knotenblech/Träger/Halter auf dem Raster: %s' % (len(G), 'ja' if not fehlt else 'FEHLT %s' % fehlt))
 ok &= not fehlt
@@ -120,8 +120,8 @@ else:
 # ---------- Fluss: Tüllenhöhen, Schlauchlängen (Mittellinie ohne Aufstecklänge) und Biegeradien ----------
 print('--- Fluss (Schlauchebene Y %.0f, X quer, Z Höhe) ---' % YS)
 print('  QV unten -> OCS-Eingang Z %.1f (hi Tülle X %.1f, lo X %.1f)' % (Z_ZUFUHR, OCS_HI['tx'][1], OCS_LO['tx'][1]))
-print('  OCS-Ausgang hi Z %.1f, lo Z %.1f -> T-Stück Z %.0f (Arme ±%.0f) -> OCS Mix Eingang Z %.0f' % (
-    OCS_HI['tz'][1], OCS_LO['tz'][1], T_Z, T_ARM, MIX['tip']))
+print('  OCS-Ausgang hi Z %.1f (von unten ins T, X %.2f), lo Z %.1f -> T-Stück -> OCS Mix Eingang Z %.0f, Ausgang Z %.0f' % (
+    OCS_HI['tz'][1], TS_X, OCS_LO['tz'][1], OCS_MIX['tz'][0], OCS_MIX['tz'][1]))
 for n, (pts, r) in schlaeuche().items():
     print('  %-8s %5.0f mm frei%s' % (n, sum(math.dist(a, b) for a, b in zip(pts, pts[1:])), ', kleinster Radius R %.0f' % r if r else ', gerade'))
 print('PRÜFUNG', 'OK' if ok else 'FEHLER')
@@ -154,8 +154,9 @@ PLATTEN = {
     'development_wand_1_wand.3mf': [('Wandplatte', VORN('dwWand'), 128.0, 128.0)],
     'development_wand_2_grundplatte_traeger.3mf': [('Grundplatte', lay(M['dwGrund'], X, 0.0), 128.0, 171.0),   # hinten: vorn links sperrt der P1S
                                                    ('Traeger Pi', VORN('dwTraegerPi'), 72.0, 46.0),
-                                                   ('Traeger Pico', VORN('dwTraegerPico'), 160.0, 46.0),
-                                                   ('Halter T', HINTEN('dwHalterT'), 226.0, 46.0)],
+                                                   ('Traeger Pico', VORN('dwTraegerPico'), 160.0, 46.0)],
+    'development_wand_mix_t.3mf': [('OCS-Halter Mix', SEITE('dwOCSHalterMix'), 128.0, 90.0),
+                                   ('T-Stueck', HINTEN('dwTStueck'), 128.0, 180.0)],
     'development_wand_ocshalter.3mf': [('OCS-Halter Hi', SEITE('dwOCSHalterHi'), 128.0, 90.0),
                                        ('OCS-Halter Lo', HINTEN('dwOCSHalterLo'), 128.0, 180.0)],
     'development_wand_3_knotenbleche.3mf': [('Knotenblech VL', lay(M['dwKnotenVL'], Y, -math.pi / 2), 64.0, 64.0),
@@ -176,7 +177,9 @@ DRUCK_PROC = {'development_wand_1_wand.3mf': proc(3, 15, 5, 4, 0, 65),
               'development_wand_2_grundplatte_traeger.3mf': proc(3, 20, 5, 4, 5, 60),
               'development_wand_3_knotenbleche.3mf': proc(5, 40, 6, 5, 3, 55),
               'development_wand_ocshalter.3mf': dict(proc(5, 50, 5, 4, 5, 55, schicht=0.28), enable_support='1',
-                                                     support_type='tree(auto)', support_on_build_plate_only='1')}
+                                                     support_type='tree(auto)', support_on_build_plate_only='1'),
+              'development_wand_mix_t.3mf': dict(proc(5, 50, 5, 4, 5, 55), enable_support='1',
+                                                 support_type='tree(auto)', support_on_build_plate_only='0')}
 for datei, PRINT in PLATTEN.items():
     for name, m, x, y in PRINT:
         e = m.extents
