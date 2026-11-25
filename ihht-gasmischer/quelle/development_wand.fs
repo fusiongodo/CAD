@@ -680,16 +680,16 @@ function dw_dwOCSHalterHi(context is Context, id is Id, prog is box)
 {
     prog[] = "Körper Stufe 0";
     const A0 = id + "dwOCSHalterHi_a0";
-    fCuboid(context, A0 + "s0", { "corner1" : vector(-25.8, -4, 88) * millimeter, "corner2" : vector(-0.2, 0, 173) * millimeter });
+    fCuboid(context, A0 + "s0", { "corner1" : vector(-26.4, -4, 88) * millimeter, "corner2" : vector(0.4, 0, 173) * millimeter });
     fCylinder(context, A0 + "s1", { "bottomCenter" : vector(-5.2, -3.99, 93.7) * millimeter, "topCenter" : vector(-5.2, -14.5, 93.7) * millimeter, "radius" : 2.5 * millimeter });
     fCylinder(context, A0 + "s2", { "bottomCenter" : vector(-22.3, -3.99, 94.1) * millimeter, "topCenter" : vector(-22.3, -14.5, 94.1) * millimeter, "radius" : 2.5 * millimeter });
     fCylinder(context, A0 + "s3", { "bottomCenter" : vector(-5.2, -3.99, 165.2) * millimeter, "topCenter" : vector(-5.2, -14.5, 165.2) * millimeter, "radius" : 2.5 * millimeter });
     fCylinder(context, A0 + "s4", { "bottomCenter" : vector(-22.3, -3.99, 169.4) * millimeter, "topCenter" : vector(-22.3, -14.5, 169.4) * millimeter, "radius" : 2.5 * millimeter });
     fCylinder(context, A0 + "s5", { "bottomCenter" : vector(-5.2, -14.49, 93.7) * millimeter, "topCenter" : vector(-5.2, -17.2, 93.7) * millimeter, "radius" : 1.3 * millimeter });
     coneOp(context, A0 + "s6", vector(-5.2, -17.19, 93.7) * millimeter, vector(-5.2, -18, 93.7) * millimeter, 1.3, 0.8);
-    fCuboid(context, A0 + "s7", { "corner1" : vector(-25.8, -17.2, 143.5) * millimeter, "corner2" : vector(-24.2, -3.99, 153.5) * millimeter });
+    fCuboid(context, A0 + "s7", { "corner1" : vector(-26.4, -17.2, 143.5) * millimeter, "corner2" : vector(-24.2, -3.99, 153.5) * millimeter });
     fCylinder(context, A0 + "s8", { "bottomCenter" : vector(-24.6, -17.2, 143.5) * millimeter, "topCenter" : vector(-24.6, -17.2, 153.5) * millimeter, "radius" : 1.2 * millimeter });
-    fCuboid(context, A0 + "s9", { "corner1" : vector(-1.8, -17.2, 143.5) * millimeter, "corner2" : vector(-0.2, -3.99, 153.5) * millimeter });
+    fCuboid(context, A0 + "s9", { "corner1" : vector(-1.8, -17.2, 143.5) * millimeter, "corner2" : vector(0.4, -3.99, 153.5) * millimeter });
     fCylinder(context, A0 + "s10", { "bottomCenter" : vector(-1.4, -17.2, 143.5) * millimeter, "topCenter" : vector(-1.4, -17.2, 153.5) * millimeter, "radius" : 1.2 * millimeter });
     prog[] = "Vereinigen Stufe 0";
     unionAll(context, id + "dwOCSHalterHi_u0", qUnion([qCreatedBy(A0, EntityType.BODY)]));

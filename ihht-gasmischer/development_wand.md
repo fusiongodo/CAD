@@ -1,6 +1,6 @@
 # Development-Wand (Variante A „Senkrechte Wand“)
 
-Stand 25.11.2026, Anordnung v2.3.
+Stand 25.11.2026, Anordnung v2.4.
 
 - **Quelle:** `quelle/teile/wand_*.py` und `quelle/ihht/wand.py`
 - **Onshape-Modul:** `development_wand.fs`
@@ -23,11 +23,16 @@ Stand 25.11.2026, Anordnung v2.3.
   - Die untere hi-Tülle liegt 17 tiefer als vorher. Ein gerader U-Bogen zum T hätte nur R 18. Deshalb lädt der Bogen links weit aus (bis X −84)
     und läuft mit einer flachen S-Kurve von unten in den T-Arm, überall R 25.
 
-- **v2.3 (25.11., aktuell):** Beim Aufbau gefunden: Die QV-Schraube oben außen am QV hi (X −99, Z 231,5) liegt 4,6 von der Fasenkante.
+- **v2.3 (25.11.):** Beim Aufbau gefunden: Die QV-Schraube oben außen am QV hi (X −99, Z 231,5) liegt 4,6 von der Fasenkante.
   Der 4 breite Fasen-Steg hinten deckte den Schraubenkopf etwa 2 mm ab, die M3 × 20 ging nicht hinein.
   - Gedruckte Wand v2.2: Steg dort wegknipsen oder die Schraube weglassen. 3 von 4 Schrauben halten das QV.
   - Neu: Freiraum Ø 7 hinten um jede QV-Schraube (`QV_KOPF_D`, klinkt den Fasen-Steg aus).
   - Die Prüfung testet jetzt auch die Schraubenköpfe hinten (Ø 6 über die Stegtiefe), nicht nur die Löcher.
+
+- **v2.4 (25.11., aktuell):** Die Rastleisten am OCS-Steckhalter Hi brachen beim Aufstecken ab (1,6 dick, quer zu den Schichten gedruckt).
+  - Leisten jetzt 2,2 dick, Wulst bleibt 0,6 über der Platinenkante, Flansch X −26,4 … 0,4.
+  - Druck auf der Seite (linke Leiste aufs Bett): Die Schichten laufen längs durch die Leisten. Die obere Leiste braucht Baumstützen (nur vom Bett).
+  - Eigene Datei `druck/development_wand_ocshalter_hi.3mf`, 0,28 mm, 5 Wände, 50 %, etwa 25 min. Aus Platte 3 herausgenommen.
 
 ## Fluss (X quer, Z Höhe über Tisch)
 

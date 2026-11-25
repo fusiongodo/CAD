@@ -144,11 +144,11 @@ H_FT = 4.0                      # Flanschdicke aller Halter (Y -4 .. 0)
 # Langlöcher -> Längenmaß unkritisch). hi: Löcher nur vom Foto -> 1 Zapfen Ø 2,6 in A1 (Lage), Stützen ohne Zapfen in
 # A2 / B1 / B2, 2 Randleisten mit Rastwulst (u 40 .. 50, frei von Rohr, Clip und Tüllen) halten die Platine.
 OH_POST_D = 5.0
-OH = {'Hi': dict(ocs=OCS_HI, flansch=(-25.8, -0.2, 88.0, 173.0), schrauben=[(-15.0, 116.0), (-15.0, 156.0)],
+OH = {'Hi': dict(ocs=OCS_HI, flansch=(-26.4, 0.4, 88.0, 173.0), schrauben=[(-15.0, 116.0), (-15.0, 156.0)],
                  zapfen={'A1': 2.6}, stuetzen=('A1', 'A2', 'B1', 'B2'), leisten=(OCS_HI['z'][1] - 50.0, OCS_HI['z'][1] - 40.0)),
       'Lo': dict(ocs=OCS_LO, flansch=(1.0, 25.0, 116.0, 195.0), schrauben=[(15.0, 126.0), (15.0, 156.0)],
                  zapfen={'L1': 3.4, 'L2': 3.4, 'R1': 3.4, 'R2': 3.4}, stuetzen=('L1', 'L2', 'R1', 'R2'), leisten=None)}
-LEISTE_T, LEISTE_LUFT, WULST_D = 1.6, 0.2, 2.4
+LEISTE_T, LEISTE_LUFT, WULST_D = 2.2, 0.2, 2.4   # v2.4: 2,2 statt 1,6 (Leisten brachen ab), Druck auf der Seite
 # T-Halter: Flansch 40 x 24, 2 waagerechte Finnen (4 dick, 30 tief) über und unter dem T-Körper, unten Gabel für den Abgang.
 TH_X, TH_Z, TH_FIN_X, TH_FIN_T, TH_D = (-20.0, 20.0), (44.0, 68.0), (-9.0, 9.0), 4.0, 30.0
 TH_HOLES = [(-15.0, 56.0), (15.0, 56.0)]

@@ -146,22 +146,26 @@ def HINTEN(n):                                                          # Halter
     if m.extents[0] > m.extents[1]:
         m = lay(m, Z_, math.pi / 2)
     return m
+def SEITE(n):                                                           # hi-Halter: linke Leiste (X min) aufs Bett, Schichten längs durch die Leisten
+    return lay(M[n], Y, -math.pi / 2)
+
+
 PLATTEN = {
     'development_wand_1_wand.3mf': [('Wandplatte', VORN('dwWand'), 128.0, 128.0)],
     'development_wand_2_grundplatte_traeger.3mf': [('Grundplatte', lay(M['dwGrund'], X, 0.0), 128.0, 171.0),   # hinten: vorn links sperrt der P1S
                                                    ('Traeger Pi', VORN('dwTraegerPi'), 72.0, 46.0),
                                                    ('Traeger Pico', VORN('dwTraegerPico'), 160.0, 46.0),
                                                    ('Halter T', HINTEN('dwHalterT'), 226.0, 46.0)],
+    'development_wand_ocshalter_hi.3mf': [('OCS-Halter Hi', SEITE('dwOCSHalterHi'), 128.0, 128.0)],
     'development_wand_3_knotenbleche.3mf': [('Knotenblech VL', lay(M['dwKnotenVL'], Y, -math.pi / 2), 64.0, 64.0),
                                             ('Knotenblech VR', lay(M['dwKnotenVR'], Y, math.pi / 2), 192.0, 64.0),
                                             ('Knotenblech HL', lay(M['dwKnotenHL'], Y, -math.pi / 2), 64.0, 192.0),
                                             ('Knotenblech HR', lay(M['dwKnotenHR'], Y, math.pi / 2), 192.0, 192.0),
-                                            ('OCS-Halter Hi', HINTEN('dwOCSHalterHi'), 128.0, 64.0),
-                                            ('OCS-Halter Lo', HINTEN('dwOCSHalterLo'), 128.0, 192.0)]}
+                                            ('OCS-Halter Lo', HINTEN('dwOCSHalterLo'), 128.0, 128.0)]}
 
 
-def proc(waende, infill, deckel, boden, brim, bett):
-    return {'layer_height': '0.2', 'print_settings_id': '0.20mm Standard @BBL P1S', 'sparse_infill_pattern': 'gyroid',
+def proc(waende, infill, deckel, boden, brim, bett, schicht=0.2):
+    return {'layer_height': '%g' % schicht, 'print_settings_id': '0.20mm Standard @BBL P1S' if schicht == 0.2 else '0.28mm Extra Draft @BBL P1S', 'sparse_infill_pattern': 'gyroid',
             'wall_loops': str(waende), 'sparse_infill_density': '%d%%' % infill, 'top_shell_layers': str(deckel),
             'bottom_shell_layers': str(boden), 'brim_type': 'outer_only' if brim else 'no_brim', 'brim_width': str(brim),
             'initial_layer_speed': ['50', '50'], 'close_fan_the_first_x_layers': ['3', '3', '3'],
@@ -170,7 +174,9 @@ def proc(waende, infill, deckel, boden, brim, bett):
 
 DRUCK_PROC = {'development_wand_1_wand.3mf': proc(3, 15, 5, 4, 0, 65),
               'development_wand_2_grundplatte_traeger.3mf': proc(3, 20, 5, 4, 5, 60),
-              'development_wand_3_knotenbleche.3mf': proc(5, 40, 6, 5, 3, 55)}
+              'development_wand_3_knotenbleche.3mf': proc(5, 40, 6, 5, 3, 55),
+              'development_wand_ocshalter_hi.3mf': dict(proc(5, 50, 5, 4, 5, 55, schicht=0.28), enable_support='1',
+                                                        support_type='tree(auto)', support_on_build_plate_only='1')}
 for datei, PRINT in PLATTEN.items():
     for name, m, x, y in PRINT:
         e = m.extents

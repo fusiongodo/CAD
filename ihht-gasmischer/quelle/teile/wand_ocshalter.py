@@ -2,7 +2,7 @@
 #   Flansch 4 an der Wand, 2 x M3 x 16 + Mutter auf dem Raster (vor dem Aufstecken einschrauben). Stützen Ø 5 bis an die
 #   Platinen-Rückseite (Bauteilseite zur Wand, Steckergehäuse 6 frei), oben Zapfen durch die Platinenlöcher mit Fase.
 #   hi zusätzlich 2 Randleisten mit Rastwulst: Platine einfach von vorn eindrücken.
-# Druck: Flansch-Rückseite unten, Stützen und Zapfen nach oben, ohne Stützmaterial.
+# Druck: lo Flansch-Rückseite unten; hi auf der Seite (linke Leiste unten), damit die Schichten längs durch die Leisten laufen.
 from ihht.geo import Part, B, Cy, Cz, K
 from ihht.wand import *
 
@@ -24,7 +24,7 @@ def halter(name, h):
         for xi, sx in ((x0 - LEISTE_LUFT, -1), (x1 + LEISTE_LUFT, 1)):            # Innenkante, nach außen dick
             yw = yo - WULST_D / 2                                                   # Wulst liegt vorn auf der Platine
             p.add(B(xi, xi + sx * LEISTE_T, -H_FT + 0.01, yw, z0, z1),
-                  Cz(xi + sx * (LEISTE_T / 2 - 0.4), yw, z0, z1, WULST_D))         # ragt 0,6 über die Platinenkante
+                  Cz(xi + sx * 0.4, yw, z0, z1, WULST_D))                         # ragt 0,6 über die Platinenkante
     for x, z in h['schrauben']:
         p.cut(Cy(x, -H_FT - 1, 1, z, M3_CLR))
     return p
