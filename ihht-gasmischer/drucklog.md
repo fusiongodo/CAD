@@ -24,7 +24,7 @@ Dateien: `druck/…` liegt in diesem Repo, `ihht-pi/…` in `~/Desktop/projects/
 | Datum | Datei | Teile / Variante | gedruckt | eingebaut | Ergebnis |
 |---|---|---|---|---|---|
 | 25.11. abends | ihht-pi `welle_zapfen_6200_e3_5.3mf` | Welle mit Zapfen e 3,5 + Distanzring (V9), 1 Stück | ja | noch nicht (Alex fragte nach dem Ring) | – |
-| 26.11. | `druck/quetschventil_v3.3mf` | Quetschventil v3 (M8-Kern, 2 × 608, 2 × 6905, e 4,5): Rückwand, Steg, Getriebeplatte, Hohlrad, Welle, Klemmhülse, Ritzel, 2 Distanzscheiben. Ambosse und Motor vom alten Ventil | übergeben, noch nicht gedruckt (4 h 08) | – | Platte neu gelegt: Rückwand aus der Sperrzone vorn links |
+| 26.11. | `druck/quetschventil_v3.3mf` | Quetschventil v3 (M8-Kern, 2 × 608, 2 × 6905, e 4,5): Rückwand, Steg, Getriebeplatte, Hohlrad, Welle, Klemmhülse, Ritzel, 2 Distanzscheiben. Ambosse und Motor vom alten Ventil | übergeben, NICHT drucken | – | Braucht 608 und 6905. Vorhanden sind 2 × 6203 und 6200 (Alex 26.11.), die passen hier nicht |
 | 25.11. | `druck/development_wand_hi_mix.3mf` | Steckhalter Hi + Mix v3.2 (Rohr zur Wand, Tülle Y −22) | übergeben, noch nicht gedruckt | – | – |
 | 25.11. | `druck/development_wand_hi_mix_t.3mf` | Steckhalter Hi + Mix v3.1, T-Stück v3.1 | ja (Halter sicher, T-Stück ?) | Hi ja | Mix passt aufs Raster. Hi: OCS mit Rohr zur Wand eingesetzt, dafür zu niedrig → v3.2 |
 | 25.11. | `druck/development_wand_ocs_alle.3mf` | Steckhalter Hi, Mix, Lo, T-Stück v3.0 | ja | nein | Clip hält die Platine perfekt. Für Rohr vorn zu hoch, Löcher passten in dieser Lage nicht → v3.1 |
