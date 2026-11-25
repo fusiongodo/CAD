@@ -101,15 +101,16 @@ TUELLE_D = 5.5                  # Tüllenhals
 STECKER_H = 6.0
 
 
-def _ocs(x0, x1, z1, L, d, mitte, vorn, ueber, tu, seite, stecker, loecher, rohr_b, rohr_t, clip_u, dreh=False):
+def _ocs(x0, x1, z1, L, d, mitte, vorn, ueber, tu, seite, stecker, loecher, rohr_b, rohr_t, clip_u, dreh=False, vor=0.0):
     """seite -1: Tüllen nach links (Tüllenkante x0), +1: nach rechts (x1). stecker / loecher in (v, u).
     Rohrseite: Rohr rohr_b breit mittig, rohr_t vor der Platine; Clip mit Muttern über die volle Breite bei clip_u (u0, u1),
-    vorn bis zur dicksten Stelle. dreh: Platine (Löcher, Stecker) 180° um ihre Mitte gedreht, Tüllen bleiben."""
+    vorn bis zur dicksten Stelle. dreh: Platine (Löcher, Stecker) 180° um ihre Mitte gedreht, Tüllen bleiben.
+    vor: Platine sitzt so viel weiter vorn als mitte sagt (Stützen und Clip entsprechend länger)."""
     if dreh:
         W = x1 - x0
         stecker = [(W - v1, W - v0, L - u1, L - u0) for v0, v1, u0, u1 in stecker]
         loecher = {k: (W - v, L - u) for k, (v, u) in loecher.items()}
-    ob = YS + mitte                                                       # Platinen-Vorderseite (Rohrseite)
+    ob = YS + mitte - vor                                                 # Platinen-Vorderseite (Rohrseite)
     vx = (lambda v: x0 + v) if seite < 0 else (lambda v: x1 - v)
     kante = x0 if seite < 0 else x1
     xm = (x0 + x1) / 2
@@ -127,7 +128,7 @@ def _ocs(x0, x1, z1, L, d, mitte, vorn, ueber, tu, seite, stecker, loecher, rohr
 OCS_HI = _ocs(-24.0, -2.0, Z_ZUFUHR + 20.0, 125.0, 1.5, 6.0, 12.5, 7.0, (20.0, 105.0), -1,
               [(0, 5.7, 6, 17.6), (0, 5.7, 108, 117), (17.2, 22, 73, 84)],                     # J2, J5, J3
               {'E': (3.2, 2.8), 'A1': (3.2, 25.2), 'A2': (20.3, 25.6), 'B1': (3.2, 96.7), 'B2': (20.3, 100.9)},
-              12.5, 12.0, (55.0, 70.0), dreh=True)
+              12.5, 12.0, (55.0, 70.0), dreh=True, vor=2.0)                                  # v2.7: Stützen/Clip hielten nicht -> 2 höher
 # lo 3FRL 2.0: 79 x 24 x 1,6, 25 hoch (Stecker bis Clip), Rohrmitte 6,7 vor der Platine, Tüllen 21,5 (J2-Ende) / 60,
 # 5,5 über die Kante. Löcher Ø 3,5 quer 18,5: Ende ohne J2 rund (u 75,6), J2-Ende Langloch 4,5 (u 3,6) + rund (u 10,1).
 OCS_LO = _ocs(1.0, 25.0, Z_ZUFUHR + 21.5, 79.0, 1.6, 6.7, 17.4, 5.5, (21.5, 60.0), 1,
@@ -147,8 +148,11 @@ H_FT = 4.0                      # Flanschdicke aller Halter (Y -4 .. 0)
 OH_POST_D = 5.0
 OH = {'Hi': dict(ocs=OCS_HI, flansch=(-26.4, 0.4, 88.0, 173.0), schrauben=[(-15.0, 116.0), (-15.0, 156.0)],
                  zapfen={'A1': 2.6}, stuetzen=('A1', 'A2', 'B1', 'B2'), leisten=(OCS_HI['z'][1] - 50.0, OCS_HI['z'][1] - 40.0)),
-      'Lo': dict(ocs=OCS_LO, flansch=(1.0, 25.0, 116.0, 195.0), schrauben=[(15.0, 126.0), (15.0, 156.0)],
-                 zapfen={'L1': 3.4, 'L2': 3.4, 'R1': 3.4, 'R2': 3.4}, stuetzen=('L1', 'L2', 'R1', 'R2'), leisten=None)}
+      'Lo': dict(ocs=OCS_LO, flansch=(0.6, 26.0, 116.0, 195.0), schrauben=[(15.0, 126.0), (15.0, 156.0)],
+                 zapfen={}, stuetzen=('L1', 'L2', 'R1', 'R2'), leisten=None, post_d=7.0, m2=('L1', 'L2', 'R1', 'R2'))}
+# v2.7 lo: Zapfen brachen beim Abnehmen ab -> M2 von vorn durch Platine und Stütze, Mutter seitlich in einen Schlitz 1,2 unter
+# der Platine eingeschoben (M2 x 6 reicht, bis M2 x 14 geht). Stützen Ø 7 für die Mutter (SW 4).
+M2_CLR, M2_MUTTER_SW, M2_MUTTER_H, M2_MUTTER_AB = 2.4, 4.2, 1.9, 1.2
 LEISTE_T, LEISTE_LUFT, WULST_D = 2.2, 0.2, 2.4   # v2.4: 2,2 statt 1,6 (Leisten brachen ab), Druck auf der Seite
 # T-Halter: Flansch 40 x 24, 2 waagerechte Finnen (4 dick, 30 tief) über und unter dem T-Körper, unten Gabel für den Abgang.
 TH_X, TH_Z, TH_FIN_X, TH_FIN_T, TH_D = (-20.0, 20.0), (44.0, 68.0), (-9.0, 9.0), 4.0, 30.0
