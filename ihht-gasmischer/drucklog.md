@@ -40,6 +40,7 @@ Ohne das wissen wir in 2 Wochen nicht mehr, was gedruckt wurde, und drucken alle
 | Datum | Datei | Teile / Variante | gedruckt | eingebaut | Ergebnis |
 |---|---|---|---|---|---|
 | 25.11. abends | ihht-pi `welle_zapfen_6200_e3_5.3mf` | Welle mit Zapfen e 3,5 + Distanzring (V9), 1 Stück | ja | noch nicht (Alex fragte nach dem Ring) | – |
+| 26.11. | `druck/qv_neue_motoren.3mf` | Alles für die neuen Motoren in einer Datei: 2 × Ritzel v2 + 2 × Distanzplatte 2 mm | übergeben, noch nicht gedruckt | – | Gleiche Teile wie die zwei Einzeldateien darunter (Alex: alles in eine 3MF) |
 | 26.11. | `druck/qv_motor_distanz.3mf` | Distanzplatte 2 mm zwischen Motor und Getriebeplatte, 2 Stück (42,3 × 42,3, Mittelloch Ø 22,4, 4 × Ø 3,4) | übergeben, noch nicht gedruckt | – | Für die neuen Motoren: Schaftspitze hätte sonst nur 0,4 Luft zur Hohlrad-Scheibe. Motorschrauben 2 länger |
 | 26.11. | `druck/qv_ritzel_lang.3mf` | Ritzel v2 für die neuen Motoren (Schaft länger), 2 Stück: Zähne über die ganze Länge, runder Einlauf 7,5 | übergeben, noch nicht gedruckt | – | Alex: neue Motoren, Schaft ab Passungsring ca. 21,5 bis 22 statt 18. Altes Ritzel sitzt zu weit vorn, Nabe blockiert die Innenverzahnung |
 | 26.11. | `druck/m8_akkuschrauber_aufsatz.3mf` | Akkuschrauber-Aufsatz für die M8 (Sechskantkopf SW 13), 2 Varianten: Schaft SW 8,5 fürs Bohrfutter, Schaft SW 6,25 für den Bithalter | übergeben, noch nicht gedruckt (33 min, 11 g) | – | Alex: M8 mit dem Akkuschrauber eindrehen statt 200 Handbewegungen |
