@@ -28,6 +28,8 @@ MODULE = [
          teile=['qv2_teile']),
     dict(datei='cpap_reservoir.fs', titel='CPAP-Inline-Reservoir-Adapter (Einwegventil)', var='cpapReservoir', prefix='cr_',
          teile=['cpap_reservoir']),
+    dict(datei='o2_mundstueck.fs', titel='O2-Mundstück mit Reservoirbeutel', var='o2Mundstueck', prefix='o2m_',
+         teile=['o2_mundstueck']),
 ]
 OHNE_FS = ['sammler_mix', 'zahnrad', 'dummies']        # nur fuer Ansicht/Pruefung, kein eigenes Feature Studio
 

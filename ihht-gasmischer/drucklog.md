@@ -24,6 +24,7 @@ Dateien: `druck/…` liegt in diesem Repo, `ihht-pi/…` in `~/Desktop/projects/
 | Datum | Datei | Teile / Variante | gedruckt | eingebaut | Ergebnis |
 |---|---|---|---|---|---|
 | 25.11. abends | ihht-pi `welle_zapfen_6200_e3_5.3mf` | Welle mit Zapfen e 3,5 + Distanzring (V9), 1 Stück | ja | noch nicht (Alex fragte nach dem Ring) | – |
+| 26.11. | `druck/o2_mundstueck.3mf` | O2-Mundstück mit Reservoirbeutel v1: Grundkörper, Ventilring, Mundrohr | übergeben, noch nicht gedruckt (1 h 01) | – | – |
 | 26.11. | `druck/qv_welle_m8kern_e3_5.3mf` | Welle mit Zapfen e 3,5 und M8-Kern (M8 × 70 von vorn durch das 6200) + Distanzring, 1 Stück | übergeben, noch nicht gedruckt (41 min) | – | Die ihht-pi-Datei `welle_zapfen_6200_e3_5.3mf` ist seit 26.11. dieselbe Geometrie; der Druck vom 25.11. hat noch das M3-Kernloch |
 | 26.11. | `druck/quetschventil_v3.3mf` | Quetschventil v3 (M8-Kern, 2 × 608, 2 × 6905, e 4,5): Rückwand, Steg, Getriebeplatte, Hohlrad, Welle, Klemmhülse, Ritzel, 2 Distanzscheiben. Ambosse und Motor vom alten Ventil | übergeben, NICHT drucken | – | Braucht 608 und 6905. Vorhanden sind 2 × 6203 und 6200 (Alex 26.11.), die passen hier nicht |
 | 25.11. | `druck/development_wand_hi_mix.3mf` | Steckhalter Hi + Mix v3.2 (Rohr zur Wand, Tülle Y −22) | übergeben, noch nicht gedruckt | – | – |
