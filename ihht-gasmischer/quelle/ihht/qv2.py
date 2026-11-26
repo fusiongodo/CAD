@@ -47,7 +47,7 @@ def _nema():
     n = G.Part('nema', 'NEMA 17 (Dummy, mit Stecker und Kabelbogen nach unten)')
     n.add(G.B(-21.15, 21.15, -G.A - 21.15, -G.A + 21.15, G.Z_C1 - 40, G.Z_C1),
           G.B(-8, 8, -G.A - 21.15 - 10, -G.A - 21.15 + 0.1, G.Z_C1 - 40, G.Z_C1 - 28),
-          G.Cz(0, -G.A, G.Z_C1 - 0.1, G.Z_C1 + 2, 22), G.Cz(0, -G.A, G.Z_C1, G.Z_C1 + G.SHAFT_TIP, 5.0))
+          G.Cz(0, -G.A, G.Z_C1 - 0.1, G.Z_C1 + 2, 22), G.Cz(0, -G.A, G.Z_C1, G.Z_C1 + G.SHAFT_LANG, 5.0))                     # langer Schaft der neuen Motoren (bis z -10)
     return n
 
 

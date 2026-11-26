@@ -37,6 +37,7 @@ FIX_X, FIX_Y = 40.0, 15.0   # Befestigungsloecher des Rahmens (Ø 3,4)
 M3_CLR, M3_SELF = 3.4, 2.6
 NEMA_D, NEMA_FLAT, RIB_T, RIB_H = 5.50, 2.25, 0.45, 0.2   # Konsens 21.11.2026
 SHAFT_TIP = 19.0            # NEMA-Wellenspitze ab Flansch (wie v1); bis 24 mm passt auch
+SHAFT_LANG = 24.0           # neue Motoren (Alex 26.11.): Schaft ab Passungsring ca. 21,5 bis 22 statt 18, also bis 24 ab Flansch
 
 # ---------------- Getriebe ----------------
 MOD = 1.0
@@ -299,13 +300,20 @@ hohlrad.cut(
     C((0, sr - 0.5, Z_SCREW), (0, NECK_D / 2 + 1, Z_SCREW), M3_SELF))                      # radiale M3 (selbstschneidend)
 
 Z_PH0, Z_PH1, Z_PG1 = Z_C0 + 0.5, Z_RING1 - GAP, Z_DISK1 - GAP     # Nabe -29,5 .. -18,2, Zaehne bis -10,2
-Z_D0 = Z_PH0 + 3.0                                                  # D-Bohrung erst ab 7,5 mm vor dem Flansch (davor rund)
+RITZEL_LANG = os.environ.get('QV_RITZEL_LANG', '1') != '0'           # v2 (26.11.): fuer den laengeren Schaft der neuen Motoren
+# Anlass (Alex): auf dem langen Schaft sitzt das alte Ritzel zu weit vorn, die zahnlose Nabe (Ø 15,4) laeuft in die
+# Innenverzahnung und blockiert. v2: Zaehne ueber die ganze Laenge (keine Nabe mehr) und runder Einlauf 7,5 statt 3,
+# damit das Ritzel auch dann bis vor die Getriebeplatte rutscht, wenn die Abflachung der Welle spaeter beginnt.
+Z_D0 = Z_PH0 + (7.5 if RITZEL_LANG else 3.0)                        # D-Bohrung erst ab hier (davor rund)
 HUB_R = RP_TIP + 0.3                                                # Nabe Ø 15,4
 Z_SET, SET_D, SET_L = (Z_D0 + Z_PH1) / 2, 4.2, 8.0                  # M5x8-Madenschraube radial auf die Abflachung (-X), z -22,35;
                                                                     # Kernloch 4,2, die Schraube schneidet ihr Gewinde selbst
-ritzel = Part('ritzel', 'QV-Getriebe Ritzel 13 Zaehne, Modul 1 (NEMA-Welle, 2 Quetschstege, M5-Madenschraube)')
-ritzel.add(Cz(0, -A, Z_PH0, Z_PH1 + 0.01, 2 * HUB_R),
-           Gz(0, -A, Z_PH1, Z_PG1, ZP, RP_TIP, RP_ROOT, math.pi * MOD / 2 - BACKLASH / 2, -math.pi / 2))
+ritzel = Part('ritzel', 'QV-Getriebe Ritzel 13 Zaehne, Modul 1 (NEMA-Welle, 2 Quetschstege, M5-Madenschraube%s)' % (', v2 Zaehne durchgehend, langer Schaft' if RITZEL_LANG else ''))
+if RITZEL_LANG:
+    ritzel.add(Gz(0, -A, Z_PH0, Z_PG1, ZP, RP_TIP, RP_ROOT, math.pi * MOD / 2 - BACKLASH / 2, -math.pi / 2))
+else:
+    ritzel.add(Cz(0, -A, Z_PH0, Z_PH1 + 0.01, 2 * HUB_R),
+               Gz(0, -A, Z_PH1, Z_PG1, ZP, RP_TIP, RP_ROOT, math.pi * MOD / 2 - BACKLASH / 2, -math.pi / 2))
 ritzel.cut(C((-(NEMA_FLAT - 0.3), -A, Z_SET), (-(HUB_R + 1.0), -A, Z_SET), SET_D),          # Kernloch M5
            C((-(HUB_R - 0.6), -A, Z_SET), (-(HUB_R + 1.0), -A, Z_SET), 5.0),                 # Einlauf 0,6 tief zum Ansetzen
            P(0, -A, Z_D0 - 0.01, Z_PG1 + 1, d_profile(NEMA_D, NEMA_FLAT)),
