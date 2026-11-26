@@ -27,6 +27,7 @@ Box für 12 Fiolen (Ø 16 × 38 mm), 4 × 3, mit Stülpdeckel zum Aufrasten. Sti
 - Ösenloch 4,8 × 4,6. Riegel in 3 Maßen mit Kennpunkten: 1 = 4,4 × 4,0, 2 = 4,2 × 3,8, 3 = 4,6 × 4,2
 - Außen 254,0 × 212,6 (mit Ösen) × 46,3 mm
 - `quelle/sammelbox_v2.py` (Modell + Prüfung), `quelle/sammelbox_v2_3mf.py [Riegel-Nr]` (Druckdateien)
+- Onshape: Dokument claude_chassis, Tab `sammelbox_16_3x3_v2` (Import von `druck/sammelbox_16_3x3_v2_gesamt.step`, Stand 32e4b93: Wanne, Deckel, 4 Riegel zugeschoben). Ein Import, kein Sync: nach Änderungen neu hochladen
 - Geprüft im Modell: offen hebt der Deckel frei ab, zugeschoben sperrt er; 9 Boxen ohne Überschneidung. Slicer ohne Fehler. Am Teil nichts geprüft
 - Offen: Der Riegel hat keine Raste, er hält nur über Reibung in seiner Stellung
 - Druck, in dieser Reihenfolge:
