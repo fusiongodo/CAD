@@ -38,4 +38,8 @@ Dateien: `druck/…` liegt in diesem Repo, `ihht-pi/…` in `~/Desktop/projects/
 | 24.11. | ihht-pi `getriebe_v1.3mf` oder `getriebe_v1_ohne_welle.3mf`: ? | Getriebeplatte, Hohlrad, Ritzel (Welle e 3,5 nur in der ersten Datei) | ja | ja, im anderen QV | dieses QV dichtet nicht, es fehlen 1 bis 2 mm |
 | vor 25.11. | `druck/development_wand_1_wand.3mf`, `_2_…`, `_3_…` | Wand, Grundplatte, Träger, Knotenbleche | ja | ja | steht, Raster stimmt mit dem Modell |
 
+**Lagerhülsen (Alex 26.11.):** Es gibt zwei Hülsen über den 6203 (ihht-pi `huelse_v1.3mf`, Druck 23.11.). Laut Alex funktioniert die dünnere besser.
+Laut Quelle haben beide 2,5 Wand und unterscheiden sich nur in der Bohrung: „eng“ = Bohrung 40,2, außen 45,2, Bund ohne Kerbe; „weit“ = Bohrung 40,4, außen 45,4, eine Kerbe im Bund.
+Die dünnere wäre danach „eng“ (ohne Kerbe). Am Teil nicht nachgemessen; ob Alex einen anderen, nicht notierten Ring meint: ?
+
 Ältere Drucke (vor dem 24.11.) stehen in `development_wand.md` und in ihht-pi `VERSUCHE.md`, dort ohne Einbau-Status.
