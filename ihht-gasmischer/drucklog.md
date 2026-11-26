@@ -19,6 +19,18 @@ Dateien: `druck/…` liegt in diesem Repo, `ihht-pi/…` in `~/Desktop/projects/
 | T-Stück | Druckteil | v3.1 gedruckt: ?; montiert: ? | – |
 | SKR Pico | direkt auf dem Lochraster verschraubt (Rückseite der Wand, ohne den Pico-Träger aus dem Modell), USB-C und 2 Adern Versorgung angeschlossen | – | Foto 25.11. abends |
 
+## Printing-Backlog (Stand 26.11.2026)
+
+Druckfertig, noch nicht gedruckt:
+
+- `druck/qv_hohlrad_griff_v2.3mf`: 2 × Hohlrad mit Kragen + Steckgriff Variante 2 (2 h 56, 95 g, ohne Stützen)
+- `druck/development_wand_hi_mix.3mf`
+- Distanzplatten 2 mm aus `druck/qv_neue_motoren.3mf`: gedruckt oder nicht: ?
+
+Noch zu konstruieren:
+
+- Welle mit weiterem M8-Loch (Variante 2): wartet auf Alex' Ergebnis vom Eindrehen in Variante 1
+
 ## Parameter und Ergebnis (Passungen, Varianten)
 
 Regel (Alex 26.11.): Zu jeder gedruckten Variante eines Teils stehen hier die Maße, die Druckeinstellungen, der Commit und das Ergebnis am Teil.
