@@ -215,6 +215,7 @@ JZ_D, JZ_RIB, JZ_PASS = 9.95, 0.12, 16.8
 # liegt auf dem Innenring des 6200 und spannt 6200, Distanzring und beide 6203 gegen die Wellenschulter. Geht nur bis
 # e 3,7: der Exzenterzapfen Ø 16,9 laesst bei e 3,5 noch 0,8 Wand neben der Bohrung, darueber bricht sie seitlich aus.
 M8_FREI, M8_SELF, M8_L, M8_KOPF = 8.3, 7.2, 70.0, 5.3
+M8_ZAPF = 8.0
 M8_KERN = os.environ.get('QV_M8', '1') != '0' and E <= 3.7
 M8_Z_KOPF = 41.25                           # Kopfauflage = Vorderseite 6200 (z 41,2)
 M8_Z_GEW = -18.0                            # ab hier nach hinten Kernloch
@@ -263,7 +264,8 @@ if os.environ.get('QV_ZAPFEN', '1') != '0':      # Standard seit 25.11.2026; QV_
         P(0, 0, ZB0 - 0.6, ZB0 + 0.01, crescent(12.5, 11.0, E)),
         C((0, sr - 3.2, Z_SCREW), (0, sr + 1, Z_SCREW), 3.2))
     if M8_KERN:
-        welle.cut(Cz(0, 0, M8_Z_GEW, ZJ1 + 1, M8_FREI),                     # M8 x 70 von vorn: frei durch Zapfen und Exzenter
+        welle.cut(Cz(0, 0, M8_Z_GEW, ZB1 + 0.01, M8_FREI),                  # M8 x 70 von vorn: frei durch den Exzenter
+                  Cz(0, 0, ZB1, ZJ1 + 1, M8_ZAPF),                          # im Zapfen fuer das 6200 enger: Wand 1,0 statt 0,8 (0,8 liess der Slicer weg)
                   Cz(0, 0, M8_Z_END, M8_Z_GEW + 0.01, M8_SELF))             # hinten schneidet sie sich ihr Gewinde (12 lang)
     elif E <= 4.6:
         welle.cut(Cz(0, 0, ZJ1 - 20, ZJ1 + 1, M3_SELF))

@@ -84,7 +84,8 @@ Stand 25.11.2026, Anordnung v3.2.
 
 - **Welle mit M8-Kern (26.11., Wunsch Alex):** Die Welle mit angedrucktem Zapfen bekommt auf der Hauptachse eine M8 × 70 (DIN 933) als Stahlkern.
   - Lager bleiben: 2 × 6203 auf dem Exzenter, 6200 vorn im Steg. Kein 608, kein 6905 (das wäre QV v3, die Lager sind nicht da).
-  - Die Schraube wird von vorn durch das 6200 gesteckt. Bohrung 8,3 frei durch Zapfen und Exzenter, hinten 12 lang Kernloch 7,2 (schneidet sich selbst ein).
+  - Die Schraube wird von vorn durch das 6200 gesteckt. Bohrung 8,3 frei durch den Exzenter, im 10-mm-Zapfen 8,0 (Hülse mit 1,0 Wand zwischen M8 und 6200), hinten 12 lang Kernloch 7,2 (schneidet sich selbst ein).
+  - Der Zapfen ist damit nur noch eine dünne Hülse um die Schraube. Im Slicer geprüft: Die Schichten des Zapfens werden voll gedruckt (Arachne).
   - Der Kopf liegt auf dem Innenring des 6200 und spannt 6200, Distanzring und beide 6203 gegen die Wellenschulter. Nur handfest anziehen, das Gewinde ist Kunststoff.
   - Grenze: geht nur bis e 3,7. Bei e 3,5 bleiben 0,8 Wand neben der Bohrung im Exzenter und im Zapfen. Wellen mit e 4,5 / 5,0 behalten das M3-Kernloch.
   - Nur die Welle ist neu (`QV_M8` in `qv2/gen_getriebe.py`, Standard an). Im Modell steht die Schraube als Dummy. Ungetestet.
