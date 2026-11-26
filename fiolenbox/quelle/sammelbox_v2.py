@@ -128,6 +128,13 @@ exp = lambda sh, n, step=False: (cq.exporters.export(sh, f"{DRUCK}/{NAME}_{n}.st
 exp(base, 'unterteil', True); exp(lid, 'deckel', True)
 for b, h, p in RIEGEL:
     exp(riegel(b, h, p), 'riegel%d' % p)
+# Gesamt-STEP für Onshape: Wanne, Deckel und 4 Riegel (zugeschoben) als eigene Körper in Einbaulage
+ges = cq.Assembly(name=NAME)
+ges.add(base, name='Wanne', color=cq.Color(0.85, 0.85, 0.88))
+ges.add(lid, name='Deckel', color=cq.Color(0.35, 0.6, 0.9, 0.6))
+for k, (xc, s) in enumerate(PLAETZE):
+    ges.add(riegel_im_bau(xc, s, TIP_ZU), name='Riegel_%d' % (k + 1), color=cq.Color(0.93, 0.55, 0.2))
+ges.save(f"{DRUCK}/{NAME}_gesamt.step")
 # Probestück: ein Riegelplatz (+x, +y) aus Wanne und Deckel geschnitten, Deckel nur bis z 26 und mit Standfuß
 xc = L / 4
 fenster = lambda z0, z1: cq.Workplane("XY").box(64, 26, z1 - z0, centered=False).translate((xc - 39, W / 2 - 14, z0))
