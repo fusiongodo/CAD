@@ -10,6 +10,6 @@
     "gegenlager_6200.fs":      {"name": "Quetschventil Gegenlager 6200 (Rahmen v2)", "var": "quetschventilGegenlager6200", "featureStudio": "faa84bba10adb02eeb0efa18", "partStudios": ["a6bb24d9dda7d62eca012b8d"]},
     "development_wand.fs":     {"name": "Development-Wand (Lochraster, 2 QV)", "var": "developmentWand", "featureStudio": "b17afd4e38fe778fbb5603db", "partStudios": ["21eed7eb162c534944e4b264"]},
     "cpap_reservoir.fs":       {"name": "CPAP-Inline-Reservoir-Adapter (Einwegventil)", "var": "cpapReservoir", "featureStudio": "0bcce45512b6ac53b8a46896", "partStudios": ["aee75640abeaf133528c3d25"]},
-    "o2_mundstueck.fs":        {"name": "O2-Mundstück mit Reservoirbeutel", "var": "o2Mundstueck", "featureStudio": null, "partStudios": []}
+    "o2_mundstueck.fs":        {"name": "O2-Mundstück mit Reservoirbeutel", "var": "o2Mundstueck", "featureStudio": "fc47efd8eafe033e8c6ebce8", "partStudios": ["5b80e8873223fd772c374d8b"]}
   }
 }
