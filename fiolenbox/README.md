@@ -10,12 +10,23 @@ Box für 12 Fiolen (Ø 16 × 38 mm), 4 × 3, mit Stülpdeckel zum Aufrasten. Sti
 | `quelle/fiolenbox_v2.py` | **Aktuell (Unterteil).** CadQuery-Modell v2, alle Maße oben als Parameter |
 | `quelle/fiolenbox_v1.py` | v1 (Röhrchen, Einsteck-Deckel) |
 | `quelle/fiolenbox_raster_v1.py` | **Beliebiges Raster, auch groß:** `fiolenbox_raster_v1.py <16|11> <SPALTENxREIHEN>` → STL/STEP + `info_<fiole>_<raster>.json`; Seiten ≥ 100 mm: 2 Rastnasen je Seite auf allen 4 Seiten, Deckelplatte 2,0 |
+| `quelle/sammelbox_v1.py` | **Sammelbox 3 × 3** für 9 große Fiolenboxen: `~/.cache/cq312/bin/python sammelbox_v1.py`, dann `fiolenbox_v2_3mf.py sammelbox_16_3x3_v1` |
 | `quelle/fiolenbox_11_v1.py` | **Fiolenbox 11** für Ø 11,6 × 32: `~/.cache/cq312/bin/python fiolenbox_11_v1.py 4x3` (oder `5x4`) → STL/STEP + `info_11_<raster>.json` |
 | `quelle/ansicht_bauen.py`, `ansicht_template.html` | baut `ansicht/index.html` (3D-Ansicht, offline) |
 | `druck/fiolenbox_v2.3mf`, `quelle/fiolenbox_v2_3mf.py` | Druckdatei P1S: Unterteil stehend + Deckel kopfüber, 0,2 mm, 3 Wände, 15 % Infill, kein Support. `fiolenbox_v2_3mf.py <NAME> masse` → Deckel 3 Wände, Unterteil 2 Wände, 6/5 Schichten, Cubic 35 % (Masse + Isolation) |
 | `quelle/deckelringe_3mf.py`, `druck/deckelringe_2026-11-18.3mf` | Testdruck: 7 Deckelringe (Spiel × Versatz der Rastnase) für das gedruckte Unterteil v2 |
 | `passungen.html` | **Messungs-Timeline** Deckelpassung, neue Einträge oben |
 | `druck/fiolenbox_v*_*.stl/.step` | Unterteil und Deckel (Deckel in geschlossener Lage, zum Drucken umdrehen) |
+
+## Sammelbox 3 × 3 v1 (26.11.2026) – Box für 9 große Fiolenboxen
+- Wanne + Stülpdeckel für 3 × 3 Fiolenboxen v2/v3 (je 82,4 × 63,4 × 42,1), einlagig, Deckel nach oben → `quelle/sammelbox_v1.py`
+- Außen 254,0 × 197,0 × 46,3 mm (Druckbett 256: 1 mm Rand je Seite). Mulde 248,4 × 191,4 × 12,4: 0,4 Luft je Box und Richtung
+- Mulde nur 12,4 tief: die Unterteile der Fiolenboxen schauen 4,6 heraus. Im Boden unter jeder Box ein Loch Ø 22 zum Herausdrücken von unten
+- Clip: 8 Rastnasen (2 je Seite, alle 4 Seiten), Spiel 0,20 je Seite (nicht 0,06, siehe `passungen.html`), Nase 0,55 hoch, 0,40 über Rillenmitte
+- Wände dünn, weil das Bett die Länge begrenzt: Hals 1,4, Deckel 1,2, Deckelplatte 2,0, Boden 1,6
+- Geprüft im Modell: 9 Boxen (Nennmaß) ohne Überschneidung, sitzend 4,4 mm³ Vorspannung, frei ab 5 mm Hub. Slicer ohne Fehler. Am Teil nichts geprüft
+- Druck: `druck/sammelbox_16_3x3_v1_unterteil.3mf` (1 h 52, 124 g), `_deckel.3mf` (kopfüber, 2 h 25, 179 g); 0,2 mm, 3 Wände, 15 %, kein Support
+- **Fiolenbox 11 (26.11., Alex):** Deckel saß bombenfest, Box aufgebrochen. Ursache offen, siehe `passungen.html`; die Dateien `fiolenbox_11_*` so nicht mehr drucken
 
 ## 10 × 10 v1 (25.11.2026) – 100 Plätze, beide Fiolengrößen
 - 16 mm (Ø 16 × 38): außen 196,4 × 196,4 × 42,5 mm · 11 mm (Ø 11,6 × 32): 152,4 × 152,4 × 36,5 mm
