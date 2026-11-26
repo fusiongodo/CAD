@@ -156,8 +156,11 @@ TS_X = 48.25                                   # Abgang nach unten (hi)
 TS_BLOCK = (42.5, 54.0, -27.5, 127.5, 140.5)   # x0, x1, y vorn, z0, z1 (hinten bis an den Flansch)
 TS_FL = (31.0, 69.0, 111.0, 140.5)             # Flansch x0, x1, z0, z1
 TS_HOLES = [(35.0, 116.0), (65.0, 116.0)]
-TS_BARB, TS_BORE = 10.0, 4.0
-TS_BARB_D = ((0.0, 5.0, 6.6), (5.0, 8.0, 7.5), (8.0, 10.0, 6.2))   # (ab Block, bis, Ø)
+# v3.3 (26.11., Alex): Luftkanäle größer. Bohrung 5 statt 4, Tülle außen 7, 3 Sägezahn-Wellen bis 7,5 (steile Flanke zum Block).
+TS_BARB, TS_BORE = 10.0, 5.0
+TS_BARB_D = ((0.0, 9.2, 7.0),)                                      # (ab Block, bis, Ø): glatter Kern
+TS_WELLEN = ((1.5, 3.5), (4.5, 6.5), (7.5, 9.2))                    # (ab Block, bis): Ø 7,5 am Block-Ende, Ø 7,0 zur Spitze
+TS_WELLE_D, TS_SPITZE_D = 7.5, 6.2                                  # Wellenscheitel, Spitze (Fase über die letzten 0,8)
 TS_LO = (OCS_LO['ty'], OCS_LO['tz'][1])        # Y, Z des lo-Anschlusses
 TS_MIX = (OCS_MIX['ty'], OCS_MIX['tz'][0])     # Y, Z des Mix-Anschlusses
 # MIX: alter Platz des kleinen OCS Mix auf der Grundplatte. Seit v3.0 unbenutzt, die Kabelbinder-Schlitze bleiben (gedruckt).

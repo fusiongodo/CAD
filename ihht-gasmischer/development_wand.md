@@ -1,6 +1,6 @@
 # Development-Wand (Variante A „Senkrechte Wand“)
 
-Stand 25.11.2026, Anordnung v3.2.
+Stand 26.11.2026, Anordnung v3.3.
 
 - **Quelle:** `quelle/teile/wand_*.py` und `quelle/ihht/wand.py`
 - **Onshape-Modul:** `development_wand.fs`
@@ -64,7 +64,12 @@ Stand 25.11.2026, Anordnung v3.2.
   - Durchfluss: Mit dieser Lage liegt der Pfeil-Einlass des OCS unten, das Gas kommt aber oben an. Die O2-Messung geht in beide Richtungen, ein Flusswert hätte das falsche Vorzeichen. Nicht getestet.
   - Druck: `druck/development_wand_hi_mix_t.3mf` (Halter Hi, Halter Mix, T-Stück; 0,20 mm, 5 Wände, 50 %, Baumstützen, 1 h 17). Der Lo-Halter bleibt.
 
-- **v3.2 (25.11., aktuell):** Zurück auf „Rohr zur Wand, Stecker vorn“ für hi und Mix, aber mit der Tülle auf Y −22.
+- **v3.3 (26.11., aktuell):** T-Stück mit größeren Luftkanälen (Alex: „innen 5, außen 7, mit Wellen bis 7,5“).
+  - Bohrung 5 statt 4. Tüllen Ø 7 statt Hals 6,6 / Wulst 7,5 / Spitze 6,2. Je Tülle 3 Sägezahn-Wellen bis Ø 7,5, steile Flanke zum Block, Spitze auf 6,2 angefast.
+  - Block, Flansch, Schrauben und Lage der Anschlüsse unverändert. Wände um die Bohrung: 3,0 vorn und oben, 2,0 unten.
+  - Druck: `druck/development_wand_t.3mf` (nur das T-Stück, mit Baumstützen, 33 min). Die älteren Platten mit T-Stück sind Stand v3.1.
+
+- **v3.2 (25.11.):** Zurück auf „Rohr zur Wand, Stecker vorn“ für hi und Mix, aber mit der Tülle auf Y −22.
   - Beobachtung am v3.1-Druck (Foto von oben): Der Mix-Halter (U-Ausschnitt, Löcher diagonal) passt aufs Raster. Alex hat das große OCS mit dem Rohr zur Wand eingeclipst,
     nicht wie auf dem Foto zu v3.1 mit dem Rohr vorn. Im v3.1-Halter (Stützen 10,5) liegt das Rohr dann fast am Flansch, die Tülle sitzt deutlich tiefer als beim lo.
   - Der Clip nimmt die Platine in beiden Lagen auf. Deshalb ging es seit v2.8 dreimal hin und her. Festgelegt: Rohr zur Wand, Stecker vorn (Kabel steckbar), J2 oben, Pfeil-Einlass oben.
