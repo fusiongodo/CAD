@@ -24,6 +24,7 @@ Dateien: `druck/…` liegt in diesem Repo, `ihht-pi/…` in `~/Desktop/projects/
 | Datum | Datei | Teile / Variante | gedruckt | eingebaut | Ergebnis |
 |---|---|---|---|---|---|
 | 25.11. abends | ihht-pi `welle_zapfen_6200_e3_5.3mf` | Welle mit Zapfen e 3,5 + Distanzring (V9), 1 Stück | ja | noch nicht (Alex fragte nach dem Ring) | – |
+| 26.11. | `druck/qv_huelsen_duenn.3mf` | Lagerhülsen dünner, 4 Stück: 2 × Wand 2,0 (außen 44,4, 2 Kerben im Bund) + 2 × Wand 1,5 (außen 43,4, 3 Kerben). Bohrung 40,4 | übergeben, noch nicht gedruckt (38 min, 31 g) | – | Alex: auch die dünnere vorhandene Hülse ist noch zu stark. Deren Wand ist nicht gemessen, darum 2 Stufen |
 | 26.11. | `druck/development_wand_t.3mf` | T-Stück v3.4: druckt ohne Stützen (Tüllen liegen flach auf dem Bett, Beine unter den Schraubstellen), 1 Stück | übergeben, noch nicht gedruckt (40 min, 14 g) | – | Ersetzt v3.3 |
 | 26.11. | `druck/o2_mundstueck_und_t.3mf` | Eine Platte: O2-Mundstück v2 + T-Stück v3.4, alles ohne Stützen | übergeben, noch nicht gedruckt (1 h 53, 45 g) | – | Mundstück unverändert |
 | 26.11. | `druck/o2_mundstueck_und_t.3mf` (alter Stand) | Eine Platte: O2-Mundstück v2 + T-Stück v3.3 (mit Baumstützen) | T-Stück gedruckt (Mundstück: ?) | nein | T-Stück unbrauchbar: Stützen auch innen in den Kanälen → v3.4 | Gleiche Teile wie die beiden Einzeldateien darunter |
@@ -40,6 +41,6 @@ Dateien: `druck/…` liegt in diesem Repo, `ihht-pi/…` in `~/Desktop/projects/
 
 **Lagerhülsen (Alex 26.11.):** Es gibt zwei Hülsen über den 6203 (ihht-pi `huelse_v1.3mf`, Druck 23.11.). Laut Alex funktioniert die dünnere besser.
 Laut Quelle haben beide 2,5 Wand und unterscheiden sich nur in der Bohrung: „eng“ = Bohrung 40,2, außen 45,2, Bund ohne Kerbe; „weit“ = Bohrung 40,4, außen 45,4, eine Kerbe im Bund.
-Die dünnere wäre danach „eng“ (ohne Kerbe). Am Teil nicht nachgemessen; ob Alex einen anderen, nicht notierten Ring meint: ?
+Alex (26.11.) sieht aber an den Teilen deutlich verschiedene Wandstärken und an beiden eine Kerbe (wohl die Naht). Die Quelle passt also nicht zu den Teilen; welche Wand die zwei Hülsen wirklich haben: ? (nicht gemessen).
 
 Ältere Drucke (vor dem 24.11.) stehen in `development_wand.md` und in ihht-pi `VERSUCHE.md`, dort ohne Einbau-Status.
