@@ -153,7 +153,9 @@ OCS_LO = _ocs(1.0, 25.0, Z_ZUFUHR + 21.5, 79.0, 1.6, 6.7, 17.4, 5.5, (21.5, 60.0
 # Flansch mit 2 x M3 x 16 auf dem Raster (unter dem Block, neben dem hi-Schlauch).
 # v3.1: hi und Mix mit Rohr vorn -> alle drei Anschlüsse auf Y -22, nur noch 3 Höhenversatz lo / Mix im Block.
 TS_X = 48.25                                   # Abgang nach unten (hi)
-TS_BLOCK = (42.5, 54.0, -27.5, 127.5, 140.5)   # x0, x1, y vorn, z0, z1 (hinten bis an den Flansch)
+TS_BLOCK = (42.5, 54.0, -25.3, 127.5, 140.5)   # x0, x1, y vorn (= Druckbett, 3,3 vor der Tüllenachse: Tüllen liegen mit Flachstelle auf), z0, z1
+TS_BEINE = ((31.0, 40.0, 127.5), (56.5, 69.0, 126.0))   # v3.4: Beine (x0, x1, z1) unter den Schraubstellen bis aufs Druckbett; dazwischen der hi-Schlauch, rechts 1 Luft zum Mix-Schlauch
+TS_MUTTER_SW = 5.9                             # Sechskant-Schacht von vorn: M3-Mutter fällt bis auf den Flansch
 TS_FL = (31.0, 69.0, 111.0, 140.5)             # Flansch x0, x1, z0, z1
 TS_HOLES = [(35.0, 116.0), (65.0, 116.0)]
 # v3.3 (26.11., Alex): Luftkanäle größer. Bohrung 5 statt 4, Tülle außen 7, 3 Sägezahn-Wellen bis 7,5 (steile Flanke zum Block).

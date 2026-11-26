@@ -1,6 +1,6 @@
 # Development-Wand (Variante A „Senkrechte Wand“)
 
-Stand 26.11.2026, Anordnung v3.3.
+Stand 26.11.2026, Anordnung v3.4.
 
 - **Quelle:** `quelle/teile/wand_*.py` und `quelle/ihht/wand.py`
 - **Onshape-Modul:** `development_wand.fs`
@@ -64,7 +64,13 @@ Stand 26.11.2026, Anordnung v3.3.
   - Durchfluss: Mit dieser Lage liegt der Pfeil-Einlass des OCS unten, das Gas kommt aber oben an. Die O2-Messung geht in beide Richtungen, ein Flusswert hätte das falsche Vorzeichen. Nicht getestet.
   - Druck: `druck/development_wand_hi_mix_t.3mf` (Halter Hi, Halter Mix, T-Stück; 0,20 mm, 5 Wände, 50 %, Baumstützen, 1 h 17). Der Lo-Halter bleibt.
 
-- **v3.3 (26.11., aktuell):** T-Stück mit größeren Luftkanälen (Alex: „innen 5, außen 7, mit Wellen bis 7,5“).
+- **v3.4 (26.11., aktuell):** T-Stück druckt ganz ohne Stützen.
+  - Anlass (Alex): v3.3 mit Stützen gedruckt, der Slicer hat auch in die Kanäle Stützen gesetzt, nicht brauchbar.
+  - Drucklage umgedreht: Vorderseite aufs Bett. Die 3 Tüllen liegen flach auf dem Bett, mit 0,2 tiefer Flachstelle unten (an den Wellen 0,45). Unter der Bohrung bleiben 0,8 Wand.
+  - Block 2,2 flacher (vorn Y −25,3). Unter den 2 Schraubstellen stehen Beine bis aufs Bett. Flansch nur noch über Beinen und Block, 16,5 Brücke über dem hi-Schlauch.
+  - Schrauben: M3 × 16 von hinten durch die Wand, Mutter von vorn in den Sechskant-Schacht (SW 5,9, 21 tief).
+  - Anschlüsse, Bohrung 5 und Tüllen wie v3.3. Slicer ohne Stützen und ohne Brim: 40 min, 14 g. Am Teil nicht getestet.
+- **v3.3 (26.11.):** T-Stück mit größeren Luftkanälen (Alex: „innen 5, außen 7, mit Wellen bis 7,5“).
   - Bohrung 5 statt 4. Tüllen Ø 7 statt Hals 6,6 / Wulst 7,5 / Spitze 6,2. Je Tülle 3 Sägezahn-Wellen bis Ø 7,5, steile Flanke zum Block, Spitze auf 6,2 angefast.
   - Block, Flansch, Schrauben und Lage der Anschlüsse unverändert. Wände um die Bohrung: 3,0 vorn und oben, 2,0 unten.
   - Druck: `druck/development_wand_t.3mf` (nur das T-Stück, mit Baumstützen, 33 min). Die älteren Platten mit T-Stück sind Stand v3.1.

@@ -140,15 +140,15 @@ PLATTEN = {
                                                    ('Traeger Pi', VORN('dwTraegerPi'), 72.0, 46.0),
                                                    ('Traeger Pico', VORN('dwTraegerPico'), 160.0, 46.0)],
     'development_wand_mix_t.3mf': [('OCS-Halter Mix', SEITE('dwOCSHalterMix'), 128.0, 90.0),
-                                   ('T-Stueck', HINTEN('dwTStueck'), 128.0, 180.0)],
+                                   ('T-Stueck', VORN('dwTStueck'), 128.0, 180.0)],
     'development_wand_ocs_alle.3mf': [('OCS-Halter Hi', SEITE('dwOCSHalterHi'), 128.0, 50.0),          # alle 4 in einem Druck (Alex 25.11.)
                                       ('OCS-Halter Mix', SEITE('dwOCSHalterMix'), 128.0, 95.0),
                                       ('OCS-Halter Lo', HINTEN('dwOCSHalterLo'), 75.0, 175.0),
-                                      ('T-Stueck', HINTEN('dwTStueck'), 175.0, 175.0)],
+                                      ('T-Stueck', VORN('dwTStueck'), 175.0, 175.0)],
     'development_wand_hi_mix_t.3mf': [('OCS-Halter Hi', SEITE('dwOCSHalterHi'), 128.0, 50.0),          # v3.1: Rohr vorn, lo bleibt
                                       ('OCS-Halter Mix', SEITE('dwOCSHalterMix'), 128.0, 95.0),
-                                      ('T-Stueck', HINTEN('dwTStueck'), 128.0, 175.0)],
-    'development_wand_t.3mf': [('T-Stueck', HINTEN('dwTStueck'), 128.0, 128.0)],                          # v3.3: nur das T-Stück
+                                      ('T-Stueck', VORN('dwTStueck'), 128.0, 175.0)],
+    'development_wand_t.3mf': [('T-Stueck', VORN('dwTStueck'), 128.0, 128.0)],                          # v3.3: nur das T-Stück
     'development_wand_hi_mix.3mf': [('OCS-Halter Hi', SEITE('dwOCSHalterHi'), 128.0, 90.0),             # v3.2: nur die 2 großen Halter
                                     ('OCS-Halter Mix', SEITE('dwOCSHalterMix'), 128.0, 160.0)],
     'development_wand_ocshalter.3mf': [('OCS-Halter Hi', SEITE('dwOCSHalterHi'), 128.0, 90.0),
@@ -180,8 +180,7 @@ DRUCK_PROC = {'development_wand_1_wand.3mf': proc(3, 15, 5, 4, 0, 65),
                                                     support_type='tree(auto)', support_on_build_plate_only='0'),
               'development_wand_mix_t.3mf': dict(proc(5, 50, 5, 4, 5, 55), enable_support='1',
                                                  support_type='tree(auto)', support_on_build_plate_only='0'),
-              'development_wand_t.3mf': dict(proc(5, 50, 5, 4, 5, 55), enable_support='1',
-                                             support_type='tree(auto)', support_on_build_plate_only='0')}
+              'development_wand_t.3mf': dict(proc(5, 50, 5, 4, 0, 55), enable_support='0')}       # v3.4: ohne Stützen, ohne Brim
 for datei, PRINT in PLATTEN.items():
     for name, m, x, y in PRINT:
         e = m.extents

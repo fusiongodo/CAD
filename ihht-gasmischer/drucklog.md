@@ -24,8 +24,10 @@ Dateien: `druck/…` liegt in diesem Repo, `ihht-pi/…` in `~/Desktop/projects/
 | Datum | Datei | Teile / Variante | gedruckt | eingebaut | Ergebnis |
 |---|---|---|---|---|---|
 | 25.11. abends | ihht-pi `welle_zapfen_6200_e3_5.3mf` | Welle mit Zapfen e 3,5 + Distanzring (V9), 1 Stück | ja | noch nicht (Alex fragte nach dem Ring) | – |
-| 26.11. | `druck/o2_mundstueck_und_t.3mf` | Eine Platte: O2-Mundstück v2 (3 Teile, ohne Stützen) + T-Stück v3.3 (mit Baumstützen) | übergeben, noch nicht gedruckt (1 h 46, 43 g) | – | Gleiche Teile wie die beiden Einzeldateien darunter |
-| 26.11. | `druck/development_wand_t.3mf` | T-Stück v3.3: Bohrung 5, Tüllen Ø 7 mit Wellen bis 7,5, 1 Stück | übergeben, noch nicht gedruckt (33 min) | – | – |
+| 26.11. | `druck/development_wand_t.3mf` | T-Stück v3.4: druckt ohne Stützen (Tüllen liegen flach auf dem Bett, Beine unter den Schraubstellen), 1 Stück | übergeben, noch nicht gedruckt (40 min, 14 g) | – | Ersetzt v3.3 |
+| 26.11. | `druck/o2_mundstueck_und_t.3mf` | Eine Platte: O2-Mundstück v2 + T-Stück v3.4, alles ohne Stützen | übergeben, noch nicht gedruckt (1 h 53, 45 g) | – | Mundstück unverändert |
+| 26.11. | `druck/o2_mundstueck_und_t.3mf` (alter Stand) | Eine Platte: O2-Mundstück v2 + T-Stück v3.3 (mit Baumstützen) | T-Stück gedruckt (Mundstück: ?) | nein | T-Stück unbrauchbar: Stützen auch innen in den Kanälen → v3.4 | Gleiche Teile wie die beiden Einzeldateien darunter |
+| 26.11. | `druck/development_wand_t.3mf` (alter Stand) | T-Stück v3.3: Bohrung 5, Tüllen Ø 7 mit Wellen bis 7,5, 1 Stück | durch v3.4 ersetzt | – | – |
 | 26.11. | `druck/o2_mundstueck.3mf` | O2-Mundstück mit Reservoirbeutel v2 (mit Gewinde): Grundkörper, Ventilring, Mundrohr | übergeben, noch nicht gedruckt (1 h 23) | – | – |
 | 26.11. | `druck/qv_welle_m8kern_e3_5.3mf` | Welle mit Zapfen e 3,5 und M8-Kern (M8 × 70 von vorn durch das 6200) + Distanzring, 1 Stück | übergeben, noch nicht gedruckt (41 min) | – | Die ihht-pi-Datei `welle_zapfen_6200_e3_5.3mf` ist seit 26.11. dieselbe Geometrie; der Druck vom 25.11. hat noch das M3-Kernloch |
 | 26.11. | `druck/quetschventil_v3.3mf` | Quetschventil v3 (M8-Kern, 2 × 608, 2 × 6905, e 4,5): Rückwand, Steg, Getriebeplatte, Hohlrad, Welle, Klemmhülse, Ritzel, 2 Distanzscheiben. Ambosse und Motor vom alten Ventil | übergeben, NICHT drucken | – | Braucht 608 und 6905. Vorhanden sind 2 × 6203 und 6200 (Alex 26.11.), die passen hier nicht |
