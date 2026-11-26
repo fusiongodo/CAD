@@ -3,11 +3,20 @@
 import math, os
 import trimesh
 import build
-from ihht.netz import build as netz
+from ihht.netz import build as netz, gewinde
 from ihht.bambu import write_3mf
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 M = {p.name: netz(p) for p in build.teil('o2_mundstueck').bauen()}
+T = build.teil('o2_mundstueck')
+cyl = lambda z0, z1, r: trimesh.creation.cylinder(radius=r, segment=[[0, 0, z0], [0, 0, z1]], sections=96)
+M['o2mA'] = trimesh.boolean.difference([M['o2mA'], gewinde(**T.GEW_A)], engine='manifold')          # Innengewinde
+t = T.TRIM
+keep = trimesh.creation.revolve([[0, 0], [t['keep_r0'], 0], [t['keep_r1'], t['keep_z1'] - t['keep_z0']], [0, t['keep_z1'] - t['keep_z0']]], sections=96)
+keep.apply_translation([0, 0, t['keep_z0']])
+if keep.volume < 0: keep.invert()
+trim = trimesh.boolean.difference([cyl(t['z0'], t['z1'], t['r_big']), keep], engine='manifold')
+M['o2mB'] = trimesh.boolean.difference([trimesh.boolean.union([M['o2mB'], gewinde(**T.GEW_B)], engine='manifold'), trim], engine='manifold')
 ok = True
 for n, m in M.items():
     b = m.bounds; k = len(m.split(only_watertight=False))

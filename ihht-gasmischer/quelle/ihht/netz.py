@@ -53,3 +53,26 @@ def build(p):
             body = trimesh.boolean.difference([body] + ms, engine='manifold')
     return body
 
+
+
+def gewinde(r_root, r_crest, overlap, z0, pitch, turns, seg=72):
+    """Gewindezahn als Netz, gleiche Masse wie makeThread in ihht/gewinde.py: 60°-Trapez entlang einer Rechts-Helix um Z,
+    Start bei Winkel 0 auf Hoehe z0. Aussengewinde: mit dem Teil vereinigen. Innengewinde: vom Teil abziehen."""
+    import math
+    depth = abs(r_crest - r_root); crest = pitch / 8; w = crest + 2 * depth * math.tan(math.radians(30))
+    prof = [(overlap, -w / 2), (r_root, -w / 2), (r_crest, -crest / 2), (r_crest, crest / 2), (r_root, w / 2), (overlap, w / 2)]
+    n = int(math.ceil(turns * seg)); k = len(prof)
+    V, F = [], []
+    for i in range(n + 1):
+        t = turns * i / n; a = 2 * math.pi * t
+        V += [(r * math.cos(a), r * math.sin(a), z0 + pitch * t + dz) for r, dz in prof]
+    for i in range(n):
+        for j in range(k):
+            a0, a1, b0, b1 = i * k + j, i * k + (j + 1) % k, (i + 1) * k + j, (i + 1) * k + (j + 1) % k
+            F += [(a0, a1, b1), (a0, b1, b0)]
+    for j in range(1, k - 1):
+        F += [(0, j + 1, j), (n * k, n * k + j, n * k + j + 1)]
+    m = trimesh.Trimesh(np.array(V, float), np.array(F, int), process=True)
+    if m.volume < 0: m.invert()
+    assert m.is_watertight, 'Gewindenetz offen'
+    return m
