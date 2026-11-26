@@ -42,4 +42,28 @@ PRINT = [('O2-Mundstueck A', lay(M['o2mA'], True), 100.0, 128.0), ('Ventilring',
 for name, m, x, y in PRINT:
     print('%-16s Drucklage %5.1f x %5.1f x %5.1f' % ((name,) + tuple(m.extents)))
 write_3mf(PRINT, os.path.join(HERE, '..', 'druck', 'o2_mundstueck.3mf'))
+
+# ---------- Gemeinsame Platte mit dem T-Stück der Development-Wand (Alex 26.11.): Stützen nur am T-Stück ----------
+import zipfile, shutil
+ts = netz(build.teil('wand_halter').bauen()[0])
+ts.apply_transform(trimesh.transformations.rotation_matrix(-math.pi / 2, [1, 0, 0]))      # Flansch-Rückseite aufs Bett
+c = ts.bounds.mean(axis=0); ts.apply_translation([-c[0], -c[1], -ts.bounds[0][2]])
+OHNE = [n for n, _, _, _ in PRINT]
+P2 = [(n, m, x, y - 28.0) for n, m, x, y in PRINT] + [('T-Stueck', ts, 128.0, 175.0)]
+out2 = os.path.join(HERE, '..', 'druck', 'o2_mundstueck_und_t.3mf')
+write_3mf(P2, out2, proc=dict(layer_height='0.2', wall_loops='4', sparse_infill_density='40%', brim_type='outer_only', brim_width='5',
+                              enable_support='1', support_type='tree(auto)', support_on_build_plate_only='0'))
+zin = zipfile.ZipFile(out2); tmp = out2 + '.tmp'; zout = zipfile.ZipFile(tmp, 'w', zipfile.ZIP_DEFLATED, compresslevel=9)
+for it in zin.infolist():
+    d = zin.read(it.filename)
+    if it.filename == 'Metadata/model_settings.config':
+        t = d.decode()
+        for n in OHNE:                                                                    # Mundstück-Teile: keine Stützen
+            k = '    <metadata key="name" value="%s"/>\n    <metadata key="extruder" value="1"/>' % n
+            assert k in t, n
+            t = t.replace(k, k + '\n    <metadata key="enable_support" value="0"/>', 1)
+        d = t.encode()
+    zout.writestr(it, d)
+zout.close(); zin.close(); shutil.move(tmp, out2)
+print('3MF', out2)
 raise SystemExit(0 if ok else 1)

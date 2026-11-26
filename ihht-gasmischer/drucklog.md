@@ -24,6 +24,7 @@ Dateien: `druck/…` liegt in diesem Repo, `ihht-pi/…` in `~/Desktop/projects/
 | Datum | Datei | Teile / Variante | gedruckt | eingebaut | Ergebnis |
 |---|---|---|---|---|---|
 | 25.11. abends | ihht-pi `welle_zapfen_6200_e3_5.3mf` | Welle mit Zapfen e 3,5 + Distanzring (V9), 1 Stück | ja | noch nicht (Alex fragte nach dem Ring) | – |
+| 26.11. | `druck/o2_mundstueck_und_t.3mf` | Eine Platte: O2-Mundstück v2 (3 Teile, ohne Stützen) + T-Stück v3.3 (mit Baumstützen) | übergeben, noch nicht gedruckt (1 h 46, 43 g) | – | Gleiche Teile wie die beiden Einzeldateien darunter |
 | 26.11. | `druck/development_wand_t.3mf` | T-Stück v3.3: Bohrung 5, Tüllen Ø 7 mit Wellen bis 7,5, 1 Stück | übergeben, noch nicht gedruckt (33 min) | – | – |
 | 26.11. | `druck/o2_mundstueck.3mf` | O2-Mundstück mit Reservoirbeutel v2 (mit Gewinde): Grundkörper, Ventilring, Mundrohr | übergeben, noch nicht gedruckt (1 h 23) | – | – |
 | 26.11. | `druck/qv_welle_m8kern_e3_5.3mf` | Welle mit Zapfen e 3,5 und M8-Kern (M8 × 70 von vorn durch das 6200) + Distanzring, 1 Stück | übergeben, noch nicht gedruckt (41 min) | – | Die ihht-pi-Datei `welle_zapfen_6200_e3_5.3mf` ist seit 26.11. dieselbe Geometrie; der Druck vom 25.11. hat noch das M3-Kernloch |
