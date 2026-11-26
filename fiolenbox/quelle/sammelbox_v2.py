@@ -19,7 +19,7 @@ FUGE = 0.4                                  # Luft je Box und Richtung
 FLOOR, H_BASE, NECK_H = 1.6, 14.0, 7.0
 NECK_T, NECK_CHAMFER = 1.4, 0.6
 R_IN = 3.0
-FINGER_D = 22.0                             # Loch im Boden unter jeder Box: von unten herausdrücken
+FINGER_D = 0.0                              # Loch im Boden unter jeder Box (22 = von unten herausdrücken); Alex 26.11.: Boden geschlossen
 # --- Deckel ---
 WALL, TOP, HEAD = 1.2, 2.0, 0.6
 LCLR = 0.20                                 # Spiel Deckel ↔ Hals je Seite
@@ -63,7 +63,7 @@ base = rrect(L, W, R_OUT, ledge_z).union(rrect(neck_L, neck_W, r_neck, NECK_H + 
 base = base.faces(">Z").edges().chamfer(NECK_CHAMFER)
 base = base.cut(rrect(IL, IW, R_IN, H_BASE, FLOOR))
 plaetze = [((i - (NX - 1) / 2) * PX, (j - (NY - 1) / 2) * PY) for i in range(NX) for j in range(NY)]
-for x, y in plaetze:
+for x, y in plaetze if FINGER_D > 0 else []:
     base = base.cut(cq.Workplane("XY").workplane(offset=-1).center(x, y).circle(FINGER_D / 2).extrude(FLOOR + 2))
 
 iL, iW, ri = neck_L + 2 * LCLR, neck_W + 2 * LCLR, r_neck + LCLR

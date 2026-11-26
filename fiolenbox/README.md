@@ -10,7 +10,8 @@ Box für 12 Fiolen (Ø 16 × 38 mm), 4 × 3, mit Stülpdeckel zum Aufrasten. Sti
 | `quelle/fiolenbox_v2.py` | **Aktuell (Unterteil).** CadQuery-Modell v2, alle Maße oben als Parameter |
 | `quelle/fiolenbox_v1.py` | v1 (Röhrchen, Einsteck-Deckel) |
 | `quelle/fiolenbox_raster_v1.py` | **Beliebiges Raster, auch groß:** `fiolenbox_raster_v1.py <16|11> <SPALTENxREIHEN>` → STL/STEP + `info_<fiole>_<raster>.json`; Seiten ≥ 100 mm: 2 Rastnasen je Seite auf allen 4 Seiten, Deckelplatte 2,0 |
-| `quelle/sammelbox_v2.py`, `sammelbox_v2_3mf.py` | **Aktuell: Sammelbox 3 × 3** für 9 große Fiolenboxen, Verschluss mit Schubriegeln |
+| `quelle/sammelbox_v3.py`, `sammelbox_v3_3mf.py` | **Aktuell: Sammelbox 3 × 3** für 9 große Fiolenboxen, Verschluss Klappe + Zunge |
+| `quelle/sammelbox_v2.py`, `sammelbox_v2_3mf.py` | Sammelbox v2 mit Schubriegeln (nicht gedruckt, ersetzt durch v3) |
 | `quelle/sammelbox_v1.py` | Sammelbox v1 mit festem Clip (nicht gedruckt, ersetzt durch v2) |
 | `quelle/fiolenbox_11_v1.py` | **Fiolenbox 11** für Ø 11,6 × 32: `~/.cache/cq312/bin/python fiolenbox_11_v1.py 4x3` (oder `5x4`) → STL/STEP + `info_11_<raster>.json` |
 | `quelle/ansicht_bauen.py`, `ansicht_template.html` | baut `ansicht/index.html` (3D-Ansicht, offline) |
@@ -18,6 +19,20 @@ Box für 12 Fiolen (Ø 16 × 38 mm), 4 × 3, mit Stülpdeckel zum Aufrasten. Sti
 | `quelle/deckelringe_3mf.py`, `druck/deckelringe_2026-11-18.3mf` | Testdruck: 7 Deckelringe (Spiel × Versatz der Rastnase) für das gedruckte Unterteil v2 |
 | `passungen.html` | **Messungs-Timeline** Deckelpassung, neue Einträge oben |
 | `druck/fiolenbox_v*_*.stl/.step` | Unterteil und Deckel (Deckel in geschlossener Lage, zum Drucken umdrehen) |
+
+## Sammelbox 3 × 3 v3 (27.11.2026) – Klappe mit Mund am Deckel, Zunge an der Wanne
+- Idee Alex: Am Deckel hängt eine frei drehbare Klappe mit einem Fenster (Mund), an der Wanne steht eine Zunge heraus (Steg 3 dick, 15 breit). Die Zunge ist ein eigenes Teil und wird variiert, bis es gut sitzt. Befestigt wird mit M2-Schrauben (max. 20 lang), nichts ist lose
+- Vorher: 2 Recherchen zu Verschlüssen (Opus-Agent, 26./27.11.). Kern: Die Federung gehört in ein kleines Tauschteil, nicht in die großen Teile. Schubriegel v2 verworfen (keine Raste, 3 Ösen müssen fluchten, 8 Handgriffe)
+- Wanne und Deckel wie v2, Boden jetzt geschlossen (Alex 26.11.), keine Ösen mehr. Je Verschluss 2 Laschen am Deckel und 2 an der Wanne; 4 Verschlüsse an den langen Seiten bei ±¼ der Länge
+- Schraube: M2 × 20 quer durch Lasche 1 (3 dick, Loch 2,5), das Teil dazwischen (12 breit) und in Lasche 2 (5 dick, Kernloch 1,8). Ab M2 × 16 greift sie
+- Klappe: 3 dick, unten 21,6 breit, Mund 15,6 × 3,7. Unter dem Mund ein Steg 1,2 dick, der unter der Zunge liegt: das hält den Deckel (Formschluss). Oben ein Hebel: Hebel zum Deckel drücken, dann schwenkt die Klappe unten auf (bis etwa 45°)
+- Zunge: Klotz 12 breit zwischen den Wannen-Laschen, daraus der Steg 15 breit, 3 dick, 8 lang. Unterseite folgt der Bahn des Klappenstegs + 0,3 Luft. Darunter eine Raste (6 breit, in der Mitte), die die Klappe zuhält. Rasthöhe 0,6 / 0,8 / 1,0 = Zunge 1 / 2 / 3 (Kennpunkte), Überdeckung 0,3 / 0,5 / 0,7
+- Druck: Klappe mit der Außenseite aufs Bett, Zunge mit der Oberseite aufs Bett. Keine Stützen
+- Geprüft im Modell: Klappe schwenkt 0 bis 40° frei, zugeklappt sperrt sie den Deckel, aufgeklappt hebt er frei ab. Slicer ohne Fehler. Am Teil nichts geprüft
+- Offen: Spiel der Zunge um ihre Schraube (der Deckel kann rechnerisch bis etwa 0,5 mm anheben); ob die Raste nach Abzug von Lochspiel noch greift
+- `quelle/sammelbox_v3.py` (Modell + Prüfung), `quelle/sammelbox_v3_3mf.py` (Testdatei)
+- **Testserie:** `druck/testserie_klappe_hohlradgriff.3mf` (3 h 26, 110 g): Probestück Wanne + Deckel, 2 Klappen, Zungen 1 bis 3, dazu 2 Hohlräder mit Steckgriff v2 vom Quetschventil. Die großen Teile (Wanne, Deckel) erst nach dem Test als Druckdatei
+- Onshape: Tab `sammelbox_16_3x3_v3` in claude_chassis (Import von `druck/sammelbox_16_3x3_v3_gesamt.step`)
 
 ## Sammelbox 3 × 3 v2 (26.11.2026) – Verschluss mit 4 Schubriegeln
 - Anlass (Alex): Beim festen Clip weiß niemand, wie stark er sein muss; ein Fehldruck der großen Teile wäre teuer. Lose Clips gehen verloren. Also: Verschluss tauschbar, aber fest am Deckel
@@ -30,10 +45,7 @@ Box für 12 Fiolen (Ø 16 × 38 mm), 4 × 3, mit Stülpdeckel zum Aufrasten. Sti
 - Onshape: Dokument claude_chassis, Tab `sammelbox_16_3x3_v2` (Import von `druck/sammelbox_16_3x3_v2_gesamt.step`, Stand 32e4b93: Wanne, Deckel, 4 Riegel zugeschoben). Ein Import, kein Sync: nach Änderungen neu hochladen
 - Geprüft im Modell: offen hebt der Deckel frei ab, zugeschoben sperrt er; 9 Boxen ohne Überschneidung. Slicer ohne Fehler. Am Teil nichts geprüft
 - Offen: Der Riegel hat keine Raste, er hält nur über Reibung in seiner Stellung
-- Druck, in dieser Reihenfolge:
-  1. `druck/sammelbox_16_3x3_v2_probe.3mf` (27 min, 11 g): ein Riegelplatz aus Wanne und Deckel + Riegel 1 bis 3. Damit den passenden Riegel finden
-  2. `druck/sammelbox_16_3x3_v2_unterteil.3mf` (2 h 11, 132 g): Wanne + 6 Riegel Nr. 1 (4 + 2 Reserve); anderer Riegel: Skript mit der Nummer neu laufen lassen
-  3. `druck/sammelbox_16_3x3_v2_deckel.3mf` (kopfüber, 2 h 43, 183 g)
+- Nicht gedruckt, ersetzt durch v3. Druckdateien gelöscht (stehen in Commit 595ade7), Skripte bleiben
 
 ## Sammelbox 3 × 3 v1 (26.11.2026) – Box für 9 große Fiolenboxen
 - Wanne + Stülpdeckel für 3 × 3 Fiolenboxen v2/v3 (je 82,4 × 63,4 × 42,1), einlagig, Deckel nach oben → `quelle/sammelbox_v1.py`
