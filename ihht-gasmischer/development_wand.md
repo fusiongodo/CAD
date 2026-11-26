@@ -64,6 +64,12 @@ Stand 26.11.2026, Anordnung v3.4.
   - Durchfluss: Mit dieser Lage liegt der Pfeil-Einlass des OCS unten, das Gas kommt aber oben an. Die O2-Messung geht in beide Richtungen, ein Flusswert hätte das falsche Vorzeichen. Nicht getestet.
   - Druck: `druck/development_wand_hi_mix_t.3mf` (Halter Hi, Halter Mix, T-Stück; 0,20 mm, 5 Wände, 50 %, Baumstützen, 1 h 17). Der Lo-Halter bleibt.
 
+- **Hohlrad mit Steckgriff (26.11.):** Alex will das Hohlrad von Hand mit mehr Kraft drehen können (z. B. Exzenter gegen einen Schlauch drücken, um den anderen zu bewegen). Griff abnehmbar, am Rad nur Löcher.
+  - Platz: außen am Hohlrad sind nur 1,7 frei bis zu den Pfosten, innen läuft die Ritzelnabe, vorn sitzt die Wand. Darum ein Kragen hinten am Hohlrad (R 34,4 bis 37,6, z −17,6 bis −28,5), hinter der Wand.
+  - 6 Paare Schlitze alle 60°, je Paar 2 parallele Schlitze Ø 6,2 im Abstand 20, nach hinten offen. Dazu 1 Loch für die M3 im Hals.
+  - Griff: Gabel mit 2 Zapfen Ø 5,8, 4,6 dick, 115 lang, Griffteil 13 dick nach hinten. Er steckt gerade hinein, das Moment geht über beide Zapfen.
+  - Im Modell geprüft: Kragen frei gegen Getriebeplatte, Rahmen, Motor. Griff schwenkt je Steckstelle etwa ±40° (dann stehen die Pfosten im Weg), danach ein Paar weiter stecken.
+  - `quelle/qv_hohlrad_griff_3mf.py` → `druck/qv_hohlrad_griff.3mf`, ohne Stützen, 2 h 54. Am Teil nicht getestet. Offen: hält die 3,2 dicke Kragenwand die Handkraft?
 - **v3.4 (26.11., aktuell):** T-Stück druckt ganz ohne Stützen.
   - Anlass (Alex): v3.3 mit Stützen gedruckt, der Slicer hat auch in die Kanäle Stützen gesetzt, nicht brauchbar.
   - Drucklage umgedreht: Vorderseite aufs Bett. Die 3 Tüllen liegen flach auf dem Bett, mit 0,2 tiefer Flachstelle unten (an den Wellen 0,45). Unter der Bohrung bleiben 0,8 Wand.

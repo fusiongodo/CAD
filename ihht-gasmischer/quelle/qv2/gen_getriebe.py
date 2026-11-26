@@ -272,9 +272,23 @@ if os.environ.get('QV_ZAPFEN', '1') != '0':      # Standard seit 25.11.2026; QV_
     for k in range(DOTS):                                   # Kennpunkte auf der Zapfenstirn neben dem Lagerzapfen
         welle.cut(Cz(E + 6.0, -2.5 + 5 * k if DOTS > 1 else 0, ZB1 - 0.8, ZB1 + 1, 1.2))
 
-hohlrad = Part('hohlrad', 'QV-Getriebe Hohlrad 65 Zaehne innen, Modul 1 (radial M3x8)')
+hohlrad = Part('hohlrad', 'QV-Getriebe Hohlrad 65 Zaehne innen, Modul 1 (radial M3x8, Kragen mit Steckloechern)')
+GRIFF = os.environ.get('QV_GRIFF', '1') != '0'
+KR_RI, KR_RA, KR_Z1 = 34.4, 37.6, -28.5         # Kragen innen / aussen / hinteres Ende (Getriebeplatte ab -30)
+GR_D, GR_PIN, GR_V, GR_N, GR_T = 6.2, 5.8, 10.0, 6, 4.6     # Loch, Zapfen, halber Zapfenabstand, Paare, Griffdicke
+GR_Z = -25.3                                    # Griffmitte: Griff z -27,6 .. -23,0, 1,0 hinter den Wandstegen (bis -22), 2,4 vor der Getriebeplatte
+GR_SPIEL = 0.3
 hohlrad.add(Cz(0, 0, Z_RING1, Z_DISK0, 2 * RIM_R))
+if GRIFF:
+    hohlrad.add(K(0, 0, Z_RING1, Z_RING1 + KR_RA - RIM_R, KR_RA, RIM_R))      # 45-Grad-Fase unter dem Kragen (druckt ohne Stuetzen)
 hohlrad.cut(Gz(0, 0, Z_RING1 - 0.1, Z_DISK1, ZR, RR_ROOT, RR_TIP, math.pi * MOD / 2 + BACKLASH / 2, -math.pi / 2))
+# Steckgriff (Alex 26.11.): Kragen hinten am Hohlrad mit Lochpaaren, darin steckt ein Gabelgriff mit 2 Zapfen.
+#   Kragen R 34,4 .. 37,6: innen 0,7 frei zur Ritzelnabe (R 33,7), aussen 0,6 frei zu den Pfosten (R 38,2). Er liegt hinter
+#   der Development-Wand (Wand bis z -12). 6 Lochpaare alle 60 Grad, je Paar 2 parallele Loecher im Abstand 20: der Griff
+#   steckt gerade hinein und haelt das Moment ueber beide Zapfen. Dazu 1 radiales Loch bei +y fuer die M3 im Hals.
+if GRIFF:
+    hohlrad.add(Cz(0, 0, KR_Z1, Z_RING1 + 0.01, 2 * KR_RA))
+    hohlrad.cut(Cz(0, 0, KR_Z1 - 1, Z_RING1 + 0.02, 2 * KR_RI))
 hohlrad.add(Cz(0, 0, Z_RING1 - 0.01, Z_DISK1 + 0.1, HUB_D), Cz(0, 0, Z_NECK1, Z_RING1, NECK_D))
 pr = (JOURNAL_D + FIT) / 2
 hohlrad.cut(
@@ -312,6 +326,32 @@ for sx in (-1, 1):
     for sy in (-1, 1):
         platte.cut(Cz(sx * 15.5, -A + sy * 15.5, Z_C1 - 1, Z_C0 + 1, M3_CLR),
                    Cz(sx * FIX_X, sy * FIX_Y, Z_PLATE - 14, Z_PLATE + 1, M3_SELF))
+
+if GRIFF:
+    for k in range(GR_N):
+        w = math.radians(30 + 60 * k)
+        d, n = (math.cos(w), math.sin(w)), (-math.sin(w), math.cos(w))
+        for sv in (-GR_V, GR_V):
+            for zz in (GR_Z, GR_Z - 2.0, GR_Z - 4.0):                                  # nach hinten offene Schlitze (kein duenner Steg am Kragenrand)
+                hohlrad.cut(C((d[0] * 30 + n[0] * sv, d[1] * 30 + n[1] * sv, zz), (d[0] * 40 + n[0] * sv, d[1] * 40 + n[1] * sv, zz), GR_D))
+    hohlrad.cut(C((0, KR_RI - 1, Z_SCREW), (0, KR_RA + 1, Z_SCREW), GR_D))            # Zugang zur radialen M3 im Hals
+
+
+def griff():
+    """Gabelgriff, gesteckt bei +y (Lochpaar 90 Grad). Druck: Vorderseite (z1) aufs Bett, Zapfen liegen flach auf, Griffteil waechst nach oben."""
+    g = Part('griff', 'QV Steckgriff fuer das Hohlrad (2 Zapfen Ø 5,8 im Abstand 20)')
+    z0, z1 = GR_Z - GR_T / 2, GR_Z + GR_T / 2
+    ri = KR_RA + GR_SPIEL
+    t0 = math.asin(14.0 / ri)
+    bogen = [(ri * math.sin(-t0 + 2 * t0 * k / 16), ri * math.cos(-t0 + 2 * t0 * k / 16)) for k in range(17)]
+    g.add(P(0, 0, z0, z1, bogen + [(14, 47), (9, 60), (9, 146), (5, 150), (-5, 150), (-9, 146), (-9, 60), (-14, 47)]))
+    tip = math.sqrt(KR_RI ** 2 - (GR_V + GR_PIN / 2) ** 2) + 0.2                       # Zapfenspitze bleibt in der Kragenwand
+    for sv in (-GR_V, GR_V):
+        g.add(C((sv, tip, GR_Z), (sv, ri + 1.0, GR_Z), GR_PIN))
+    g.add(P(0, 0, z1 - 13.0, z0 + 0.01, [(9, 78), (9, 146), (5, 150), (-5, 150), (-9, 146), (-9, 78)]))    # Griffteil 13 dick, nach hinten (weg von der Wand)
+    g.cut(B(-20, 20, 25, 45, z0 - 2, z0), B(-20, 20, 25, 45, z1, z1 + 2))              # Zapfen auf Griffdicke kappen (liegen flach auf dem Bett)
+    return g
+
 
 PARTS = [welle, hohlrad, ritzel, platte]
 

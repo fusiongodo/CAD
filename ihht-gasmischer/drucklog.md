@@ -24,6 +24,7 @@ Dateien: `druck/…` liegt in diesem Repo, `ihht-pi/…` in `~/Desktop/projects/
 | Datum | Datei | Teile / Variante | gedruckt | eingebaut | Ergebnis |
 |---|---|---|---|---|---|
 | 25.11. abends | ihht-pi `welle_zapfen_6200_e3_5.3mf` | Welle mit Zapfen e 3,5 + Distanzring (V9), 1 Stück | ja | noch nicht (Alex fragte nach dem Ring) | – |
+| 26.11. | `druck/qv_hohlrad_griff.3mf` | 2 × Hohlrad mit Kragen und Steckschlitzen + 1 Steckgriff (Gabel, 2 Zapfen). Ersetzt beide Hohlräder | übergeben, noch nicht gedruckt (2 h 54, 95 g) | – | Alex: Hohlrad mit abnehmbarem Griff, um den Exzenter mit mehr Kraft von Hand zu drehen |
 | 26.11. | `druck/qv_huelsen_duenn.3mf` | Lagerhülsen dünner, 4 Stück: 2 × Wand 2,0 (außen 44,4, 2 Punkte) + 2 × Wand 1,5 (außen 43,4, 1 Punkt); Punkte vertieft oben auf dem Bodensaum. Bohrung 40,4 | übergeben, noch nicht gedruckt (38 min, 31 g) | – | Alex: auch die dünnere vorhandene Hülse ist noch zu stark. Deren Wand ist nicht gemessen, darum 2 Stufen |
 | 26.11. | `druck/development_wand_t.3mf` | T-Stück v3.4: druckt ohne Stützen (Tüllen liegen flach auf dem Bett, Beine unter den Schraubstellen), 1 Stück | aus dem Backlog gestrichen (Alex 26.11.; ob gedruckt oder nicht mehr nötig: ?) (40 min, 14 g) | – | Ersetzt v3.3 |
 | 26.11. | `druck/o2_mundstueck_und_t.3mf` | Eine Platte: O2-Mundstück v2 + T-Stück v3.4, alles ohne Stützen | aus dem Backlog gestrichen (Alex 26.11.; ob gedruckt oder nicht mehr nötig: ?) (1 h 53, 45 g) | – | Mundstück unverändert |
