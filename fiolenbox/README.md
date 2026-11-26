@@ -10,13 +10,29 @@ Box für 12 Fiolen (Ø 16 × 38 mm), 4 × 3, mit Stülpdeckel zum Aufrasten. Sti
 | `quelle/fiolenbox_v2.py` | **Aktuell (Unterteil).** CadQuery-Modell v2, alle Maße oben als Parameter |
 | `quelle/fiolenbox_v1.py` | v1 (Röhrchen, Einsteck-Deckel) |
 | `quelle/fiolenbox_raster_v1.py` | **Beliebiges Raster, auch groß:** `fiolenbox_raster_v1.py <16|11> <SPALTENxREIHEN>` → STL/STEP + `info_<fiole>_<raster>.json`; Seiten ≥ 100 mm: 2 Rastnasen je Seite auf allen 4 Seiten, Deckelplatte 2,0 |
-| `quelle/sammelbox_v1.py` | **Sammelbox 3 × 3** für 9 große Fiolenboxen: `~/.cache/cq312/bin/python sammelbox_v1.py`, dann `fiolenbox_v2_3mf.py sammelbox_16_3x3_v1` |
+| `quelle/sammelbox_v2.py`, `sammelbox_v2_3mf.py` | **Aktuell: Sammelbox 3 × 3** für 9 große Fiolenboxen, Verschluss mit Schubriegeln |
+| `quelle/sammelbox_v1.py` | Sammelbox v1 mit festem Clip (nicht gedruckt, ersetzt durch v2) |
 | `quelle/fiolenbox_11_v1.py` | **Fiolenbox 11** für Ø 11,6 × 32: `~/.cache/cq312/bin/python fiolenbox_11_v1.py 4x3` (oder `5x4`) → STL/STEP + `info_11_<raster>.json` |
 | `quelle/ansicht_bauen.py`, `ansicht_template.html` | baut `ansicht/index.html` (3D-Ansicht, offline) |
 | `druck/fiolenbox_v2.3mf`, `quelle/fiolenbox_v2_3mf.py` | Druckdatei P1S: Unterteil stehend + Deckel kopfüber, 0,2 mm, 3 Wände, 15 % Infill, kein Support. `fiolenbox_v2_3mf.py <NAME> masse` → Deckel 3 Wände, Unterteil 2 Wände, 6/5 Schichten, Cubic 35 % (Masse + Isolation) |
 | `quelle/deckelringe_3mf.py`, `druck/deckelringe_2026-11-18.3mf` | Testdruck: 7 Deckelringe (Spiel × Versatz der Rastnase) für das gedruckte Unterteil v2 |
 | `passungen.html` | **Messungs-Timeline** Deckelpassung, neue Einträge oben |
 | `druck/fiolenbox_v*_*.stl/.step` | Unterteil und Deckel (Deckel in geschlossener Lage, zum Drucken umdrehen) |
+
+## Sammelbox 3 × 3 v2 (26.11.2026) – Verschluss mit 4 Schubriegeln
+- Anlass (Alex): Beim festen Clip weiß niemand, wie stark er sein muss; ein Fehldruck der großen Teile wäre teuer. Lose Clips gehen verloren. Also: Verschluss tauschbar, aber fest am Deckel
+- Wanne und Deckel wie v1, aber ohne Rastnasen. Der Deckel liegt mit 0,20 Spiel auf dem Hals
+- Je Riegel 2 Ösen am Deckel und 1 Öse an der Wanne (lange Seiten, bei ±¼ der Länge). Der Riegel ist ein Vierkantstab 4,4 × 4,0 × 41, er läuft durch die Deckel-Ösen und schiebt sich in die Wannen-Öse (Hub 11,4). Das hält formschlüssig, eine Federkraft gibt es nicht
+- Eine M3-Schraube (Kernloch 2,6, von oben in den Riegel, zwischen den Deckel-Ösen) ist Griff und Anschlag: der Riegel kann nicht herausfallen. Tauschen: Schraube heraus, Riegel ziehen
+- Ösenloch 4,8 × 4,6. Riegel in 3 Maßen mit Kennpunkten: 1 = 4,4 × 4,0, 2 = 4,2 × 3,8, 3 = 4,6 × 4,2
+- Außen 254,0 × 212,6 (mit Ösen) × 46,3 mm
+- `quelle/sammelbox_v2.py` (Modell + Prüfung), `quelle/sammelbox_v2_3mf.py [Riegel-Nr]` (Druckdateien)
+- Geprüft im Modell: offen hebt der Deckel frei ab, zugeschoben sperrt er; 9 Boxen ohne Überschneidung. Slicer ohne Fehler. Am Teil nichts geprüft
+- Offen: Der Riegel hat keine Raste, er hält nur über Reibung in seiner Stellung
+- Druck, in dieser Reihenfolge:
+  1. `druck/sammelbox_16_3x3_v2_probe.3mf` (27 min, 11 g): ein Riegelplatz aus Wanne und Deckel + Riegel 1 bis 3. Damit den passenden Riegel finden
+  2. `druck/sammelbox_16_3x3_v2_unterteil.3mf` (2 h 11, 132 g): Wanne + 6 Riegel Nr. 1 (4 + 2 Reserve); anderer Riegel: Skript mit der Nummer neu laufen lassen
+  3. `druck/sammelbox_16_3x3_v2_deckel.3mf` (kopfüber, 2 h 43, 183 g)
 
 ## Sammelbox 3 × 3 v1 (26.11.2026) – Box für 9 große Fiolenboxen
 - Wanne + Stülpdeckel für 3 × 3 Fiolenboxen v2/v3 (je 82,4 × 63,4 × 42,1), einlagig, Deckel nach oben → `quelle/sammelbox_v1.py`
@@ -25,7 +41,7 @@ Box für 12 Fiolen (Ø 16 × 38 mm), 4 × 3, mit Stülpdeckel zum Aufrasten. Sti
 - Clip: 8 Rastnasen (2 je Seite, alle 4 Seiten), Spiel 0,20 je Seite (nicht 0,06, siehe `passungen.html`), Nase 0,55 hoch, 0,40 über Rillenmitte
 - Wände dünn, weil das Bett die Länge begrenzt: Hals 1,4, Deckel 1,2, Deckelplatte 2,0, Boden 1,6
 - Geprüft im Modell: 9 Boxen (Nennmaß) ohne Überschneidung, sitzend 4,4 mm³ Vorspannung, frei ab 5 mm Hub. Slicer ohne Fehler. Am Teil nichts geprüft
-- Druck: `druck/sammelbox_16_3x3_v1_unterteil.3mf` (1 h 52, 124 g), `_deckel.3mf` (kopfüber, 2 h 25, 179 g); 0,2 mm, 3 Wände, 15 %, kein Support
+- Nicht gedruckt, ersetzt durch v2. Druckdateien gelöscht (stehen in Commit 87bfc2d), Skript `quelle/sammelbox_v1.py` bleibt
 - **Fiolenbox 11 (26.11., Alex):** Deckel saß bombenfest, Box aufgebrochen. Ursache offen, siehe `passungen.html`; die Dateien `fiolenbox_11_*` so nicht mehr drucken
 
 ## 10 × 10 v1 (25.11.2026) – 100 Plätze, beide Fiolengrößen
