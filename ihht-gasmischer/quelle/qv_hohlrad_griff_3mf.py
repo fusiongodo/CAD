@@ -24,15 +24,19 @@ for w in range(0, 60, 5):                                                       
     for f in ('platte', 'rahmen', 'nema'):
         v = inter(rot(M['hohlrad'], w), M[f]); ok &= v < 0.2
         if v >= 0.2: print('Hohlrad %3d° x %s: %.1f mm3' % (w, f, v))
-v = inter(M['hohlrad'], M['griff']); print('Griff x Hohlrad (gesteckt): %.2f mm3' % v); ok &= v < 0.2
+v = inter(rot(M['hohlrad'], 22.5), M['griff']); print('Griff x Hohlrad (gesteckt): %.2f mm3' % v); ok &= v < 0.2
 FEST = ('platte', 'rahmen', 'nema', 'ritzel', 'welle')
 frei = [w for w in range(-90, 91, 2) if all(inter(rot(M['griff'], w), M[f]) < 0.2 for f in FEST)]   # Griff mit Hohlrad geschwenkt
 print('Griff frei beim Schwenken (0 = oben gesteckt): %d bis %d Grad' % (min(frei), max(frei)))
-ok &= min(frei) <= -32 and max(frei) >= 32                                     # Schlitzpaare alle 60 Grad: je Seite mehr als 30 noetig
-for dy in (4, 10, 20, 40):                                                     # gerade nach hinten abziehen (Builder +Y = Ventil -z)
-    g = M['griff'].copy(); g.apply_translation([0, dy, 0])
-    v = sum(inter(g, M[f]) for f in FEST + ('hohlrad',)); ok &= v < 0.2
-    if v >= 0.2: print('Abziehen %d mm: %.1f mm3' % (dy, v))
+ok &= min(frei) <= -26 and max(frei) >= 26
+def ab(w):                                                                     # bei Winkel w gerade nach hinten abziehen (Builder +Y = Ventil -z)
+    for dy in (2, 4, 6, 8, 12, 20, 40):
+        g = rot(M['griff'], w); g.apply_translation([0, dy, 0])
+        if sum(inter(g, M[f]) for f in FEST) + inter(g, rot(M['hohlrad'], 22.5 + w)) >= 0.2: return False
+    return True
+zieh = [w for w in range(-60, 61, 2) if ab(w)]
+print('Abziehen / Aufstecken frei: %d bis %d Grad' % (min(zieh), max(zieh)))
+ok &= min(zieh) <= -26 and max(zieh) >= 26                                     # Schlitzpaare alle 45 Grad: je Seite mehr als 22,5 noetig
 print('PRÜFUNG', 'OK' if ok else 'FEHLER')
 
 
