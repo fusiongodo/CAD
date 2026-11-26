@@ -275,9 +275,12 @@ if os.environ.get('QV_ZAPFEN', '1') != '0':      # Standard seit 25.11.2026; QV_
 
 hohlrad = Part('hohlrad', 'QV-Getriebe Hohlrad 65 Zaehne innen, Modul 1 (radial M3x8, Kragen mit Steckloechern)')
 GRIFF = os.environ.get('QV_GRIFF', '1') != '0'
-KR_RI, KR_RA, KR_Z1 = 34.4, 37.6, -28.5         # Kragen innen / aussen / hinteres Ende (Getriebeplatte ab -30)
-GR_D, GR_PIN, GR_V, GR_N, GR_T = 6.2, 5.8, 10.0, 6, 4.6     # Loch, Zapfen, halber Zapfenabstand, Paare, Griffdicke
-GR_Z = -25.3                                    # Griffmitte: Griff z -27,6 .. -23,0, 1,0 hinter den Wandstegen (bis -22), 2,4 vor der Getriebeplatte
+KR_RI, KR_RA, KR_Z1 = 34.4, 37.6, -27.5         # Kragen innen / aussen / hinteres Ende (Getriebeplatte ab -30; 1,7 Platz fuer den Boden der Griffklaue)
+GR_D, GR_PIN, GR_V, GR_N = 6.2, 5.8, 7.0, 6     # Schlitzbreite, Nasenbreite, halber Nasenabstand, Paare
+GR_Z = -25.3                                    # Mitte der Schlitzrundung (Schlitzgrund z -22,2)
+GR_W, GR_YI, GR_YA = 12.0, 29.5, 45.0           # Griff v2: halbe Breite, Klaue radial innen / aussen
+GR_ZV, GR_ZH = -23.0, Z_C0 + 0.5                # Klaue vorn (1,0 hinter den Wandstegen bis -22) / hinten (0,5 vor der Getriebeplatte)
+GR_HZ1, GR_HZ0, GR_HY = -37.5, -49.5, 130.0     # Hebel: z vorn (1,5 hinter der Distanzplatte bis -36) / hinten, radial bis
 GR_SPIEL = 0.3
 hohlrad.add(Cz(0, 0, Z_RING1, Z_DISK0, 2 * RIM_R))
 if GRIFF:
@@ -285,8 +288,9 @@ if GRIFF:
 hohlrad.cut(Gz(0, 0, Z_RING1 - 0.1, Z_DISK1, ZR, RR_ROOT, RR_TIP, math.pi * MOD / 2 + BACKLASH / 2, -math.pi / 2))
 # Steckgriff (Alex 26.11.): Kragen hinten am Hohlrad mit Lochpaaren, darin steckt ein Gabelgriff mit 2 Zapfen.
 #   Kragen R 34,4 .. 37,6: innen 0,7 frei zur Ritzelnabe (R 33,7), aussen 0,6 frei zu den Pfosten (R 38,2). Er liegt hinter
-#   der Development-Wand (Wand bis z -12). 6 Lochpaare alle 60 Grad, je Paar 2 parallele Loecher im Abstand 20: der Griff
-#   steckt gerade hinein und haelt das Moment ueber beide Zapfen. Dazu 1 radiales Loch bei +y fuer die M3 im Hals.
+#   der Development-Wand (Wand bis z -12). 6 Schlitzpaare alle 60 Grad, je Paar 2 parallele, nach hinten offene Schlitze
+#   im Abstand 14. Variante 1 (Griff radial gesteckt, Abstand 20) verworfen: in der Rad-Ebene ist kein Platz.
+#   Variante 2: griff() wird axial von hinten aufgeschoben. Dazu 1 radiales Loch bei +y fuer die M3 im Hals.
 if GRIFF:
     hohlrad.add(Cz(0, 0, KR_Z1, Z_RING1 + 0.01, 2 * KR_RA))
     hohlrad.cut(Cz(0, 0, KR_Z1 - 1, Z_RING1 + 0.02, 2 * KR_RI))
@@ -346,18 +350,23 @@ if GRIFF:
 
 
 def griff():
-    """Gabelgriff, gesteckt bei +y (Lochpaar 90 Grad). Druck: Vorderseite (z1) aufs Bett, Zapfen liegen flach auf, Griffteil waechst nach oben."""
-    g = Part('griff', 'QV Steckgriff fuer das Hohlrad (2 Zapfen Ø 5,8 im Abstand 20)')
-    z0, z1 = GR_Z - GR_T / 2, GR_Z + GR_T / 2
-    ri = KR_RA + GR_SPIEL
-    t0 = math.asin(14.0 / ri)
-    bogen = [(ri * math.sin(-t0 + 2 * t0 * k / 16), ri * math.cos(-t0 + 2 * t0 * k / 16)) for k in range(17)]
-    g.add(P(0, 0, z0, z1, bogen + [(14, 47), (9, 60), (9, 146), (5, 150), (-5, 150), (-9, 146), (-9, 60), (-14, 47)]))
-    tip = math.sqrt(KR_RI ** 2 - (GR_V + GR_PIN / 2) ** 2) + 0.2                       # Zapfenspitze bleibt in der Kragenwand
-    for sv in (-GR_V, GR_V):
-        g.add(C((sv, tip, GR_Z), (sv, ri + 1.0, GR_Z), GR_PIN))
-    g.add(P(0, 0, z1 - 13.0, z0 + 0.01, [(9, 78), (9, 146), (5, 150), (-5, 150), (-9, 146), (-9, 78)]))    # Griffteil 13 dick, nach hinten (weg von der Wand)
-    g.cut(B(-20, 20, 25, 45, z0 - 2, z0), B(-20, 20, 25, 45, z1, z1 + 2))              # Zapfen auf Griffdicke kappen (liegen flach auf dem Bett)
+    """Steckgriff Variante 2 (Alex 26.11.: Zugang nur parallel zur Achse). Lage: gesteckt bei +y (Schlitzpaar 90 Grad).
+    Er wird von hinten gerade aufgeschoben: eine Klaue greift innen und aussen ueber die Kragenwand, 2 Nasen sitzen in den
+    Schlitzen. Der Stiel laeuft ueber die Oberkante der Getriebeplatte nach hinten, dahinter knickt der Hebel radial ab.
+    Druck: auf der Seite liegend (x nach oben), dann gibt es keine Ueberhaenge und die Schichten laufen laengs durch den Hebel."""
+    g = Part('griff', 'QV Steckgriff v2 fuer das Hohlrad (Klaue axial ueber den Kragen, 2 Nasen 5,8 im Abstand 14, Hebel hinter der Getriebeplatte)')
+    w, ro, ri = GR_W, KR_RA + GR_SPIEL, KR_RI - GR_SPIEL
+    bog = lambda r, s: [(r * math.sin(s * (-t + 2 * t * k / 16)), r * math.cos(-t + 2 * t * k / 16)) for t in (math.asin(w / r),) for k in range(17)]
+    aussen = bog(ro, 1) + [(w, GR_YA), (-w, GR_YA)]                                    # aussen ueber dem Kragen, zugleich Stielquerschnitt
+    innen = [(-w, GR_YI), (w, GR_YI)] + bog(ri, -1)                                    # Backe innen im Kragen
+    g.add(P(0, 0, GR_HZ0, GR_ZV, aussen),                                              # Stiel + aeussere Backe
+          P(0, 0, GR_ZH, GR_ZV, innen),
+          B(-w, w, GR_YI, GR_YA, GR_ZH, KR_Z1 - GR_SPIEL),                             # Boden der Klaue hinter dem Kragenrand
+          B(-w, w, GR_YA - 5.0, GR_HY, GR_HZ0, GR_HZ1))                                # Hebel
+    for sv in (-GR_V, GR_V):                                                           # Nasen in den Schlitzen (oben rund wie der Schlitzgrund)
+        g.add(B(sv - GR_PIN / 2, sv + GR_PIN / 2, ri - 1.0, ro + 1.0, KR_Z1 - GR_SPIEL - 0.1, GR_Z),
+              C((sv, ri - 1.0, GR_Z), (sv, ro + 1.0, GR_Z), GR_PIN))
+    g.cut(B(-w - 5, w + 5, GR_YI - 5, GR_YA + 5, GR_ZV, GR_ZV + 5))
     return g
 
 

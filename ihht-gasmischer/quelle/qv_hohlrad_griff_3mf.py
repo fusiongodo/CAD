@@ -1,6 +1,8 @@
-"""Hohlrad mit Steckgriff für das gebaute Quetschventil (Alex 26.11.): 2 x Hohlrad mit Kragen + 1 Gabelgriff.
-Geometrie in qv2/gen_getriebe.py (GRIFF, KR_*, GR_*). Prüft Hohlrad und Griff gegen Getriebeplatte, Ritzel, Welle, Rahmenplatte.
-<venv>/bin/python qv_hohlrad_griff_3mf.py  ->  ../druck/qv_hohlrad_griff.3mf (ohne Stützen)."""
+"""Hohlrad mit Steckgriff für das gebaute Quetschventil (Alex 26.11.): 2 x Hohlrad mit Kragen + 1 Griff Variante 2.
+Der Griff wird axial von hinten über den Kragen geschoben (Variante 1, radial gesteckt, ist verworfen).
+Geometrie in qv2/gen_getriebe.py (GRIFF, KR_*, GR_*). Prüft Hohlrad und Griff gegen Getriebeplatte, Ritzel, Welle, Rahmenplatte,
+Motor; dazu den Schwenkbereich und das gerade Aufschieben.
+<venv>/bin/python qv_hohlrad_griff_3mf.py  ->  ../druck/qv_hohlrad_griff_v2.3mf (ohne Stützen)."""
 import math, os
 import trimesh
 from ihht import qv2
@@ -23,11 +25,14 @@ for w in range(0, 60, 5):                                                       
         v = inter(rot(M['hohlrad'], w), M[f]); ok &= v < 0.2
         if v >= 0.2: print('Hohlrad %3d° x %s: %.1f mm3' % (w, f, v))
 v = inter(M['hohlrad'], M['griff']); print('Griff x Hohlrad (gesteckt): %.2f mm3' % v); ok &= v < 0.2
-frei = []
-for w in range(0, 360, 5):                                                      # Griff mit Hohlrad gedreht: wo geht er frei?
-    g = rot(M['griff'], w)
-    if all(inter(g, M[f]) < 0.2 for f in ('platte', 'rahmen', 'nema', 'ritzel')): frei.append(w)
-print('Griff frei bei Drehung (0 = nach oben gesteckt, Grad):', frei)
+FEST = ('platte', 'rahmen', 'nema', 'ritzel', 'welle')
+frei = [w for w in range(-90, 91, 2) if all(inter(rot(M['griff'], w), M[f]) < 0.2 for f in FEST)]   # Griff mit Hohlrad geschwenkt
+print('Griff frei beim Schwenken (0 = oben gesteckt): %d bis %d Grad' % (min(frei), max(frei)))
+ok &= min(frei) <= -32 and max(frei) >= 32                                     # Schlitzpaare alle 60 Grad: je Seite mehr als 30 noetig
+for dy in (4, 10, 20, 40):                                                     # gerade nach hinten abziehen (Builder +Y = Ventil -z)
+    g = M['griff'].copy(); g.apply_translation([0, dy, 0])
+    v = sum(inter(g, M[f]) for f in FEST + ('hohlrad',)); ok &= v < 0.2
+    if v >= 0.2: print('Abziehen %d mm: %.1f mm3' % (dy, v))
 print('PRÜFUNG', 'OK' if ok else 'FEHLER')
 
 
@@ -38,12 +43,13 @@ def lay(m, vorn):                                                               
     return m
 
 
-h, g = lay(M['hohlrad'], True), lay(M['griff'], True)
-g.apply_transform(trimesh.transformations.rotation_matrix(math.pi / 2, [0, 0, 1])); c = g.bounds.mean(axis=0); g.apply_translation([-c[0], -c[1], 0])
-PRINT = [('Hohlrad a', h, 80.0, 150.0), ('Hohlrad b', h.copy(), 176.0, 150.0), ('Steckgriff', g, 128.0, 70.0)]
+h = lay(M['hohlrad'], True)
+g = M['griff'].copy(); g.apply_transform(trimesh.transformations.rotation_matrix(math.pi / 2, [0, 1, 0]))   # auf die Seite: Griffbreite nach oben
+c = g.bounds.mean(axis=0); g.apply_translation([-c[0], -c[1], -g.bounds[0][2]])
+PRINT = [('Hohlrad a', h, 80.0, 160.0), ('Hohlrad b', h.copy(), 176.0, 160.0), ('Steckgriff v2', g, 128.0, 70.0)]
 for n, m, x, y in PRINT:
     print('%-10s Drucklage %5.1f x %5.1f x %5.1f' % ((n,) + tuple(m.extents)))
-out = os.path.join(HERE, '..', 'druck', 'qv_hohlrad_griff.3mf')
+out = os.path.join(HERE, '..', 'druck', 'qv_hohlrad_griff_v2.3mf')
 write_3mf(PRINT, out, proc=dict(layer_height='0.2', wall_loops='4', sparse_infill_density='40%', brim_type='no_brim', enable_support='0'))
 print('3MF', out)
 raise SystemExit(0 if ok else 1)
