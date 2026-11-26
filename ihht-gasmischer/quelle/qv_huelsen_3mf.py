@@ -1,7 +1,7 @@
-"""Dünnere Lagerhülsen für das gebaute Quetschventil (über beide 6203), je 2 Stück mit Wand 2,0 und 1,5.
+"""Dünnere Lagerhülsen für das gebaute Quetschventil (über beide 6203), je 2 Stück mit Wand 1,5 und 1,0 (erste Fassung 2,0 + 1,5: 2,0 ist laut Alex zu viel).
 Anlass (Alex 26.11.): von den zwei vorhandenen Hülsen ist die mit der dünneren Wand besser, aber noch zu stark.
 Maße wie ihht-pi build_huelse.py, Passung "weit": Bohrung 40,4, Länge 24 + Bund 1 (innen Ø 35), Einführfase.
-Kennung: vertiefte Punkte oben auf dem Bodensaum (innen), 1 Punkt = Wand 1,5, 2 Punkte = Wand 2,0 (Alex 26.11.).
+Kennung: vertiefte Punkte oben auf dem Bodensaum (innen), 1 Punkt = Wand 1,5, 3 Punkte = Wand 1,0 (2 Punkte = Wand 2,0, nur in der ersten Fassung).
 Spalt zu = 8,5 - e - Wand: mit e 3,5 also 3,0 (Wand 2,0) bzw. 3,5 (Wand 1,5) statt 2,5.
 <venv>/bin/python qv_huelsen_3mf.py  ->  ../druck/qv_huelsen_duenn.3mf (Bund unten, ohne Stützen, ohne Brim)."""
 import math, os
@@ -27,8 +27,8 @@ def huelse(wand, kerben):
     return m
 
 
-PRINT = [('Huelse Wand 2,0 a', huelse(2.0, 2), 98.0, 100.0), ('Huelse Wand 2,0 b', huelse(2.0, 2), 158.0, 100.0),
-         ('Huelse Wand 1,5 a', huelse(1.5, 1), 98.0, 160.0), ('Huelse Wand 1,5 b', huelse(1.5, 1), 158.0, 160.0)]
+PRINT = [('Huelse Wand 1,5 a', huelse(1.5, 1), 98.0, 100.0), ('Huelse Wand 1,5 b', huelse(1.5, 1), 158.0, 100.0),      # Alex 26.11.: 2,0 ist zu viel, nur 1,5 und weniger
+         ('Huelse Wand 1,0 a', huelse(1.0, 3), 98.0, 160.0), ('Huelse Wand 1,0 b', huelse(1.0, 3), 158.0, 160.0)]
 out = os.path.join(HERE, '..', 'druck', 'qv_huelsen_duenn.3mf')
 write_3mf(PRINT, out, proc=dict(layer_height='0.2', wall_loops='4', sparse_infill_density='40%', brim_type='no_brim',
                                 wall_generator='arachne', enable_support='0'))
