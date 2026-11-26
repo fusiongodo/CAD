@@ -19,6 +19,18 @@ Dateien: `druck/…` liegt in diesem Repo, `ihht-pi/…` in `~/Desktop/projects/
 | T-Stück | Druckteil | v3.1 gedruckt: ?; montiert: ? | – |
 | SKR Pico | direkt auf dem Lochraster verschraubt (Rückseite der Wand, ohne den Pico-Träger aus dem Modell), USB-C und 2 Adern Versorgung angeschlossen | – | Foto 25.11. abends |
 
+## Parameter und Ergebnis (Passungen, Varianten)
+
+Regel (Alex 26.11.): Zu jeder gedruckten Variante eines Teils stehen hier die Maße, die Druckeinstellungen, der Commit und das Ergebnis am Teil.
+Ohne das wissen wir in 2 Wochen nicht mehr, was gedruckt wurde, und drucken alles neu. Maße in mm, Soll aus der Quelle (nicht nachgemessen, außer es steht da).
+
+| Teil / Variante | Datei, Commit | Maße (Soll) | Druck | Ergebnis am Teil | Nächster Schritt |
+|---|---|---|---|---|---|
+| Welle mit Zapfen, M8-Kern, **Variante 1** | `druck/qv_welle_m8kern_e3_5.3mf`, Commit e506d08 (26.11.), Quelle `quelle/qv2/gen_getriebe.py` (`M8_*`) | e 3,5. Loch für M8 × 70 in 3 Stufen: **8,3** frei durch den Exzenter (`M8_FREI`), **8,0** im 10-mm-Zapfen für das 6200 (`M8_ZAPF`, Wand 1,0), **7,2** Kernloch hinten 12 lang, selbstschneidend (`M8_SELF`). Lochgrund z −30,25 | stehend auf dem hinteren Zapfen Ø 14, 0,2 Schicht, 4 Wände, 40 % Füllung, Arachne, Brim 5, keine Stützen | **26.11. (Alex): M8 geht nicht hinein, viel zu eng.** An welcher der 3 Stufen sie klemmt und wie weit sie kommt: ? (nicht gemessen) | Variante 2 mit weiteren Löchern. Maße noch offen (Backlog) |
+| Lagerhülse dünn, Wand 2,0 / 1,5 | `druck/qv_huelsen_duenn.3mf`, Commit c28ca96, Quelle `quelle/qv_huelsen_3mf.py` | Bohrung 40,4, Länge 24 + Bund 1 (innen Ø 35). Wand 2,0 (außen 44,4, 2 Punkte) und 1,5 (außen 43,4, 1 Punkt) | Bund unten, 0,2 Schicht, 4 Wände, Arachne, kein Brim | noch nicht gedruckt | – |
+| Hohlrad mit Kragen + Steckgriff, Variante 1 | `druck/qv_hohlrad_griff.3mf`, Commit 8040341, Quelle `quelle/qv2/gen_getriebe.py` (`KR_*`, `GR_*`) | Kragen R 34,4 bis 37,6. Schlitze Ø 6,2, Zapfen Ø 5,8, Abstand 20, Griff 4,6 dick | Scheibe unten, 0,2 Schicht, 4 Wände, 40 %, kein Brim | noch nicht gedruckt | – |
+| T-Stück v3.4 | `druck/development_wand_t.3mf`, Commit 703be89, Quelle `quelle/ihht/wand.py` (`TS_*`) | Bohrung 5,0, Tüllen Ø 7,0, Wellen Ø 7,5, Spitze 6,2, Mutterschacht SW 5,9 | Vorderseite unten, 0,2 Schicht, 5 Wände, 50 %, kein Brim, keine Stützen | aus dem Backlog gestrichen, Ergebnis nicht gemeldet | – |
+
 ## Drucke
 
 | Datum | Datei | Teile / Variante | gedruckt | eingebaut | Ergebnis |
@@ -31,7 +43,7 @@ Dateien: `druck/…` liegt in diesem Repo, `ihht-pi/…` in `~/Desktop/projects/
 | 26.11. | `druck/o2_mundstueck_und_t.3mf` (alter Stand) | Eine Platte: O2-Mundstück v2 + T-Stück v3.3 (mit Baumstützen) | T-Stück gedruckt (Mundstück: ?) | nein | T-Stück unbrauchbar: Stützen auch innen in den Kanälen → v3.4 | Gleiche Teile wie die beiden Einzeldateien darunter |
 | 26.11. | `druck/development_wand_t.3mf` (alter Stand) | T-Stück v3.3: Bohrung 5, Tüllen Ø 7 mit Wellen bis 7,5, 1 Stück | durch v3.4 ersetzt | – | – |
 | 26.11. | `druck/o2_mundstueck.3mf` | O2-Mundstück mit Reservoirbeutel v2 (mit Gewinde): Grundkörper, Ventilring, Mundrohr | aus dem Backlog gestrichen (Alex 26.11.; ob gedruckt oder nicht mehr nötig: ?) (1 h 23) | – | – |
-| 26.11. | `druck/qv_welle_m8kern_e3_5.3mf` | Welle mit Zapfen e 3,5 und M8-Kern (M8 × 70 von vorn durch das 6200) + Distanzring, 1 Stück | übergeben, noch nicht gedruckt (41 min) | – | Die ihht-pi-Datei `welle_zapfen_6200_e3_5.3mf` ist seit 26.11. dieselbe Geometrie; der Druck vom 25.11. hat noch das M3-Kernloch |
+| 26.11. | `druck/qv_welle_m8kern_e3_5.3mf` | Welle mit Zapfen e 3,5 und M8-Kern (M8 × 70 von vorn durch das 6200) + Distanzring, 1 Stück | gedruckt (Anzahl ?) | nein | Die ihht-pi-Datei `welle_zapfen_6200_e3_5.3mf` ist seit 26.11. dieselbe Geometrie; der Druck vom 25.11. hat noch das M3-Kernloch **Ergebnis (Alex 26.11.): M8 geht nicht hinein, Loch viel zu eng → weiter machen. Maße siehe „Parameter und Ergebnis“.** |
 | 26.11. | `druck/quetschventil_v3.3mf` | Quetschventil v3 (M8-Kern, 2 × 608, 2 × 6905, e 4,5): Rückwand, Steg, Getriebeplatte, Hohlrad, Welle, Klemmhülse, Ritzel, 2 Distanzscheiben. Ambosse und Motor vom alten Ventil | übergeben, NICHT drucken | – | Braucht 608 und 6905. Vorhanden sind 2 × 6203 und 6200 (Alex 26.11.), die passen hier nicht |
 | 25.11. | `druck/development_wand_hi_mix.3mf` | Steckhalter Hi + Mix v3.2 (Rohr zur Wand, Tülle Y −22) | übergeben, noch nicht gedruckt | – | – |
 | 25.11. | `druck/development_wand_hi_mix_t.3mf` | Steckhalter Hi + Mix v3.1, T-Stück v3.1 | ja (Halter sicher, T-Stück ?) | Hi ja | Mix passt aufs Raster. Hi: OCS mit Rohr zur Wand eingesetzt, dafür zu niedrig → v3.2 |

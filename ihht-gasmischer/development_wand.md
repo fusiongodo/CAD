@@ -64,6 +64,7 @@ Stand 26.11.2026, Anordnung v3.4.
   - Durchfluss: Mit dieser Lage liegt der Pfeil-Einlass des OCS unten, das Gas kommt aber oben an. Die O2-Messung geht in beide Richtungen, ein Flusswert hätte das falsche Vorzeichen. Nicht getestet.
   - Druck: `druck/development_wand_hi_mix_t.3mf` (Halter Hi, Halter Mix, T-Stück; 0,20 mm, 5 Wände, 50 %, Baumstützen, 1 h 17). Der Lo-Halter bleibt.
 
+- **Welle mit M8-Kern, Variante 1 gedruckt (26.11.):** Die M8 geht nicht hinein, das Loch ist viel zu eng (Alex). Gedruckte Maße: 8,3 / 8,0 (Zapfen) / 7,2 (Kernloch). Backlog: Variante 2 mit weiteren Löchern. Tabelle mit Maßen und Ergebnis: `drucklog.md`, Abschnitt „Parameter und Ergebnis“.
 - **Hohlrad mit Steckgriff (26.11.):** Alex will das Hohlrad von Hand mit mehr Kraft drehen können (z. B. Exzenter gegen einen Schlauch drücken, um den anderen zu bewegen). Griff abnehmbar, am Rad nur Löcher.
   - Platz: außen am Hohlrad sind nur 1,7 frei bis zu den Pfosten, innen läuft die Ritzelnabe, vorn sitzt die Wand. Darum ein Kragen hinten am Hohlrad (R 34,4 bis 37,6, z −17,6 bis −28,5), hinter der Wand.
   - 6 Paare Schlitze alle 60°, je Paar 2 parallele Schlitze Ø 6,2 im Abstand 20, nach hinten offen. Dazu 1 Loch für die M3 im Hals.
