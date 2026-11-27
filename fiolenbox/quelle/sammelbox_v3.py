@@ -36,10 +36,13 @@ WL_U, WL_Z1 = 6.0, 7.0                      # Wannen-Laschen: Außenkante, oben 
 ZS_U, ZS_Z = 3.0, 3.5                       # Schraube der Zunge
 KL_U0, KL_U1 = 8.5, 11.5                    # Klappenplatte innen / außen (3 dick)
 KL_B = 21.6                                 # Klappe unten breit (Mund 15,6 + 2 x 3)
-KL_Z0, KL_STEG = 2.1, 1.2                   # Unterkante Klappe, Dicke des unteren Stegs (federt über die Raste)
+KL_STEG = 1.2                               # Dicke des unteren Stegs der Klappe (federt über die Raste)
+STEG_Z = 3.3                                # Oberkante des Klappenstegs = Unterkante Mund
+KLAPPEN = [(1.2, 1), (0.9, 2)]              # Testserie: Stegdicke, Kennpunkte auf dem Hebel
 ZU_B, ZU_D, ZU_TOP, ZU_TIP = 15.0, 3.0, 6.6, 14.0   # Zunge: Breite, Dicke, Oberseite z, Spitze u
 LUFT = 0.3                                  # Luft Klappensteg ↔ Zungen-Unterseite
 RASTE = [(0.6, 1), (0.8, 2), (1.0, 3)]      # Rasthöhe unter der Zunge, Kennpunkte. Überdeckung = Höhe - LUFT
+MINI = (52.0, 34.0, 34.0)                   # Mini-Box der Testserie: Mulde Länge, Breite, Deckeloberkante z
 RASTE_U, RASTE_B, RASTE_X = 12.5, 0.75, 3.0  # Raste: Mitte (u), halbe Länge (u), halbe Breite (x): nur 6 breit in der Mitte
 
 PX, PY = BOX_L + FUGE, BOX_W + FUGE
@@ -51,7 +54,6 @@ ledge_z = H_BASE - NECK_H
 top_z = FLOOR + BOX_H + HEAD + TOP
 PLAETZE = [(sx * L / 4, sy) for sx in (-1, 1) for sy in (-1, 1)]     # Verschlussmitte x, Seite ±y
 LASCHEN = ((-SPALT_B / 2 - LA1, -SPALT_B / 2, M2_FREI), (SPALT_B / 2, SPALT_B / 2 + LA2, M2_KERN))
-STEG_Z = KL_Z0 + KL_STEG                    # Oberkante des Klappenstegs = Unterkante Mund
 assert L <= 255.0 and W + 2 * DL_U <= 255.0, 'passt nicht aufs Druckbett (256)'
 
 
@@ -71,9 +73,9 @@ def profil(pts, x0, x1):                    # Profil in (u, z), längs x
     return cq.Workplane("YZ").workplane(offset=x0).polyline(pts).close().extrude(x1 - x0)
 
 
-def setze(teil, xc, s):                     # lokales Teil (y = u) an die Seite s (±1) bei xc
+def setze(teil, xc, s, w=None):             # lokales Teil (y = u) an die Seite s (±1) bei xc; w = Außenbreite des Kastens
     if s < 0: teil = teil.mirror("XZ")
-    return teil.translate((xc, s * W / 2, 0))
+    return teil.translate((xc, s * (W if w is None else w) / 2, 0))
 
 
 def huellkurve():
@@ -108,28 +110,37 @@ def zunge(h, punkte):
     return z
 
 
-def klappe():
+def klappe(steg=KL_STEG, punkte=0):
+    """steg = Dicke des unteren Stegs (Oberkante bleibt bei STEG_Z). punkte = Kennpunkte außen auf dem Hebel."""
     k = box(-TEIL_B / 2, TEIL_B / 2, KL_U0, KL_U1, 10.5, DL_Z1)               # Hals
     k = k.union(box(-5.0, 5.0, KL_U0, KL_U1, DL_Z1 - 0.1, 27.0))              # Hebel über der Achse
-    k = k.union(box(-KL_B / 2, KL_B / 2, KL_U0, KL_U1, KL_Z0, 10.6))          # Platte mit Mund
+    k = k.union(box(-KL_B / 2, KL_B / 2, KL_U0, KL_U1, STEG_Z - steg, 10.6))  # Platte mit Mund
     k = k.union(box(-TEIL_B / 2, TEIL_B / 2, ACH_U - 3.5, KL_U1, DL_Z0, DL_Z1))   # Auge
     k = k.cut(xloch(-TEIL_B / 2 - 1, TEIL_B / 2 + 1, ACH_U, ACH_Z, M2_FREI))
+    for j in range(punkte):
+        xm = -1.4 * (punkte - 1) + 2.8 * j                                    # quadratische Marke 1,6 x 1,6, 0,6 tief, außen auf dem Hebel
+        k = k.cut(box(xm - 0.8, xm + 0.8, KL_U1 - 0.6, KL_U1 + 0.5, 22.7, 24.3))
     return k.cut(box(-ZU_B / 2 - 0.3, ZU_B / 2 + 0.3, KL_U0 - 1, KL_U1 + 1, STEG_Z, ZU_TOP + 0.4))   # Mund
 
 
-base = rrect(L, W, R_OUT, ledge_z).union(rrect(neck_L, neck_W, r_neck, NECK_H + 0.01, ledge_z - 0.01))
-base = base.faces(">Z").edges().chamfer(NECK_CHAMFER)
-base = base.cut(rrect(IL, IW, R_IN, H_BASE, FLOOR))
-iL, iW, ri = neck_L + 2 * LCLR, neck_W + 2 * LCLR, r_neck + LCLR
-oL, oW, ro = iL + 2 * WALL, iW + 2 * WALL, ri + WALL
-lid = rrect(oL, oW, ro, top_z - ledge_z, ledge_z).cut(rrect(iL, iW, ri, top_z - TOP - ledge_z + 0.01, ledge_z - 0.01))
+def kasten(il, iw, tz, plaetze):
+    """Wanne + Deckel für die Mulde il x iw, Deckeloberkante tz, mit Laschen an den Plätzen. Gibt (Wanne, Deckel, Außenbreite)."""
+    nl, nw = il + 2 * NECK_T, iw + 2 * NECK_T
+    l, w = nl + 2 * NECK_IN, nw + 2 * NECK_IN
+    b = rrect(l, w, R_OUT, ledge_z).union(rrect(nl, nw, r_neck, NECK_H + 0.01, ledge_z - 0.01))
+    b = b.faces(">Z").edges().chamfer(NECK_CHAMFER).cut(rrect(il, iw, R_IN, H_BASE, FLOOR))
+    d = rrect(nl + 2 * NECK_IN, nw + 2 * NECK_IN, r_neck + NECK_IN, tz - ledge_z, ledge_z)
+    d = d.cut(rrect(nl + 2 * LCLR, nw + 2 * LCLR, r_neck + LCLR, tz - TOP - ledge_z + 0.01, ledge_z - 0.01))
+    for xc, s in plaetze:
+        for x0, x1, dm in LASCHEN:
+            dl = box(x0, x1, -0.2, DL_U, DL_Z0, DL_Z1).union(profil([(-0.2, DL_Z1 - 0.01), (DL_U, DL_Z1 - 0.01), (-0.2, DL_Z1 + DL_U + 0.2)], x0, x1))
+            d = d.union(setze(dl.cut(xloch(x0 - 1, x1 + 1, ACH_U, ACH_Z, dm)), xc, s, w))
+            b = b.union(setze(box(x0, x1, -0.2, WL_U, 0, WL_Z1).cut(xloch(x0 - 1, x1 + 1, ZS_U, ZS_Z, dm)), xc, s, w))
+    return b, d, w
 
-for xc, s in PLAETZE:
-    for x0, x1, d in LASCHEN:
-        dl = box(x0, x1, -0.2, DL_U, DL_Z0, DL_Z1).union(profil([(-0.2, DL_Z1 - 0.01), (DL_U, DL_Z1 - 0.01), (-0.2, DL_Z1 + DL_U + 0.2)], x0, x1))
-        lid = lid.union(setze(dl.cut(xloch(x0 - 1, x1 + 1, ACH_U, ACH_Z, d)), xc, s))
-        wl = box(x0, x1, -0.2, WL_U, 0, WL_Z1).cut(xloch(x0 - 1, x1 + 1, ZS_U, ZS_Z, d))
-        base = base.union(setze(wl, xc, s))
+
+base, lid, _w = kasten(IL, IW, top_z, PLAETZE)
+assert abs(_w - W) < 1e-6
 
 vol = lambda a, b: sum(x.Volume() for x in a.intersect(b).solids().vals())
 xc0 = L / 4
@@ -166,7 +177,8 @@ for h, p in RASTE:                                                            # 
 exp = lambda sh, n, step=False: (cq.exporters.export(sh, f"{DRUCK}/{NAME}_{n}.stl", tolerance=0.02, angularTolerance=0.1),
                                  step and cq.exporters.export(sh, f"{DRUCK}/{NAME}_{n}.step"))
 exp(base, 'unterteil', True); exp(lid, 'deckel', True)
-exp(klappe().rotate((0, 0, 0), (1, 0, 0), -90), 'klappe')                     # Drucklage: Außenseite unten
+for st, p in KLAPPEN:
+    exp(klappe(st, p).rotate((0, 0, 0), (1, 0, 0), -90), 'klappe%d' % p)       # Drucklage: Außenseite unten
 for h, p in RASTE:
     exp(zunge(h, p).rotate((0, 0, 0), (1, 0, 0), 180), 'zunge%d' % p)         # Drucklage: Oberseite unten
 ges = cq.Assembly(name=NAME)
@@ -176,10 +188,13 @@ for k, (xc, s) in enumerate(PLAETZE):
     ges.add(setze(klappe(), xc, s), name='Klappe_%d' % (k + 1), color=cq.Color(0.93, 0.55, 0.2))
     ges.add(setze(zunge(*RASTE[1]), xc, s), name='Zunge_%d' % (k + 1), color=cq.Color(0.36, 0.79, 0.65))
 ges.save(f"{DRUCK}/{NAME}_gesamt.step")
-# Probestück: ein Verschlussplatz (+x, +y) aus Wanne und Deckel geschnitten, Deckel nur bis z 34 und mit Standfuß
-fenster = lambda z0, z1: cq.Workplane("XY").box(64, 30, z1 - z0, centered=False).translate((xc0 - 32, W / 2 - 14, z0))
-exp(base.intersect(fenster(-1, 30)), 'probe_unterteil')
-fuss = cq.Workplane("XY").box(64, 14, 1.2, centered=False).translate((xc0 - 32, W / 2 - 14, 32.8))
-exp(lid.intersect(fenster(0, 34)).union(fuss), 'probe_deckel')
+# Mini-Box für die Testserie: gleiche Wände, gleicher Hals, gleiche Laschen, 1 Verschluss je langer Seite
+mb, md, mw = kasten(MINI[0], MINI[1], MINI[2], [(0.0, 1), (0.0, -1)])
+for nme, sh in (('Mini-Wanne', mb), ('Mini-Deckel', md)):
+    v = sh.val(); k = len(sh.solids().vals()); ok &= v.isValid() and k == 1
+    print('  %-11s %.1f × %.1f, gültig %s, Körper %d' % (nme, MINI[0] + 2 * (NECK_T + NECK_IN), mw, v.isValid(), k))
+v = vol(mb, md) + sum(vol(setze(klappe(), 0.0, s, mw), mb.union(md)) + vol(setze(zunge(0.0, 0), 0.0, s, mw), mb.union(md)) for s in (1, -1))
+print('  Mini-Box: Deckel × Wanne + Klappen und Zungen × beide: %.2f mm³' % v); ok &= v < 0.1
+exp(mb, 'mini_unterteil'); exp(md, 'mini_deckel')
 print('PRÜFUNG', 'OK' if ok else 'FEHLER')
 raise SystemExit(0 if ok else 1)
