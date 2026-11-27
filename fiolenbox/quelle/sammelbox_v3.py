@@ -27,7 +27,8 @@ R_IN = 3.0
 WALL, TOP, HEAD = 1.2, 2.0, 0.6
 LCLR = 0.20                                 # Spiel Deckel ↔ Hals je Seite
 # --- Verschluss ---
-M2_FREI, M2_KERN = 2.5, 1.8                 # Durchgang / Kernloch (liegende Löcher fallen enger aus)
+M2_FREI, M2_KERN = 2.8, 2.0                 # Durchgang / Kernloch. Testdruck 27.11. mit 2,5 / 1,8: Löcher zu eng für M2 (Alex), darum +0,3 / +0,2.
+                                            # Die Druckdateien im Repo sind noch der Stand 2,5 / 1,8 (erst beim nächsten Erzeugen neu)
 TEIL_B, SPALT_B = 12.0, 12.3                # Breite von Klappenauge und Zungenklotz / lichte Weite zwischen den Laschen
 LA1, LA2 = 3.0, 5.0                         # Lasche Kopfseite / Gewindeseite (3 + 12,3 + 4,7 = 20: M2 x 20; ab M2 x 16 greift sie)
 ACH_U, ACH_Z = 8.0, 15.5                    # Klappenachse

@@ -29,6 +29,7 @@ Box für 12 Fiolen (Ø 16 × 38 mm), 4 × 3, mit Stülpdeckel zum Aufrasten. Sti
 - Zunge: Klotz 12 breit zwischen den Wannen-Laschen, daraus der Steg 15 breit, 3 dick, 8 lang. Unterseite folgt der Bahn des Klappenstegs + 0,3 Luft. Darunter eine Raste (6 breit, in der Mitte), die die Klappe zuhält. Rasthöhe 0,6 / 0,8 / 1,0 = Zunge 1 / 2 / 3 (Kennpunkte), Überdeckung 0,3 / 0,5 / 0,7
 - Druck: Klappe mit der Außenseite aufs Bett, Zunge mit der Oberseite aufs Bett. Keine Stützen
 - Geprüft im Modell: Klappe schwenkt 0 bis 40° frei, zugeklappt sperrt sie den Deckel, aufgeklappt hebt er frei ab. Slicer ohne Fehler. Am Teil nichts geprüft
+- Testdruck 27.11. (Alex): Löcher zu eng für M2. Skript jetzt Durchgang 2,8 / Kernloch 2,0 (vorher 2,5 / 1,8); Druckdateien noch alt
 - Offen: Spiel der Zunge um ihre Schraube (der Deckel kann rechnerisch bis etwa 0,5 mm anheben); ob die Raste nach Abzug von Lochspiel noch greift
 - `quelle/sammelbox_v3.py` (Modell + Prüfung), `quelle/sammelbox_v3_3mf.py` (Testdatei; Mini-Box über `MINI` im Modell-Skript)
 - **Testserie:** `druck/testserie_klappe_zunge.3mf` (1 h 07, 38 g). Alex 27.11.: Hohlräder + Griff sind schon gedruckt, also heraus; Test darf bis 1 h dauern. Inhalt: Mini-Box 57,6 × 39,6 (Wanne + Deckel, gleiche Wände, Hals und Laschen wie die große, 1 Verschluss je langer Seite), Klappen 2 × Nr. 1 (Steg 1,2) + 2 × Nr. 2 (Steg 0,9; Marken auf dem Hebel), Zungen je 2 × Nr. 1, 2, 3. Braucht 4 × M2 × 16 bis 20. Die großen Teile (Wanne, Deckel) erst nach dem Test als Druckdatei
