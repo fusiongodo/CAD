@@ -19,10 +19,11 @@ Dateien: `druck/…` liegt in diesem Repo, `ihht-pi/…` in `~/Desktop/projects/
 | T-Stück | Druckteil | v3.1 gedruckt: ?; montiert: ? | – |
 | SKR Pico | direkt auf dem Lochraster verschraubt (Rückseite der Wand, ohne den Pico-Träger aus dem Modell), USB-C und 2 Adern Versorgung angeschlossen | – | Foto 25.11. abends |
 
-## Printing-Backlog (Stand 27.11.2026)
+## Printing-Backlog (Stand 28.11.2026)
 
 Druckfertig, noch nicht gedruckt:
 
+- `druck/cpap_o2_adapter.3mf`: Adapter CPAP auf Tülle 7 (19 min, 3,5 g, ohne Stützen)
 - `druck/development_wand_hi_mix.3mf`
 - Distanzplatten 2 mm aus `druck/qv_neue_motoren.3mf`: gedruckt oder nicht: ?
 
@@ -45,6 +46,7 @@ Ohne das wissen wir in 2 Wochen nicht mehr, was gedruckt wurde, und drucken alle
 | Motor-Distanzplatte | `druck/qv_motor_distanz.3mf`, Quelle `quelle/qv_motor_distanz_3mf.py` | 42,3 × 42,3 × 2,0, Mittelloch Ø 22,4, 4 × Ø 3,4 im Raster 31 | flach, 0,2 Schicht, 3 Wände, 40 %, kein Brim | noch nicht gedruckt | – |
 | Ritzel v1 (zum Vergleich) | ihht-pi `getriebe_v1_ohne_welle.3mf` (24.11.) | Nabe Ø 15,4 von z −29,5 bis −18,2, Zähne nur −18,2 bis −10,2, runder Einlauf 3 | – | eingebaut mit den alten Motoren. Mit den neuen Motoren (26.11., Alex): Nabe läuft in die Innenverzahnung, blockiert | ersetzt durch v2 |
 | M8-Akkuschrauber-Aufsatz, Variante 1 | `druck/m8_akkuschrauber_aufsatz.3mf`, Quelle `quelle/m8_akkuschrauber_aufsatz_3mf.py` | Kopf Ø 20 × 10, Tasche SW 13,4 × 6,5 tief. Schaft A SW 8,5 × 28 (Bohrfutter), Schaft B SW 6,25 × 26 (Bit) | Tasche unten, 0,2 Schicht, 8 Wände, 40 %, kein Brim, keine Stützen | gedruckt (Alex 26.11.), Ergebnis am Teil: ? | – |
+| Adapter CPAP auf Tülle 7, Variante 1 | `druck/cpap_o2_adapter.3mf`, Quelle `quelle/cpap_o2_adapter_3mf.py`, Maße aus `quelle/ihht/anschluesse.py` (`cpap_pi`, `o2`) | CPAP-Seite: Kern Ø 22,5, Wellen Ø 24,0, Bohrung Ø 20,4, 16,2 lang. Dünne Tülle: Kern Ø 7,0, Wellen Ø 7,5, Bohrung Ø 5,0, Spitze Ø 6,2, 12 lang. 45°-Kegel dazwischen, Wand 1,6. Höhe 36,7 | CPAP-Seite unten, 0,2 Schicht, 4 Wände, 40 %, kein Brim, keine Stützen | noch nicht gedruckt | – |
 | T-Stück v3.4 | `druck/development_wand_t.3mf`, Commit 703be89, Quelle `quelle/ihht/wand.py` (`TS_*`) | Bohrung 5,0, Tüllen Ø 7,0, Wellen Ø 7,5, Spitze 6,2, Mutterschacht SW 5,9 | Vorderseite unten, 0,2 Schicht, 5 Wände, 50 %, kein Brim, keine Stützen | aus dem Backlog gestrichen, Ergebnis nicht gemeldet | – |
 
 ## Drucke
@@ -52,6 +54,7 @@ Ohne das wissen wir in 2 Wochen nicht mehr, was gedruckt wurde, und drucken alle
 | Datum | Datei | Teile / Variante | gedruckt | eingebaut | Ergebnis |
 |---|---|---|---|---|---|
 | 25.11. abends | ihht-pi `welle_zapfen_6200_e3_5.3mf` | Welle mit Zapfen e 3,5 + Distanzring (V9), 1 Stück | ja | noch nicht (Alex fragte nach dem Ring) | – |
+| 28.11. | `druck/cpap_o2_adapter.3mf` | Adapter CPAP-Schlauch (22 mm) auf dünne Tülle Ø 7, gerade 1:1, 1 Stück | übergeben, noch nicht gedruckt (19 min, 3,5 g) | – | Alex: CPAP-Schlauch an den Ausgang des Mischers anschließen. Wie die Splitter, aber ohne Verzweigung |
 | 26.11. | `druck/qv_hohlrad_griff_v2.3mf` | 2 × Hohlrad mit Kragen und Schlitzen + 1 Steckgriff Variante 2 (Klaue von hinten über den Kragen, Hebel hinter der Getriebeplatte). Ersetzt beide Hohlräder | gedruckt in der Nacht 26./27.11. (Alex) | – | Alex 26.11.: Griff nur parallel zur Achse möglich. Im Modell der Development-Wand (claude_chassis) passt er an beiden Plätzen. Offen bleibt, was nicht im Modell ist: Kabel, Schläuche in echter Lage, Distanzplatte |
 | 26.11. | `druck/qv_neue_motoren.3mf` | Alles für die neuen Motoren in einer Datei: 2 × Ritzel v2 + 2 × Distanzplatte 2 mm | Ritzel gedruckt (Alex 26.11., aus dieser oder der Einzeldatei: ?), Distanzplatten: ? | – | Gleiche Teile wie die zwei Einzeldateien darunter (Alex: alles in eine 3MF) |
 | 26.11. | `druck/qv_motor_distanz.3mf` | Distanzplatte 2 mm zwischen Motor und Getriebeplatte, 2 Stück (42,3 × 42,3, Mittelloch Ø 22,4, 4 × Ø 3,4) | übergeben, noch nicht gedruckt | – | Für die neuen Motoren: Schaftspitze hätte sonst nur 0,4 Luft zur Hohlrad-Scheibe. Motorschrauben 2 länger |
